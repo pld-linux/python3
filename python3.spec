@@ -74,13 +74,6 @@ BuildRequires:	sqlite3-devel >= 3.3.5
 %{?with_tkinter:BuildRequires:	tk-devel >= 8.4.3}
 BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
-Obsoletes:	python-curses
-Obsoletes:	python-gdbm
-Obsoletes:	python-intl
-Obsoletes:	python-xml
-Obsoletes:	python-zlib
-Obsoletes:	python2
-Obsoletes:	python2-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %if %{with verbose_tests}
@@ -204,7 +197,7 @@ Group:		Libraries/Python
 Provides:	python(abi) = %{py_ver}
 # for compatibility with existing Ac packages
 Provides:	python(bytecode) = %{py_ver}
-%{!?with_info:Obsoletes:	python-doc-info}
+%{!?with_info:Obsoletes:	python30-doc-info}
 
 %description libs
 Python shared library and very essental modules for Python binary.
