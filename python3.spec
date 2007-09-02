@@ -670,6 +670,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %attr(755,root,root) %{py_dyndir}/array.so
+%attr(755,root,root) %{py_dyndir}/atexit.so
+%attr(755,root,root) %{py_dyndir}/audioop.so
 %attr(755,root,root) %{py_dyndir}/binascii.so
 %attr(755,root,root) %{py_dyndir}/_bisect.so
 %attr(755,root,root) %{py_dyndir}/_bsddb.so
@@ -681,10 +683,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_codecs_jp.so
 %attr(755,root,root) %{py_dyndir}/_codecs_kr.so
 %attr(755,root,root) %{py_dyndir}/_codecs_tw.so
-%attr(755,root,root) %{py_dyndir}/collections.so
-%attr(755,root,root) %{py_dyndir}/cPickle.so
+%attr(755,root,root) %{py_dyndir}/_collections.so
+#%attr(755,root,root) %{py_dyndir}/cPickle.so
 %attr(755,root,root) %{py_dyndir}/crypt.so
-%attr(755,root,root) %{py_dyndir}/cStringIO.so
+#%attr(755,root,root) %{py_dyndir}/cStringIO.so
 %attr(755,root,root) %{py_dyndir}/_csv.so
 %attr(755,root,root) %{py_dyndir}/_ctypes*.so
 %attr(755,root,root) %{py_dyndir}/_curses_panel.so
@@ -710,7 +712,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/gdbm.so
 %attr(755,root,root) %{py_dyndir}/grp.so
 %attr(755,root,root) %{py_dyndir}/itertools.so
-%attr(755,root,root) %{py_dyndir}/linuxaudiodev.so
+#%attr(755,root,root) %{py_dyndir}/linuxaudiodev.so
 %attr(755,root,root) %{py_dyndir}/math.so
 %attr(755,root,root) %{py_dyndir}/mmap.so
 %attr(755,root,root) %{py_dyndir}/nis.so
@@ -721,7 +723,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/readline.so
 %attr(755,root,root) %{py_dyndir}/resource.so
 %attr(755,root,root) %{py_dyndir}/select.so
-%attr(755,root,root) %{py_dyndir}/strop.so
+#%attr(755,root,root) %{py_dyndir}/strop.so
 %attr(755,root,root) %{py_dyndir}/syslog.so
 %attr(755,root,root) %{py_dyndir}/termios.so
 %attr(755,root,root) %{py_dyndir}/time.so
@@ -735,11 +737,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_scriptdir}/bsddb
 %{py_scriptdir}/bsddb/*.py[co]
 
-%dir %{py_scriptdir}/compiler
-%{py_scriptdir}/compiler/*.py[co]
+#%dir %{py_scriptdir}/compiler
+#%{py_scriptdir}/compiler/*.py[co]
 
 %dir %{py_scriptdir}/ctypes
 %dir %{py_scriptdir}/ctypes/macholib
+
 %{py_scriptdir}/ctypes/*.py[co]
 %{py_scriptdir}/ctypes/macholib/*.py[co]
 
@@ -850,7 +853,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/bsddb/*.py
 %{py_scriptdir}/ctypes/*.py
 %{py_scriptdir}/ctypes/macholib/*.py
-%{py_scriptdir}/compiler/*.py
+#%{py_scriptdir}/compiler/*.py
 %{py_scriptdir}/curses/*.py
 %{py_scriptdir}/distutils/*.py
 %{py_scriptdir}/distutils/command/*.py
