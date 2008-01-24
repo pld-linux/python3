@@ -615,11 +615,11 @@ rm -rf $RPM_BUILD_ROOT
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
 
-%post doc-info
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+%post doc-info	-p	/sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
 
-%postun doc-info
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+%postun doc-info	-p	/sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
 
 %files
 %defattr(644,root,root,755)
