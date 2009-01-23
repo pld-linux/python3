@@ -126,28 +126,29 @@ diff -Nur Python-2.5b2.orig/Lib/distutils/tests/test_install.py Python-2.5b2/Lib
 diff -Nur Python-2.5b2.orig/Lib/site.py Python-2.5b2/Lib/site.py
 --- Python-2.5b2.orig/Lib/site.py	2006-06-12 09:23:02.000000000 +0100
 +++ Python-2.5b2/Lib/site.py	2006-07-12 17:42:51.000000000 +0100
-@@ -182,12 +182,18 @@
-                 sitedirs = [os.path.join(prefix, "Lib", "site-packages")]
-             elif os.sep == '/':
-                 sitedirs = [os.path.join(prefix,
--                                         "lib",
-+                                         sys.lib,
-                                          "python" + sys.version[:3],
-                                          "site-packages"),
--                            os.path.join(prefix, "lib", "site-python")]
-+                            os.path.join(prefix, sys.lib, "site-python")]
-+                if sys.lib != 'lib':
-+                    sitedirs.append(os.path.join(prefix,
-+                                                 'lib',
-+                                                 "python" + sys.version[:3],
-+                                                 "site-packages"))
-+                    sitedirs.append(os.path.join(prefix, 'lib', "site-python"))
-             else:
--                sitedirs = [prefix, os.path.join(prefix, "lib", "site-packages")]
-+                sitedirs = [prefix, os.path.join(prefix, sys.lib, "site-packages")]
-             if sys.platform == 'darwin':
-                 # for framework builds *only* we add the standard Apple
-                 # locations. Currently only per-user, but /Library and
+@@ -258,13 +258,19 @@
+         if sys.platform in ('os2emx', 'riscos'):
+             sitedirs.append(os.path.join(prefix, "Lib", "site-packages"))
+         elif os.sep == '/':
+-            sitedirs.append(os.path.join(prefix, "lib",
++            sitedirs.append(os.path.join(prefix, sys.lib,
+                                         "python" + sys.version[:3],
+                                         "site-packages"))
+-            sitedirs.append(os.path.join(prefix, "lib", "site-python"))
++            sitedirs.append(os.path.join(prefix, sys.lib, "site-python"))
++            if sys.lib != 'lib':
++            sitedirs.append(os.path.join(prefix, 'lib',
++                                        "python" + sys.version[:3],
++                                        "site-packages"))
++            sitedirs.append(os.path.join(prefix, 'lib', "site-python"))
++        	
+         else:
+             sitedirs.append(prefix)
+-            sitedirs.append(os.path.join(prefix, "lib", "site-packages"))
++            sitedirs.append(os.path.join(prefix, sys.lib, "site-packages"))
+ 
+         if sys.platform == "darwin":
+             # for framework builds *only* we add the standard Apple
 diff -Nur Python-2.5b2.orig/Makefile.pre.in Python-2.5b2/Makefile.pre.in
 --- Python-2.5b2.orig/Makefile.pre.in	2006-06-27 16:45:32.000000000 +0100
 +++ Python-2.5b2/Makefile.pre.in	2006-07-12 17:42:51.000000000 +0100
@@ -206,15 +207,15 @@ diff -Nur Python-2.5b2.orig/Modules/getpath.c Python-2.5b2/Modules/getpath.c
  #endif
  
  #ifndef LANDMARK
-@@ -129,7 +137,7 @@
- static char exec_prefix[MAXPATHLEN+1];
- static char progpath[MAXPATHLEN+1];
- static char *module_search_path = NULL;
--static char lib_python[] = "lib/python" VERSION;
-+static char lib_python[] = LIB_PYTHON VERSION;
+@@ -137,7 +137,7 @@
+ static wchar_t exec_prefix[MAXPATHLEN+1];
+ static wchar_t progpath[MAXPATHLEN+1];
+ static wchar_t *module_search_path = NULL;
+-static wchar_t lib_python[] = L"lib/python" VERSION;
++static wchar_t lib_python[] = LIB_PYTHON VERSION;
  
- static void
- reduce(char *dir)
+ /* In principle, this should use HAVE__WSTAT, and _wstat
+    should be detected by autoconf. However, no current
 diff -Nur Python-2.5b2.orig/Python/getplatform.c Python-2.5b2/Python/getplatform.c
 --- Python-2.5b2.orig/Python/getplatform.c	2000-09-02 00:29:29.000000000 +0100
 +++ Python-2.5b2/Python/getplatform.c	2006-07-12 17:42:51.000000000 +0100
