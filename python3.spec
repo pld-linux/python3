@@ -13,7 +13,7 @@
 # tests which fail because of some unknown/unresolved reason (this list should be empty)
 %define		broken_tests test_anydbm test_bsddb test_re test_shelve test_whichdb test_zipimport test_distutils
 
-%define	beta		%nil
+%define	beta		%{nil}
 
 %define py_ver		3.0
 %define py_prefix	%{_prefix}
