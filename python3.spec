@@ -13,7 +13,7 @@
 # tests which fail because of some unknown/unresolved reason (this list should be empty)
 %define		broken_tests test_anydbm test_bsddb test_re test_shelve test_whichdb test_zipimport test_distutils
 
-%define	beta		a1
+%define	beta		%nil
 
 %define py_ver		3.0
 %define py_prefix	%{_prefix}
@@ -37,7 +37,7 @@ Epoch:		1
 License:	PSF
 Group:		Applications
 Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}%{beta}.tgz
-# Source0-md5:	89356ece9bd276e78a9e63cfe4a83a23
+# Source0-md5:	ac1d8aa55bd6d04232cd96abfa445ac4
 Patch1:		%{name}-pythonpath.patch
 Patch2:		%{name}-no_ndbm.patch
 Patch3:		%{name}-ac_fixes.patch
@@ -480,13 +480,13 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 
 %prep
 %setup -q -n Python-%{version}%{beta}
-%patch1 -p1
-%patch2 -p1
+#patch1 -p1
+#patch2 -p1
 %patch3 -p1
-%patch5 -p1
-%patch4 -p1
-%patch6 -p1
-%patch7 -p1
+#patch5 -p1
+#patch4 -p1
+#patch6 -p1
+#patch7 -p1
 
 %build
 sed -i -e 's#-ltermcap#-ltinfo#g' configure*
