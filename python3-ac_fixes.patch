@@ -7,8 +7,8 @@
 -		OPT="-g -Wall $STRICT_PROTO"
 +		OPT="-g $CPPFLAGS $CFLAGS -Wall $STRICT_PROTO"
  	    else
--		OPT="-g -O3 -Wall $STRICT_PROTO"
-+		OPT="-g $CPPFLAGS $CFLAGS -Wall $STRICT_PROTO"
+-		OPT="-g $WRAP -O3 -Wall $STRICT_PROTO"
++		OPT="-g $WRAP $CPPFLAGS $CFLAGS -Wall $STRICT_PROTO"
  	    fi
  	    ;;
  	*)
