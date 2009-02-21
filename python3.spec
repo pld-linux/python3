@@ -31,13 +31,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python30
-Version:	%{py_ver}
+Version:	%{py_ver}.1
 Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Applications
-Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}%{beta}.tgz
-# Source0-md5:	ac1d8aa55bd6d04232cd96abfa445ac4
+Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}%{beta}.tar.bz2
+# Source0-md5:	7291eac6a9a7a3642e309c78b8d744e5
 Patch1:		%{name}-pythonpath.patch
 Patch2:		%{name}-no_ndbm.patch
 Patch3:		%{name}-ac_fixes.patch
@@ -55,6 +55,7 @@ BuildRequires:	expat-devel >= 1:1.95.7
 BuildRequires:	file
 BuildRequires:	gdbm-devel >= 1.8.3
 BuildRequires:	gmp-devel >= 4.0
+BuildRequires:	libffi-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	ncurses-ext-devel >= 5.2
 %if %{with openssl097}
@@ -481,7 +482,7 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %prep
 %setup -q -n Python-%{version}%{beta}
 #patch1 -p1
-#patch2 -p1
+%patch2 -p1
 %patch3 -p1
 %patch5 -p1
 #patch4 -p1
@@ -491,18 +492,19 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %build
 sed -i -e 's#-ltermcap#-ltinfo#g' configure*
 %{__autoconf}
-CPPFLAGS="-I/usr/include/ncurses"; export CPPFLAGS
+CPPFLAGS="-I/usr/include/ncursesw"; export CPPFLAGS
 %configure \
-	--with-cxx="%{__cxx}" \
+	--with-cxx-main="%{__cxx}" \
 	--enable-shared \
 	--enable-ipv6 \
-	--enable-unicode=ucs4 \
+	--with-wide-unicode \
 	--with-signal-module \
 	--with-tsc \
 	--with-threads \
 	--with-doc-strings \
 	--with-wctype-functions \
 	--with-fpectl \
+	--with-system-ffi \
 	LINKCC='$(PURIFY) $(CXX)' \
 	LDSHARED='$(CC) $(CFLAGS) -shared' \
 	BLDSHARED='$(CC) $(CFLAGS) -shared' \
@@ -526,7 +528,7 @@ export LC_ALL
 binlibdir=`echo build/lib.*`
 %{__make} test \
 	TESTOPTS="%{test_flags} %{test_list}" \
-	TESTPYTHON="LD_LIBRARY_PATH=`pwd` PYTHONHOME=`pwd` PYTHONPATH=`pwd`/Lib:$binlibdir ./python%{py_ver} -tt"
+	TESTPYTHON="LD_LIBRARY_PATH=`pwd` PYTHONHOME=`pwd` PYTHONPATH=`pwd`/Lib:$binlibdir ./python -tt"
 %endif
 
 %install
