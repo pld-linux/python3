@@ -137,10 +137,10 @@ diff -Nur Python-2.5b2.orig/Lib/site.py Python-2.5b2/Lib/site.py
 -            sitedirs.append(os.path.join(prefix, "lib", "site-python"))
 +            sitedirs.append(os.path.join(prefix, sys.lib, "site-python"))
 +            if sys.lib != 'lib':
-+            sitedirs.append(os.path.join(prefix, 'lib',
-+                                        "python" + sys.version[:3],
-+                                        "site-packages"))
-+            sitedirs.append(os.path.join(prefix, 'lib', "site-python"))
++                sitedirs.append(os.path.join(prefix, 'lib',
++                                            "python" + sys.version[:3],
++                                            "site-packages"))
++                sitedirs.append(os.path.join(prefix, 'lib', "site-python"))
 +        	
          else:
              sitedirs.append(prefix)
@@ -193,9 +193,9 @@ diff -Nur Python-2.5b2.orig/Modules/getpath.c Python-2.5b2/Modules/getpath.c
  
 +#ifndef LIB_PYTHON
 +#if defined(__x86_64__) || (defined(__sparc__) && defined(__arch64__)) || defined(__powerpc64__) || defined(__s390x__)
-+#define LIB_PYTHON "lib64/python"
++#define LIB_PYTHON L"lib64/python"
 +#else
-+#define LIB_PYTHON "lib/python"
++#define LIB_PYTHON L"lib/python"
 +#endif
 +#endif
 +
