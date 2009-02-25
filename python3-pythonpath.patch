@@ -1,179 +1,54 @@
-diff -urN Python-3.0a1.org/Demo/cgi/cgi1.py Python-3.0a1/Demo/cgi/cgi1.py
---- Python-3.0a1.org/Demo/cgi/cgi1.py	2007-07-17 23:03:42.000000000 +0200
-+++ Python-3.0a1/Demo/cgi/cgi1.py	2007-09-02 20:58:24.437999826 +0200
+--- Python-3.0.1/Modules/getpath.c.wiget	2009-02-12 16:56:48.000000000 +0100
++++ Python-3.0.1/Modules/getpath.c	2009-02-25 17:23:09.000000000 +0100
+@@ -481,7 +481,7 @@ calculate_path(void)
+       * "#!/opt/python2.3/bin/python", the kernel only passes "python"
+       * as argv[0], which falls through to the $PATH search below.
+       * If /opt/python2.3/bin isn't in your path, or is near the end,
+-      * this algorithm may incorrectly find /usr/bin/python. To work
++      * this algorithm may incorrectly find /usr/bin/python3.0. To work
+       * around this, we can use _NSGetExecutablePath to get a better
+       * hint of what the intended interpreter was, although this
+       * will fail if a relative path was used. but in that case,
+--- Python-3.0.1/Lib/distutils/tests/test_build_scripts.py.wiget	2004-08-26 07:44:02.000000000 +0200
++++ Python-3.0.1/Lib/distutils/tests/test_build_scripts.py	2009-02-25 17:23:09.000000000 +0100
+@@ -58,7 +58,7 @@ class BuildScriptsTestCase(support.Tempd
+                            "pass\n"))
+         expected.append("script2.py")
+         self.write_script(dir, "script2.py",
+-                          ("#!/usr/bin/python\n"
++                          ("#!/usr/bin/python3.0\n"
+                            "# bogus script w/ Python sh-bang\n"
+                            "pass\n"))
+         expected.append("shell.sh")
+--- Python-3.0.1/Lib/distutils/tests/test_install_scripts.py.wiget	2004-08-03 20:53:07.000000000 +0200
++++ Python-3.0.1/Lib/distutils/tests/test_install_scripts.py	2009-02-25 17:23:09.000000000 +0100
+@@ -48,7 +48,7 @@ class InstallScriptsTestCase(support.Tem
+         write_script("script1.py", ("#! /usr/bin/env python2.3\n"
+                                     "# bogus script w/ Python sh-bang\n"
+                                     "pass\n"))
+-        write_script("script2.py", ("#!/usr/bin/python\n"
++        write_script("script2.py", ("#!/usr/bin/python3.0\n"
+                                     "# bogus script w/ Python sh-bang\n"
+                                     "pass\n"))
+         write_script("shell.sh", ("#!/bin/sh\n"
+--- Python-3.0.1/Lib/test/test_optparse.py.wiget	2008-05-20 23:35:26.000000000 +0200
++++ Python-3.0.1/Lib/test/test_optparse.py	2009-02-25 17:23:09.000000000 +0100
 @@ -1,4 +1,4 @@
--#!/usr/local/bin/python
+-#!/usr/bin/python
 +#!/usr/bin/python3.0
  
- """CGI test 1 - check server setup."""
- 
-diff -urN Python-3.0a1.org/Demo/cgi/cgi2.py Python-3.0a1/Demo/cgi/cgi2.py
---- Python-3.0a1.org/Demo/cgi/cgi2.py	2007-08-06 23:21:05.000000000 +0200
-+++ Python-3.0a1/Demo/cgi/cgi2.py	2007-09-02 20:58:24.437999826 +0200
+ #
+ # Test suite for Optik.  Supplied by Johannes Gijsbers
+--- Python-3.0.1/Lib/test/test_bz2.py.wiget	2008-07-16 05:43:04.000000000 +0200
++++ Python-3.0.1/Lib/test/test_bz2.py	2009-02-25 17:28:56.000000000 +0100
 @@ -1,4 +1,4 @@
--#!/usr/local/bin/python
+-#!/usr/bin/python
 +#!/usr/bin/python3.0
+ from test import support
+ from test.support import TESTFN
  
- """CGI test 2 - basic use of cgi module."""
- 
-diff -urN Python-3.0a1.org/Demo/cgi/cgi3.py Python-3.0a1/Demo/cgi/cgi3.py
---- Python-3.0a1.org/Demo/cgi/cgi3.py	2006-10-25 00:26:30.000000000 +0200
-+++ Python-3.0a1/Demo/cgi/cgi3.py	2007-09-02 20:58:24.437999826 +0200
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/python
-+#!/usr/bin/python3.0
- 
- """CGI test 3 (persistent data)."""
- 
-diff -urN Python-3.0a1.org/Demo/tix/INSTALL.txt Python-3.0a1/Demo/tix/INSTALL.txt
---- Python-3.0a1.org/Demo/tix/INSTALL.txt	2006-10-25 00:26:31.000000000 +0200
-+++ Python-3.0a1/Demo/tix/INSTALL.txt	2007-09-02 20:58:24.442000056 +0200
-@@ -71,7 +71,7 @@
- You should now have a working Tix implementation in Python. To see if all
- is as it should be, run the 'tixwidgets.py' script in the Demo/tix directory.
- Under X windows, do
--	/usr/local/bin/python Demo/tix/tixwidgets.py
-+	/usr/bin/python3.0 Demo/tix/tixwidgets.py
- 
- If this does not work, you may need to tell python where to find
- the Tcl, Tk and Tix library files. This is done by setting the
-@@ -80,7 +80,7 @@
- 	env 	TCL_LIBRARY=/usr/local/lib/tcl8.3 \
- 		TK_LIBRARY=/usr/local/lib/tk8.3 \
- 		TIX_LIBRARY=/usr/local/lib/tix8.1 \
--		/usr/local/bin/python Demo/tix/tixwidgets.py
-+		/usr/bin/python3.0 Demo/tix/tixwidgets.py
- 
- 
- If you find any bugs or have suggestions for improvement, please report them
-diff -urN Python-3.0a1.org/Doc/c-api/init.rst Python-3.0a1/Doc/c-api/init.rst
---- Python-3.0a1.org/Doc/c-api/init.rst	2007-08-17 02:23:32.000000000 +0200
-+++ Python-3.0a1/Doc/c-api/init.rst	2007-09-02 20:58:24.446000286 +0200
-@@ -195,7 +195,7 @@
-    Return the *prefix* for installed platform-independent files. This is derived
-    through a number of complicated rules from the program name set with
-    :cfunc:`Py_SetProgramName` and some environment variables; for example, if the
--   program name is ``'/usr/local/bin/python'``, the prefix is ``'/usr/local'``. The
-+   program name is ``'/usr/bin/python3.0'``, the prefix is ``'/usr/local'``. The
-    returned string points into static storage; the caller should not modify its
-    value.  This corresponds to the :makevar:`prefix` variable in the top-level
-    :file:`Makefile` and the :option:`--prefix` argument to the :program:`configure`
-@@ -208,7 +208,7 @@
-    Return the *exec-prefix* for installed platform-*dependent* files.  This is
-    derived through a number of complicated rules from the program name set with
-    :cfunc:`Py_SetProgramName` and some environment variables; for example, if the
--   program name is ``'/usr/local/bin/python'``, the exec-prefix is
-+   program name is ``'/usr/bin/python3.0'``, the exec-prefix is
-    ``'/usr/local'``.  The returned string points into static storage; the caller
-    should not modify its value.  This corresponds to the :makevar:`exec_prefix`
-    variable in the top-level :file:`Makefile` and the :option:`--exec-prefix`
-diff -urN Python-3.0a1.org/Doc/c-api/intro.rst Python-3.0a1/Doc/c-api/intro.rst
---- Python-3.0a1.org/Doc/c-api/intro.rst	2007-08-17 02:23:32.000000000 +0200
-+++ Python-3.0a1/Doc/c-api/intro.rst	2007-09-02 20:58:24.450000516 +0200
-@@ -536,7 +536,7 @@
- path (the environment variable :envvar:`PATH`).
- 
- For instance, if the Python executable is found in
--:file:`/usr/local/bin/python`, it will assume that the libraries are in
-+:file:`/usr/bin/python3.0`, it will assume that the libraries are in
- :file:`/usr/local/lib/python{X.Y}`.  (In fact, this particular path is also
- the "fallback" location, used when no executable file named :file:`python` is
- found along :envvar:`PATH`.)  The user can override this behavior by setting the
-diff -urN Python-3.0a1.org/Doc/howto/pythonmac.rst Python-3.0a1/Doc/howto/pythonmac.rst
---- Python-3.0a1.org/Doc/howto/pythonmac.rst	2007-08-17 02:23:33.000000000 +0200
-+++ Python-3.0a1/Doc/howto/pythonmac.rst	2007-09-02 20:58:24.478002127 +0200
-@@ -44,7 +44,7 @@
-   symlink to the Python executable is placed in /usr/local/bin/.
- 
- The Apple-provided build of Python is installed in
--:file:`/System/Library/Frameworks/Python.framework` and :file:`/usr/bin/python`,
-+:file:`/System/Library/Frameworks/Python.framework` and :file:`/usr/bin/python3.0`,
- respectively. You should never modify or delete these, as they are
- Apple-controlled and are used by Apple- or third-party software.
- 
-diff -urN Python-3.0a1.org/Doc/install/index.rst Python-3.0a1/Doc/install/index.rst
---- Python-3.0a1.org/Doc/install/index.rst	2007-08-29 00:24:47.000000000 +0200
-+++ Python-3.0a1/Doc/install/index.rst	2007-09-02 20:58:24.482002357 +0200
-@@ -366,16 +366,16 @@
- them to go in :file:`/usr/local/lib/python2.{X}` rather than
- :file:`/usr/lib/python2.{X}`.  This can be done with ::
- 
--   /usr/bin/python setup.py install --prefix=/usr/local
-+   /usr/bin/python3.0 setup.py install --prefix=/usr/local
- 
- Another possibility is a network filesystem where the name used to write to a
- remote directory is different from the name used to read it: for example, the
--Python interpreter accessed as :file:`/usr/local/bin/python` might search for
-+Python interpreter accessed as :file:`/usr/bin/python3.0` might search for
- modules in :file:`/usr/local/lib/python2.{X}`, but those modules would have to
- be installed to, say, :file:`/mnt/{@server}/export/lib/python2.{X}`.  This could
- be done with ::
- 
--   /usr/local/bin/python setup.py install --prefix=/mnt/@server/export
-+   /usr/bin/python3.0 setup.py install --prefix=/mnt/@server/export
- 
- In either case, the :option:`--prefix` option defines the installation base, and
- the :option:`--exec-prefix` option defines the platform-specific installation
-diff -urN Python-3.0a1.org/Doc/library/cgi.rst Python-3.0a1/Doc/library/cgi.rst
---- Python-3.0a1.org/Doc/library/cgi.rst	2007-08-17 02:23:42.000000000 +0200
-+++ Python-3.0a1/Doc/library/cgi.rst	2007-09-02 20:58:24.486002587 +0200
-@@ -409,7 +409,7 @@
- first line of the script contains ``#!`` starting in column 1 followed by the
- pathname of the Python interpreter, for instance::
- 
--   #!/usr/local/bin/python
-+   #!/usr/bin/python3.0
- 
- Make sure the Python interpreter exists and is executable by "others".
- 
-diff -urN Python-3.0a1.org/Doc/library/pickle.rst Python-3.0a1/Doc/library/pickle.rst
---- Python-3.0a1.org/Doc/library/pickle.rst	2007-08-17 02:23:42.000000000 +0200
-+++ Python-3.0a1/Doc/library/pickle.rst	2007-09-02 20:58:24.490002817 +0200
-@@ -717,7 +717,7 @@
- reading resumes from the last location. The :meth:`__setstate__` and
- :meth:`__getstate__` methods are used to implement this behavior. ::
- 
--   #!/usr/local/bin/python
-+   #!/usr/bin/python3.0
- 
-    class TextReader:
-        """Print and number lines in a text file."""
-@@ -754,7 +754,7 @@
-    >>> import TextReader
-    >>> obj = TextReader.TextReader("TextReader.py")
-    >>> obj.readline()
--   '1: #!/usr/local/bin/python'
-+   '1: #!/usr/bin/python3.0'
-    >>> obj.readline()
-    '2: '
-    >>> obj.readline()
-diff -urN Python-3.0a1.org/Doc/README.txt Python-3.0a1/Doc/README.txt
---- Python-3.0a1.org/Doc/README.txt	2007-08-31 01:06:19.000000000 +0200
-+++ Python-3.0a1/Doc/README.txt	2007-09-02 20:58:24.494003047 +0200
-@@ -37,7 +37,7 @@
- To use a Python interpreter that's not called ``python``, use the standard
- way to set Makefile variables, using e.g. ::
- 
--   make html PYTHON=/usr/bin/python2.5
-+   make html PYTHON=/usr/bin/python3.02.5
- 
- Available make targets are:
- 
-diff -urN Python-3.0a1.org/Doc/tutorial/interpreter.rst Python-3.0a1/Doc/tutorial/interpreter.rst
---- Python-3.0a1.org/Doc/tutorial/interpreter.rst	2007-08-17 02:23:34.000000000 +0200
-+++ Python-3.0a1/Doc/tutorial/interpreter.rst	2007-09-02 20:58:24.498003277 +0200
-@@ -10,7 +10,7 @@
- Invoking the Interpreter
- ========================
- 
--The Python interpreter is usually installed as :file:`/usr/local/bin/python` on
-+The Python interpreter is usually installed as :file:`/usr/bin/python3.0` on
- those machines where it is available; putting :file:`/usr/local/bin` in your
- Unix shell's search path makes it possible to start it by typing the command ::
- 
-diff -urN Python-3.0a1.org/Lib/cgi.py Python-3.0a1/Lib/cgi.py
---- Python-3.0a1.org/Lib/cgi.py	2007-08-31 01:06:20.000000000 +0200
-+++ Python-3.0a1/Lib/cgi.py	2007-09-02 20:58:24.502003507 +0200
+--- Python-3.0.1/Lib/cgi.py.wiget	2008-12-04 21:11:57.000000000 +0100
++++ Python-3.0.1/Lib/cgi.py	2009-02-25 17:23:09.000000000 +0100
 @@ -1,6 +1,6 @@
 -#! /usr/local/bin/python
 +#! /usr/bin/python3.0
@@ -183,65 +58,148 @@ diff -urN Python-3.0a1.org/Lib/cgi.py Python-3.0a1/Lib/cgi.py
  # intentionally NOT "/usr/bin/env python".  On many systems
  # (e.g. Solaris), /usr/local/bin is not in $PATH as passed to CGI
  # scripts, and /usr/local/bin is the default directory where Python is
-diff -urN Python-3.0a1.org/Lib/distutils/tests/test_build_scripts.py Python-3.0a1/Lib/distutils/tests/test_build_scripts.py
---- Python-3.0a1.org/Lib/distutils/tests/test_build_scripts.py	2006-10-25 00:27:19.000000000 +0200
-+++ Python-3.0a1/Lib/distutils/tests/test_build_scripts.py	2007-09-02 20:58:24.502003507 +0200
-@@ -58,7 +58,7 @@
-                            "pass\n"))
-         expected.append("script2.py")
-         self.write_script(dir, "script2.py",
--                          ("#!/usr/bin/python\n"
-+                          ("#!/usr/bin/python3.0\n"
-                            "# bogus script w/ Python sh-bang\n"
-                            "pass\n"))
-         expected.append("shell.sh")
-diff -urN Python-3.0a1.org/Lib/distutils/tests/test_install_scripts.py Python-3.0a1/Lib/distutils/tests/test_install_scripts.py
---- Python-3.0a1.org/Lib/distutils/tests/test_install_scripts.py	2006-10-25 00:27:19.000000000 +0200
-+++ Python-3.0a1/Lib/distutils/tests/test_install_scripts.py	2007-09-02 20:58:24.506003737 +0200
-@@ -48,7 +48,7 @@
-         write_script("script1.py", ("#! /usr/bin/env python2.3\n"
-                                     "# bogus script w/ Python sh-bang\n"
-                                     "pass\n"))
--        write_script("script2.py", ("#!/usr/bin/python\n"
-+        write_script("script2.py", ("#!/usr/bin/python3.0\n"
-                                     "# bogus script w/ Python sh-bang\n"
-                                     "pass\n"))
-         write_script("shell.sh", ("#!/bin/sh\n"
-diff -urN Python-3.0a1.org/Lib/plat-mac/bundlebuilder.py Python-3.0a1/Lib/plat-mac/bundlebuilder.py
---- Python-3.0a1.org/Lib/plat-mac/bundlebuilder.py	2007-08-23 02:07:08.000000000 +0200
-+++ Python-3.0a1/Lib/plat-mac/bundlebuilder.py	2007-09-02 20:58:24.510003967 +0200
-@@ -500,8 +500,8 @@
-             makedirs(execdir)
-             if self.standalone or self.semi_standalone:
-                 # XXX we're screwed when the end user has deleted
--                # /usr/bin/python
--                hashbang = "/usr/bin/python"
-+                # /usr/bin/python3.0
-+                hashbang = "/usr/bin/python3.0"
-             elif self.python:
-                 hashbang = self.python
-             else:
-diff -urN Python-3.0a1.org/Lib/test/test_bz2.py Python-3.0a1/Lib/test/test_bz2.py
---- Python-3.0a1.org/Lib/test/test_bz2.py	2007-08-17 05:42:15.000000000 +0200
-+++ Python-3.0a1/Lib/test/test_bz2.py	2007-09-02 20:58:24.514004197 +0200
+--- Python-3.0.1/Demo/cgi/cgi2.py.wiget	2007-08-06 23:07:53.000000000 +0200
++++ Python-3.0.1/Demo/cgi/cgi2.py	2009-02-25 17:23:09.000000000 +0100
 @@ -1,4 +1,4 @@
--#!/usr/bin/python
-+#!/usr/bin/python3.0
- from test import test_support
- from test.test_support import TESTFN
- 
-diff -urN Python-3.0a1.org/Lib/test/test_optparse.py Python-3.0a1/Lib/test/test_optparse.py
---- Python-3.0a1.org/Lib/test/test_optparse.py	2007-08-20 20:40:57.000000000 +0200
-+++ Python-3.0a1/Lib/test/test_optparse.py	2007-09-02 20:58:24.522004657 +0200
-@@ -1,4 +1,4 @@
--#!/usr/bin/python
+-#!/usr/local/bin/python
 +#!/usr/bin/python3.0
  
- #
- # Test suite for Optik.  Supplied by Johannes Gijsbers
-diff -urN Python-3.0a1.org/Mac/BuildScript/build-installer.py Python-3.0a1/Mac/BuildScript/build-installer.py
---- Python-3.0a1.org/Mac/BuildScript/build-installer.py	2007-08-31 01:14:39.000000000 +0200
-+++ Python-3.0a1/Mac/BuildScript/build-installer.py	2007-09-02 20:58:24.526004887 +0200
+ """CGI test 2 - basic use of cgi module."""
+ 
+--- Python-3.0.1/Demo/cgi/cgi1.py.wiget	2007-07-17 22:59:35.000000000 +0200
++++ Python-3.0.1/Demo/cgi/cgi1.py	2009-02-25 17:23:09.000000000 +0100
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/python
++#!/usr/bin/python3.0
+ 
+ """CGI test 1 - check server setup."""
+ 
+--- Python-3.0.1/Demo/cgi/cgi3.py.wiget	2002-10-17 17:53:02.000000000 +0200
++++ Python-3.0.1/Demo/cgi/cgi3.py	2009-02-25 17:23:09.000000000 +0100
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/python
++#!/usr/bin/python3.0
+ 
+ """CGI test 3 (persistent data)."""
+ 
+--- Python-3.0.1/Demo/tix/INSTALL.txt.wiget	2001-11-11 15:07:37.000000000 +0100
++++ Python-3.0.1/Demo/tix/INSTALL.txt	2009-02-25 17:23:09.000000000 +0100
+@@ -71,7 +71,7 @@ _tkinter _tkinter.c tkappinit.c -DWITH_A
+ You should now have a working Tix implementation in Python. To see if all
+ is as it should be, run the 'tixwidgets.py' script in the Demo/tix directory.
+ Under X windows, do
+-	/usr/local/bin/python Demo/tix/tixwidgets.py
++	/usr/bin/python3.0 Demo/tix/tixwidgets.py
+ 
+ If this does not work, you may need to tell python where to find
+ the Tcl, Tk and Tix library files. This is done by setting the
+@@ -80,7 +80,7 @@ TCL_LIBRARY, TK_LIBRARY and TIX_LIBRARY 
+ 	env 	TCL_LIBRARY=/usr/local/lib/tcl8.3 \
+ 		TK_LIBRARY=/usr/local/lib/tk8.3 \
+ 		TIX_LIBRARY=/usr/local/lib/tix8.1 \
+-		/usr/local/bin/python Demo/tix/tixwidgets.py
++		/usr/bin/python3.0 Demo/tix/tixwidgets.py
+ 
+ 
+ If you find any bugs or have suggestions for improvement, please report them
+--- Python-3.0.1/Tools/faqwiz/faqw.py.wiget	2008-02-23 19:30:17.000000000 +0100
++++ Python-3.0.1/Tools/faqwiz/faqw.py	2009-02-25 17:23:09.000000000 +0100
+@@ -1,4 +1,4 @@
+-#! /usr/local/bin/python
++#! /usr/bin/python3.0
+ 
+ """FAQ wizard bootstrap."""
+ 
+@@ -10,7 +10,7 @@
+ # executable.
+ 
+ # You need to edit the first line and the lines that define FAQDIR and
+-# SRCDIR, below: change /usr/local/bin/python to where your Python
++# SRCDIR, below: change /usr/bin/python3.0 to where your Python
+ # interpreter lives, change the value for FAQDIR to where your FAQ
+ # lives, and change the value for SRCDIR to where your faqwiz.py
+ # module lives.  The faqconf.py and faqcust.py files live there, too.
+--- Python-3.0.1/Tools/pybench/README.wiget	2009-02-07 18:28:46.000000000 +0100
++++ Python-3.0.1/Tools/pybench/README	2009-02-25 17:29:43.000000000 +0100
+@@ -142,7 +142,7 @@ Benchmark: 2006-06-12 12:09:25
+ 
+     Python:
+        Implementation: CPython
+-       Executable:   /usr/local/bin/python
++       Executable:   /usr/bin/python3.0
+        Version:      3.0
+        Compiler:     GCC 3.3.4 (pre 3.3.5 20040809)
+        Bits:         64bit
+--- Python-3.0.1/Tools/pybench/pybench.py.wiget	2009-02-07 18:28:46.000000000 +0100
++++ Python-3.0.1/Tools/pybench/pybench.py	2009-02-25 17:23:09.000000000 +0100
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/python -O
++#!/usr/bin/python3.0 -O
+ 
+ """ A Python Benchmark Suite
+ 
+--- Python-3.0.1/Tools/scripts/README.wiget	2007-10-13 20:56:00.000000000 +0200
++++ Python-3.0.1/Tools/scripts/README	2009-02-25 17:23:09.000000000 +0100
+@@ -44,7 +44,7 @@ ndiff.py		Intelligent diff between text 
+ nm2def.py		Create a template for PC/python_nt.def (Marc Lemburg)
+ objgraph.py		Print object graph from nm output on a library
+ parseentities.py	Utility for parsing HTML entity definitions
+-pathfix.py		Change #!/usr/local/bin/python into something else
++pathfix.py		Change #!/usr/bin/python3.0 into something else
+ pdeps.py		Print dependencies between Python modules
+ pickle2db.py		Load a pickle generated by db2pickle.py to a database
+ pindent.py		Indent Python code, giving block-closing comments
+--- Python-3.0.1/Tools/scripts/parseentities.py.wiget	2008-05-16 17:23:30.000000000 +0200
++++ Python-3.0.1/Tools/scripts/parseentities.py	2009-02-25 17:23:09.000000000 +0100
+@@ -1,4 +1,4 @@
+-#!/usr/local/bin/python
++#!/usr/bin/python3.0
+ """ Utility for parsing HTML entity definitions available from:
+ 
+       http://www.w3.org/ as e.g.
+--- Python-3.0.1/Tools/scripts/fixps.py.wiget	2007-08-03 19:06:41.000000000 +0200
++++ Python-3.0.1/Tools/scripts/fixps.py	2009-02-25 17:23:09.000000000 +0100
+@@ -15,13 +15,13 @@ def main():
+             print(filename, ': can\'t open :', msg)
+             continue
+         line = f.readline()
+-        if not re.match('^#! */usr/local/bin/python', line):
+-            print(filename, ': not a /usr/local/bin/python script')
++        if not re.match('^#! */usr/bin/python3.0', line):
++            print(filename, ': not a /usr/bin/python3.0 script')
+             f.close()
+             continue
+         rest = f.read()
+         f.close()
+-        line = re.sub('/usr/local/bin/python',
++        line = re.sub('/usr/bin/python3.0',
+                       '/usr/bin/env python', line)
+         print(filename, ':', repr(line))
+         f = open(filename, "w")
+--- Python-3.0.1/Mac/README.wiget	2008-07-01 20:23:09.000000000 +0200
++++ Python-3.0.1/Mac/README	2009-02-25 17:23:09.000000000 +0100
+@@ -123,7 +123,7 @@ GUI-things. Keep the "alt" key depressed
+ script to set runtime options. These options can be set once and for all
+ through PythonLauncher's preferences dialog.
+ 
+-The commandline scripts /usr/local/bin/python and pythonw can be used to run
++The commandline scripts /usr/bin/python3.0 and pythonw can be used to run
+ non-GUI and GUI python scripts from the command line, respectively.
+ 
+ How do I create a binary distribution?
+--- Python-3.0.1/Mac/Resources/app/Resources/English.lproj/Documentation/shell.html.wiget	2003-06-19 00:10:27.000000000 +0200
++++ Python-3.0.1/Mac/Resources/app/Resources/English.lproj/Documentation/shell.html	2009-02-25 17:23:09.000000000 +0100
+@@ -17,7 +17,7 @@
+ 			</td>
+ 			<td>
+ 				<p>MacPython 2.3 installs a perfectly normal Unix commandline
+-				python interpreter in <tt>/usr/local/bin/python</tt>. As of Mac OS X 10.2, however,
++				python interpreter in <tt>/usr/bin/python3.0</tt>. As of Mac OS X 10.2, however,
+ 				<tt>/usr/local/bin</tt> is not on the search path of your shell. Moreover,
+ 				Apple's python 2.2, which lives in <tt>/usr/bin</tt> <em>is</em> on your
+ 				search path, so this can lead to confusion.</p>
+--- Python-3.0.1/Mac/BuildScript/build-installer.py.wiget	2009-02-12 17:09:09.000000000 +0100
++++ Python-3.0.1/Mac/BuildScript/build-installer.py	2009-02-25 17:23:09.000000000 +0100
 @@ -1,11 +1,11 @@
 -#!/usr/bin/python2.3
 +#!/usr/bin/python3.02.3
@@ -256,9 +214,16 @@ diff -urN Python-3.0a1.org/Mac/BuildScript/build-installer.py Python-3.0a1/Mac/B
  
  Usage: see USAGE variable in the script.
  """
-diff -urN Python-3.0a1.org/Mac/PythonLauncher/factorySettings.plist Python-3.0a1/Mac/PythonLauncher/factorySettings.plist
---- Python-3.0a1.org/Mac/PythonLauncher/factorySettings.plist	2006-10-25 00:26:37.000000000 +0200
-+++ Python-3.0a1/Mac/PythonLauncher/factorySettings.plist	2007-09-02 20:58:24.526004887 +0200
+--- Python-3.0.1/Mac/Tools/fixapplepython23.py.wiget	2008-12-30 21:19:21.000000000 +0100
++++ Python-3.0.1/Mac/Tools/fixapplepython23.py	2009-02-25 17:23:09.000000000 +0100
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python3.0
+ """fixapplepython23 - Fix Apple-installed Python 2.3 (on Mac OS X 10.3)
+ 
+ Python 2.3 (and 2.3.X for X<5) have the problem that building an extension
+--- Python-3.0.1/Mac/PythonLauncher/factorySettings.plist.wiget	2004-07-16 14:34:23.000000000 +0200
++++ Python-3.0.1/Mac/PythonLauncher/factorySettings.plist	2009-02-25 17:23:09.000000000 +0100
 @@ -10,8 +10,8 @@
                  <false/>
                  <key>interpreter_list</key>
@@ -300,52 +265,108 @@ diff -urN Python-3.0a1.org/Mac/PythonLauncher/factorySettings.plist Python-3.0a1
                      <string>/sw/bin/pythonw</string>
                      <string>/sw/bin/python</string>
                  </array>
-diff -urN Python-3.0a1.org/Mac/README Python-3.0a1/Mac/README
---- Python-3.0a1.org/Mac/README	2006-12-13 15:07:43.000000000 +0100
-+++ Python-3.0a1/Mac/README	2007-09-02 20:58:24.530005117 +0200
-@@ -128,7 +128,7 @@
- to be supplied later. Some useful (but outdated) info can be found in
- Mac/Demo.
+--- Python-3.0.1/Doc/install/index.rst.wiget	2009-01-04 01:09:41.000000000 +0100
++++ Python-3.0.1/Doc/install/index.rst	2009-02-25 17:23:09.000000000 +0100
+@@ -362,16 +362,16 @@ However, if you are installing Python mo
+ them to go in :file:`/usr/local/lib/python2.{X}` rather than
+ :file:`/usr/lib/python2.{X}`.  This can be done with ::
  
--The commandline scripts /usr/local/bin/python and pythonw can be used to run
-+The commandline scripts /usr/bin/python3.0 and pythonw can be used to run
- non-GUI and GUI python scripts from the command line, respectively.
+-   /usr/bin/python setup.py install --prefix=/usr/local
++   /usr/bin/python3.0 setup.py install --prefix=/usr/local
  
- How do I create a binary distribution?
-diff -urN Python-3.0a1.org/Mac/Resources/app/Resources/English.lproj/Documentation/shell.html Python-3.0a1/Mac/Resources/app/Resources/English.lproj/Documentation/shell.html
---- Python-3.0a1.org/Mac/Resources/app/Resources/English.lproj/Documentation/shell.html	2006-10-25 00:26:42.000000000 +0200
-+++ Python-3.0a1/Mac/Resources/app/Resources/English.lproj/Documentation/shell.html	2007-09-02 20:58:24.530005117 +0200
-@@ -17,7 +17,7 @@
- 			</td>
- 			<td>
- 				<p>MacPython 2.3 installs a perfectly normal Unix commandline
--				python interpreter in <tt>/usr/local/bin/python</tt>. As of Mac OS X 10.2, however,
-+				python interpreter in <tt>/usr/bin/python3.0</tt>. As of Mac OS X 10.2, however,
- 				<tt>/usr/local/bin</tt> is not on the search path of your shell. Moreover,
- 				Apple's python 2.2, which lives in <tt>/usr/bin</tt> <em>is</em> on your
- 				search path, so this can lead to confusion.</p>
-diff -urN Python-3.0a1.org/Mac/scripts/zappycfiles.py Python-3.0a1/Mac/scripts/zappycfiles.py
---- Python-3.0a1.org/Mac/scripts/zappycfiles.py	2007-08-31 01:06:18.000000000 +0200
-+++ Python-3.0a1/Mac/scripts/zappycfiles.py	2007-09-02 20:58:24.534005347 +0200
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/python
-+#!/usr/bin/python3.0
- """Recursively zap all .pyc and .pyo files"""
- import os
- import sys
-diff -urN Python-3.0a1.org/Mac/Tools/fixapplepython23.py Python-3.0a1/Mac/Tools/fixapplepython23.py
---- Python-3.0a1.org/Mac/Tools/fixapplepython23.py	2007-08-31 01:06:18.000000000 +0200
-+++ Python-3.0a1/Mac/Tools/fixapplepython23.py	2007-09-02 20:58:24.534005347 +0200
-@@ -1,4 +1,4 @@
--#!/usr/bin/python
-+#!/usr/bin/python3.0
- """fixapplepython23 - Fix Apple-installed Python 2.3 (on Mac OS X 10.3)
+ Another possibility is a network filesystem where the name used to write to a
+ remote directory is different from the name used to read it: for example, the
+-Python interpreter accessed as :file:`/usr/local/bin/python` might search for
++Python interpreter accessed as :file:`/usr/bin/python3.0` might search for
+ modules in :file:`/usr/local/lib/python2.{X}`, but those modules would have to
+ be installed to, say, :file:`/mnt/{@server}/export/lib/python2.{X}`.  This could
+ be done with ::
  
- Python 2.3 (and 2.3.X for X<5) have the problem that building an extension
-diff -urN Python-3.0a1.org/Misc/HISTORY Python-3.0a1/Misc/HISTORY
---- Python-3.0a1.org/Misc/HISTORY	2007-08-16 18:30:26.000000000 +0200
-+++ Python-3.0a1/Misc/HISTORY	2007-09-02 20:58:24.594008798 +0200
-@@ -11092,9 +11092,9 @@
+-   /usr/local/bin/python setup.py install --prefix=/mnt/@server/export
++   /usr/bin/python3.0 setup.py install --prefix=/mnt/@server/export
+ 
+ In either case, the :option:`--prefix` option defines the installation base, and
+ the :option:`--exec-prefix` option defines the platform-specific installation
+--- Python-3.0.1/Doc/README.txt.wiget	2009-02-13 00:46:00.000000000 +0100
++++ Python-3.0.1/Doc/README.txt	2009-02-25 17:23:09.000000000 +0100
+@@ -37,7 +37,7 @@ the top-level index `build/html/index.ht
+ To use a Python interpreter that's not called ``python``, use the standard
+ way to set Makefile variables, using e.g. ::
+ 
+-   make html PYTHON=/usr/bin/python2.5
++   make html PYTHON=/usr/bin/python3.02.5
+ 
+ Available make targets are:
+ 
+--- Python-3.0.1/Doc/tutorial/interpreter.rst.wiget	2009-01-04 01:04:26.000000000 +0100
++++ Python-3.0.1/Doc/tutorial/interpreter.rst	2009-02-25 17:28:11.000000000 +0100
+@@ -10,8 +10,8 @@ Using the Python Interpreter
+ Invoking the Interpreter
+ ========================
+ 
+-The Python interpreter is usually installed as :file:`/usr/local/bin/python3.0`
+-on those machines where it is available; putting :file:`/usr/local/bin` in your
++The Python interpreter is usually installed as :file:`/usr/bin/python3.0`
++on those machines where it is available; putting :file:`/usr/bin` in your
+ Unix shell's search path makes it possible to start it by typing the command ::
+ 
+    python3.0
+--- Python-3.0.1/Doc/c-api/init.rst.wiget	2009-02-06 03:50:18.000000000 +0100
++++ Python-3.0.1/Doc/c-api/init.rst	2009-02-25 17:23:09.000000000 +0100
+@@ -194,7 +194,7 @@ Initialization, Finalization, and Thread
+    Return the *prefix* for installed platform-independent files. This is derived
+    through a number of complicated rules from the program name set with
+    :cfunc:`Py_SetProgramName` and some environment variables; for example, if the
+-   program name is ``'/usr/local/bin/python'``, the prefix is ``'/usr/local'``. The
++   program name is ``'/usr/bin/python3.0'``, the prefix is ``'/usr/local'``. The
+    returned string points into static storage; the caller should not modify its
+    value.  This corresponds to the :makevar:`prefix` variable in the top-level
+    :file:`Makefile` and the :option:`--prefix` argument to the :program:`configure`
+@@ -207,7 +207,7 @@ Initialization, Finalization, and Thread
+    Return the *exec-prefix* for installed platform-*dependent* files.  This is
+    derived through a number of complicated rules from the program name set with
+    :cfunc:`Py_SetProgramName` and some environment variables; for example, if the
+-   program name is ``'/usr/local/bin/python'``, the exec-prefix is
++   program name is ``'/usr/bin/python3.0'``, the exec-prefix is
+    ``'/usr/local'``.  The returned string points into static storage; the caller
+    should not modify its value.  This corresponds to the :makevar:`exec_prefix`
+    variable in the top-level :file:`Makefile` and the :option:`--exec-prefix`
+--- Python-3.0.1/Doc/c-api/intro.rst.wiget	2009-01-17 19:00:58.000000000 +0100
++++ Python-3.0.1/Doc/c-api/intro.rst	2009-02-25 17:23:09.000000000 +0100
+@@ -536,7 +536,7 @@ where the executable named :file:`python
+ path (the environment variable :envvar:`PATH`).
+ 
+ For instance, if the Python executable is found in
+-:file:`/usr/local/bin/python`, it will assume that the libraries are in
++:file:`/usr/bin/python3.0`, it will assume that the libraries are in
+ :file:`/usr/local/lib/python{X.Y}`.  (In fact, this particular path is also
+ the "fallback" location, used when no executable file named :file:`python` is
+ found along :envvar:`PATH`.)  The user can override this behavior by setting the
+--- Python-3.0.1/Doc/library/cgi.rst.wiget	2008-09-04 00:49:01.000000000 +0200
++++ Python-3.0.1/Doc/library/cgi.rst	2009-02-25 17:23:09.000000000 +0100
+@@ -360,7 +360,7 @@ mode should be ``0o755`` octal (use ``ch
+ first line of the script contains ``#!`` starting in column 1 followed by the
+ pathname of the Python interpreter, for instance::
+ 
+-   #!/usr/local/bin/python
++   #!/usr/bin/python3.0
+ 
+ Make sure the Python interpreter exists and is executable by "others".
+ 
+--- Python-3.0.1/PC/os2vacpp/readme.txt.wiget	2006-03-01 07:28:58.000000000 +0100
++++ Python-3.0.1/PC/os2vacpp/readme.txt	2009-02-25 17:23:09.000000000 +0100
+@@ -78,7 +78,7 @@ A few new attributes have been added to 
+ -- Using Python as the Default OS/2 Batch Language
+ 
+ Note that OS/2 supports the Unix technique of putting the special
+-comment line at the time of scripts e.g. "#!/usr/bin/python" in
++comment line at the time of scripts e.g. "#!/usr/bin/python3.0" in
+ a different syntactic form.  To do this, put your script into a file
+ with a .CMD extension and added 'extproc' to the top as follows:
+ 
+--- Python-3.0.1/Misc/HISTORY.wiget	2008-02-22 17:37:40.000000000 +0100
++++ Python-3.0.1/Misc/HISTORY	2009-02-25 17:23:09.000000000 +0100
+@@ -13231,9 +13231,9 @@ but not in sys.argv[0], so you can still
  were invoked.
  
  - It is now recommended to use ``#!/usr/bin/env python'' instead of
@@ -357,7 +378,7 @@ diff -urN Python-3.0a1.org/Misc/HISTORY Python-3.0a1/Misc/HISTORY
  never have to be edited when the Python interpreter lives in a
  non-standard place.  Note that this doesn't work for CGI scripts since
  the python executable often doesn't live in the HTTP server's default
-@@ -14379,7 +14379,7 @@
+@@ -16518,7 +16518,7 @@ assign a function object to sys.exitfunc
  Python exits or receives a SIGTERM or SIGHUP signal.
  
  The interpreter is now generally assumed to live in
@@ -366,150 +387,3 @@ diff -urN Python-3.0a1.org/Misc/HISTORY Python-3.0a1/Misc/HISTORY
  demo/scripts/fixps.py will update old scripts in place (you can easily
  modify it to do other similar changes).
  
-diff -urN Python-3.0a1.org/Misc/RPM/python-2.6.spec Python-3.0a1/Misc/RPM/python-2.6.spec
---- Python-3.0a1.org/Misc/RPM/python-2.6.spec	2006-10-25 00:26:34.000000000 +0200
-+++ Python-3.0a1/Misc/RPM/python-2.6.spec	2007-09-02 20:58:24.598009028 +0200
-@@ -150,10 +150,10 @@
- 
- * Sat Mar 27 2004 Sean Reifschneider <jafo-rpms@tummy.com> [2.3.2-3pydotorg]
- - Being more agressive about finding the paths to fix for
--  #!/usr/local/bin/python.
-+  #!/usr/bin/python3.0.
- 
- * Sat Feb 07 2004 Sean Reifschneider <jafo-rpms@tummy.com> [2.3.3-2pydotorg]
--- Adding code to remove "#!/usr/local/bin/python" from particular files and
-+- Adding code to remove "#!/usr/bin/python3.0" from particular files and
-   causing the RPM build to terminate if there are any unexpected files
-   which have that line in them.
- 
-@@ -296,7 +296,7 @@
- 
- #  fix the #! line in installed files
- find "$RPM_BUILD_ROOT" -type f -print0 |
--      xargs -0 grep -l /usr/local/bin/python | while read file
-+      xargs -0 grep -l /usr/bin/python3.0 | while read file
- do
-    FIXFILE="$file"
-    sed 's|^#!.*python|#!%{__prefix}/bin/env python'"%{binsuffix}"'|' \
-@@ -306,7 +306,7 @@
- done
- 
- #  check to see if there are any straggling #! lines
--find "$RPM_BUILD_ROOT" -type f | xargs egrep -n '^#! */usr/local/bin/python' \
-+find "$RPM_BUILD_ROOT" -type f | xargs egrep -n '^#! */usr/bin/python3.0' \
-       | grep ':1:#!' >/tmp/python-rpm-files.$$ || true
- if [ -s /tmp/python-rpm-files.$$ ]
- then
-@@ -314,7 +314,7 @@
-    cat /tmp/python-rpm-files.$$
-    cat <<@EOF
-    *****************************************************
--     There are still files referencing /usr/local/bin/python in the
-+     There are still files referencing /usr/bin/python3.0 in the
-      install directory.  They are listed above.  Please fix the .spec
-      file and try again.  If you are an end-user, you probably want
-      to report this to jafo-rpms@tummy.com as well.
-diff -urN Python-3.0a1.org/Modules/getpath.c Python-3.0a1/Modules/getpath.c
---- Python-3.0a1.org/Modules/getpath.c	2007-05-03 01:01:29.000000000 +0200
-+++ Python-3.0a1/Modules/getpath.c	2007-09-02 20:58:24.614009948 +0200
-@@ -405,7 +405,7 @@
-       * "#!/opt/python2.3/bin/python", the kernel only passes "python"
-       * as argv[0], which falls through to the $PATH search below.
-       * If /opt/python2.3/bin isn't in your path, or is near the end,
--      * this algorithm may incorrectly find /usr/bin/python. To work
-+      * this algorithm may incorrectly find /usr/bin/python3.0. To work
-       * around this, we can use _NSGetExecutablePath to get a better
-       * hint of what the intended interpreter was, although this
-       * will fail if a relative path was used. but in that case,
-diff -urN Python-3.0a1.org/PC/os2vacpp/readme.txt Python-3.0a1/PC/os2vacpp/readme.txt
---- Python-3.0a1.org/PC/os2vacpp/readme.txt	2006-10-25 00:26:50.000000000 +0200
-+++ Python-3.0a1/PC/os2vacpp/readme.txt	2007-09-02 20:58:24.618010178 +0200
-@@ -78,7 +78,7 @@
- -- Using Python as the Default OS/2 Batch Language
- 
- Note that OS/2 supports the Unix technique of putting the special
--comment line at the time of scripts e.g. "#!/usr/bin/python" in
-+comment line at the time of scripts e.g. "#!/usr/bin/python3.0" in
- a different syntactic form.  To do this, put your script into a file
- with a .CMD extension and added 'extproc' to the top as follows:
- 
-diff -urN Python-3.0a1.org/Tools/faqwiz/faqw.py Python-3.0a1/Tools/faqwiz/faqw.py
---- Python-3.0a1.org/Tools/faqwiz/faqw.py	2007-08-03 22:42:22.000000000 +0200
-+++ Python-3.0a1/Tools/faqwiz/faqw.py	2007-09-02 20:58:24.618010178 +0200
-@@ -1,4 +1,4 @@
--#! /usr/local/bin/python
-+#! /usr/bin/python3.0
- 
- """FAQ wizard bootstrap."""
- 
-@@ -10,7 +10,7 @@
- # executable.
- 
- # You need to edit the first line and the lines that define FAQDIR and
--# SRCDIR, below: change /usr/local/bin/python to where your Python
-+# SRCDIR, below: change /usr/bin/python3.0 to where your Python
- # interpreter lives, change the value for FAQDIR to where your FAQ
- # lives, and change the value for SRCDIR to where your faqwiz.py
- # module lives.  The faqconf.py and faqcust.py files live there, too.
-diff -urN Python-3.0a1.org/Tools/pybench/pybench.py Python-3.0a1/Tools/pybench/pybench.py
---- Python-3.0a1.org/Tools/pybench/pybench.py	2007-08-03 22:42:22.000000000 +0200
-+++ Python-3.0a1/Tools/pybench/pybench.py	2007-09-02 20:58:24.622010408 +0200
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/python -O
-+#!/usr/bin/python3.0 -O
- 
- """ A Python Benchmark Suite
- 
-diff -urN Python-3.0a1.org/Tools/pybench/README Python-3.0a1/Tools/pybench/README
---- Python-3.0a1.org/Tools/pybench/README	2006-10-25 00:26:47.000000000 +0200
-+++ Python-3.0a1/Tools/pybench/README	2007-09-02 20:58:24.626010638 +0200
-@@ -141,7 +141,7 @@
-        Processor:    x86_64
- 
-     Python:
--       Executable:   /usr/local/bin/python
-+       Executable:   /usr/bin/python3.0
-        Version:      2.4.2
-        Compiler:     GCC 3.3.4 (pre 3.3.5 20040809)
-        Bits:         64bit
-diff -urN Python-3.0a1.org/Tools/scripts/fixps.py Python-3.0a1/Tools/scripts/fixps.py
---- Python-3.0a1.org/Tools/scripts/fixps.py	2007-08-03 22:42:22.000000000 +0200
-+++ Python-3.0a1/Tools/scripts/fixps.py	2007-09-02 20:58:24.626010638 +0200
-@@ -15,13 +15,13 @@
-             print(filename, ': can\'t open :', msg)
-             continue
-         line = f.readline()
--        if not re.match('^#! */usr/local/bin/python', line):
--            print(filename, ': not a /usr/local/bin/python script')
-+        if not re.match('^#! */usr/bin/python3.0', line):
-+            print(filename, ': not a /usr/bin/python3.0 script')
-             f.close()
-             continue
-         rest = f.read()
-         f.close()
--        line = re.sub('/usr/local/bin/python',
-+        line = re.sub('/usr/bin/python3.0',
-                       '/usr/bin/env python', line)
-         print(filename, ':', repr(line))
-         f = open(filename, "w")
-diff -urN Python-3.0a1.org/Tools/scripts/parseentities.py Python-3.0a1/Tools/scripts/parseentities.py
---- Python-3.0a1.org/Tools/scripts/parseentities.py	2006-10-25 00:26:46.000000000 +0200
-+++ Python-3.0a1/Tools/scripts/parseentities.py	2007-09-02 20:58:24.630010868 +0200
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/python
-+#!/usr/bin/python3.0
- """ Utility for parsing HTML entity definitions available from:
- 
-       http://www.w3.org/ as e.g.
-diff -urN Python-3.0a1.org/Tools/scripts/README Python-3.0a1/Tools/scripts/README
---- Python-3.0a1.org/Tools/scripts/README	2006-10-25 00:26:46.000000000 +0200
-+++ Python-3.0a1/Tools/scripts/README	2007-09-02 20:58:24.630010868 +0200
-@@ -45,7 +45,7 @@
- nm2def.py		Create a template for PC/python_nt.def (Marc Lemburg)
- objgraph.py		Print object graph from nm output on a library
- parseentities.py	Utility for parsing HTML entity definitions
--pathfix.py		Change #!/usr/local/bin/python into something else
-+pathfix.py		Change #!/usr/bin/python3.0 into something else
- pdeps.py		Print dependencies between Python modules
- pickle2db.py		Load a pickle generated by db2pickle.py to a database
- pindent.py		Indent Python code, giving block-closing comments
