@@ -4,7 +4,6 @@
 %bcond_without	tkinter			# disables tkinter module building
 %bcond_without	tests			# disables Python testing
 %bcond_with	verbose_tests		# runs tests in verbose mode
-%bcond_with	openssl097
 #
 # tests which will not work on 64-bit platforms
 %define		no64bit_tests	test_audioop test_rgbimg test_imageop
@@ -32,7 +31,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python30
 Version:	%{py_ver}.1
-Release:	0.1
+Release:	0.2
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -43,8 +42,6 @@ Patch2:		%{name}-no_ndbm.patch
 Patch3:		%{name}-ac_fixes.patch
 Patch4:		%{name}-lib64.patch
 Patch5:		%{name}-noarch_to_datadir.patch
-Patch6:		%{name}-doc_path.patch
-Patch7:		%{name}-db4.6.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf
 BuildRequires:	bluez-libs-devel
@@ -58,11 +55,7 @@ BuildRequires:	gmp-devel >= 4.0
 BuildRequires:	libffi-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	ncurses-ext-devel >= 5.2
-%if %{with openssl097}
-BuildRequires:	openssl-devel < 0.9.8
-%else
 BuildRequires:	openssl-devel >= 0.9.8
-%endif
 BuildRequires:	readline-devel >= 5.0
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sed >= 4.0
@@ -486,8 +479,6 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-#patch6 -p1
-#patch7 -p1
 
 %build
 sed -i -e 's#-ltermcap#-ltinfo#g' configure*
@@ -592,7 +583,6 @@ install Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 for script in idle pydoc; do
 	mv $RPM_BUILD_ROOT%{_bindir}/${script} $RPM_BUILD_ROOT%{_bindir}/${script}%{py_ver}
 done
-#mv $RPM_BUILD_ROOT%{_mandir}/man1/python.1 $RPM_BUILD_ROOT%{_mandir}/man1/python%{py_ver}.1
 
 # just to cut the noise, as they are not packaged (now)
 # first tests
@@ -630,12 +620,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/python%{py_ver}
 %attr(755,root,root) %{_bindir}/2to3
-#%{_mandir}/man1/*
 
 %files modules
 %defattr(644,root,root,755)
 /etc/shrc.d/python*-modules*
-#exclude %{py_scriptdir}/UserDict.py[co]
 %exclude %{py_scriptdir}/codecs.py[co]
 %exclude %{py_scriptdir}/copyreg.py[co]
 %exclude %{py_scriptdir}/locale.py[co]
@@ -675,7 +663,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/audioop.so
 %attr(755,root,root) %{py_dyndir}/binascii.so
 %attr(755,root,root) %{py_dyndir}/_bisect.so
-#%attr(755,root,root) %{py_dyndir}/_bsddb.so
 %attr(755,root,root) %{py_dyndir}/bz2.so
 %attr(755,root,root) %{py_dyndir}/cmath.so
 %attr(755,root,root) %{py_dyndir}/_codecs_cn.so
@@ -686,7 +673,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_codecs_tw.so
 %attr(755,root,root) %{py_dyndir}/_collections.so
 %attr(755,root,root) %{py_dyndir}/crypt.so
-#%attr(755,root,root) %{py_dyndir}/cStringIO.so
 %attr(755,root,root) %{py_dyndir}/_csv.so
 %attr(755,root,root) %{py_dyndir}/_ctypes*.so
 %attr(755,root,root) %{py_dyndir}/_curses_panel.so
@@ -703,11 +689,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_multiprocessing.so
 %attr(755,root,root) %{py_dyndir}/_pickle.so
 %attr(755,root,root) %{py_dyndir}/_random.so
-%{?with_openssl097:%attr(755,root,root) %{py_dyndir}/_sha*.so}
 %attr(755,root,root) %{py_dyndir}/_socket.so
 %attr(755,root,root) %{py_dyndir}/_ssl.so
 %attr(755,root,root) %{py_dyndir}/_testcapi.so
-#%attr(755,root,root) %{py_dyndir}/_weakref.so
 %ifnarch sparc64
 %attr(755,root,root) %{py_dyndir}/_dbm.so
 %endif
@@ -715,7 +699,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_gdbm.so
 %attr(755,root,root) %{py_dyndir}/grp.so
 %attr(755,root,root) %{py_dyndir}/itertools.so
-#%attr(755,root,root) %{py_dyndir}/linuxaudiodev.so
 %attr(755,root,root) %{py_dyndir}/math.so
 %attr(755,root,root) %{py_dyndir}/mmap.so
 %attr(755,root,root) %{py_dyndir}/nis.so
@@ -726,7 +709,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/readline.so
 %attr(755,root,root) %{py_dyndir}/resource.so
 %attr(755,root,root) %{py_dyndir}/select.so
-#%attr(755,root,root) %{py_dyndir}/strop.so
 %attr(755,root,root) %{py_dyndir}/syslog.so
 %attr(755,root,root) %{py_dyndir}/termios.so
 %attr(755,root,root) %{py_dyndir}/time.so
@@ -736,12 +718,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %dir %{py_scriptdir}/plat-*
 %{py_scriptdir}/plat-*/*.py[co]
-
-#%dir %{py_scriptdir}/bsddb
-#%{py_scriptdir}/bsddb/*.py[co]
-
-#%dir %{py_scriptdir}/compiler
-#%{py_scriptdir}/compiler/*.py[co]
 
 %dir %{py_scriptdir}/ctypes
 %dir %{py_scriptdir}/ctypes/macholib
@@ -836,7 +812,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_struct.so
 
 # modules required by python library
-#%{py_scriptdir}/UserDict.py[co]
 %{py_scriptdir}/codecs.py[co]
 %{py_scriptdir}/copyreg.py[co]
 %{py_scriptdir}/locale.py[co]
@@ -870,7 +845,6 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %doc Misc/{ACKS,NEWS,README,README.valgrind,valgrind-python.supp}
-#%attr(755,root,root) %{_bindir}/python-config
 %attr(755,root,root) %{_bindir}/python%{py_ver}-config
 %attr(755,root,root) %{_libdir}/lib*.so
 %dir %{py_incdir}
@@ -892,10 +866,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(-,root,root) %{py_scriptdir}/*.py
 %{py_scriptdir}/plat-*/*.py
-#%{py_scriptdir}/bsddb/*.py
 %{py_scriptdir}/ctypes/*.py
 %{py_scriptdir}/ctypes/macholib/*.py
-#%{py_scriptdir}/compiler/*.py
 %{py_scriptdir}/curses/*.py
 %{py_scriptdir}/dbm/*.py
 %{py_scriptdir}/distutils/*.py
@@ -931,9 +903,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(755,root,root) %{_bindir}/pygettext%{py_ver}
 
-#%attr(755,root,root) %{py_dyndir}/_hotshot.so
-#%dir %{py_scriptdir}/hotshot
-#%{py_scriptdir}/hotshot/*.py[co]
 %{py_scriptdir}/pdb.py[co]
 %{py_scriptdir}/profile.py[co]
 %{py_scriptdir}/pstats.py[co]
@@ -946,11 +915,6 @@ rm -rf $RPM_BUILD_ROOT
 %files examples
 %defattr(644,root,root,755)
 %{_examplesdir}/%{name}-%{version}
-
-
-#%files doc
-#%defattr(644,root,root,755)
-#%doc Python-Docs-%{version}%{beta}/*
 
 %if %{with info}
 %files doc-info
