@@ -131,3 +131,14 @@
  
  # Detailed destination directories
  BINLIBDEST=	$(LIBDIR)/python$(VERSION)
+--- Python-3.0.1/Lib/distutils/tests/test_install.py.wig	2009-02-25 11:42:38.000000000 +0100
++++ Python-3.0.1/Lib/distutils/tests/test_install.py	2009-02-25 11:51:23.000000000 +0100
+@@ -38,7 +38,7 @@ class InstallTestCase(support.TempdirMan
+             expected = os.path.normpath(expected)
+             self.assertEqual(got, expected)
+ 
+-        libdir = os.path.join(destination, "lib", "python")
++        libdir = os.path.join(destination, "share", "python")
+         platlibdir =  os.path.join(destination, sys.lib, "python")
+         check_path(cmd.install_lib, libdir)
+         check_path(cmd.install_platlib, platlibdir)
