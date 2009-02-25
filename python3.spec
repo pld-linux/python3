@@ -31,7 +31,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python30
 Version:	%{py_ver}.1
-Release:	0.2
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -257,7 +257,6 @@ Summary(tr.UTF-8):	Python ile geliştirme yapmak için gerekli dosyalar
 Summary(uk.UTF-8):	Бібліотеки та хедери для програмування на мові Python
 Group:		Development/Languages/Python
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
-Obsoletes:	python-devel
 
 %description devel
 The Python interpreter is relatively easy to extend with dynamically
@@ -334,6 +333,19 @@ Python development tools such as profilers and debugger.
 %description devel-tools -l pl.UTF-8
 Narzędzia programistyczne języka Python takie jak profiler oraz
 debugger.
+
+%package 2to3
+Summary:	Automated Python 2 to 3 code translation
+Summary(pl.UTF-8):	Automatyczne tłumaczenie kody Pythona 2 do 3
+Group:		Development/Languages/Pythona
+
+%description 2to3
+2to3 is a Python program that reads Python 2.x source code and applies a series
+of fixers to transform it into valid Python 3.x code. The standard library
+contains a rich set of fixers that will handle almost all code. 2to3 supporting
+library lib2to3 is, however, a flexible and generic library, so it is possible
+to write your own fixers for 2to3. lib2to3 could also be adapted to custom
+applications in which Python code needs to be edited automatically.
 
 %package static
 Summary:	Static python library
@@ -474,7 +486,7 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 
 %prep
 %setup -q -n Python-%{version}%{beta}
-#patch1 -p1
+%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -541,7 +553,6 @@ install Makefile.pre.in $RPM_BUILD_ROOT%{py_libdir}/config
 
 mv $RPM_BUILD_ROOT{%{py_libdir}/config,%{_libdir}}/libpython%{py_ver}.a
 ln -sf libpython%{py_ver}.a $RPM_BUILD_ROOT%{_libdir}/libpython.a
-ln -sf libpython%{py_ver}.so.1.0 $RPM_BUILD_ROOT%{_libdir}/libpython.so
 ln -sf libpython%{py_ver}.so.1.0 $RPM_BUILD_ROOT%{_libdir}/libpython%{py_ver}.so
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
@@ -600,6 +611,9 @@ rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/plat-*/regen
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/ctypes/macholib/fetch_macholib*
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/site-packages/README
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/distutils/command/wininst*.exe
+rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/idlelib/*.bat
+rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/idlelib/*.pyw
+rm -rf $RPM_BUILD_ROOT%{_bindir}/smtpd.py
 # already in %%doc
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/pdb.doc
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/LICENSE.txt
@@ -619,7 +633,6 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/python%{py_ver}
-%attr(755,root,root) %{_bindir}/2to3
 
 %files modules
 %defattr(644,root,root,755)
@@ -752,15 +765,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %dir %{py_scriptdir}/json
 %{py_scriptdir}/json/*.py[co]
-
-%dir %{py_scriptdir}/lib2to3
-%{py_scriptdir}/lib2to3/*.txt
-%{py_scriptdir}/lib2to3/*.pickle
-%{py_scriptdir}/lib2to3/*.py[co]
-%dir %{py_scriptdir}/lib2to3/fixes
-%{py_scriptdir}/lib2to3/fixes/*.py[co]
-%dir %{py_scriptdir}/lib2to3/pgen2
-%{py_scriptdir}/lib2to3/pgen2/*.py[co]
 
 %dir %{py_scriptdir}/logging
 %{py_scriptdir}/logging/*.py[co]
@@ -907,6 +911,17 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/profile.py[co]
 %{py_scriptdir}/pstats.py[co]
 %{py_scriptdir}/timeit.py[co]
+
+%files 2to3
+%attr(755,root,root) %{_bindir}/2to3
+%dir %{py_scriptdir}/lib2to3
+%{py_scriptdir}/lib2to3/*.txt
+%{py_scriptdir}/lib2to3/*.pickle
+%{py_scriptdir}/lib2to3/*.py[co]
+%dir %{py_scriptdir}/lib2to3/fixes
+%{py_scriptdir}/lib2to3/fixes/*.py[co]
+%dir %{py_scriptdir}/lib2to3/pgen2
+%{py_scriptdir}/lib2to3/pgen2/*.py[co]
 
 %files static
 %defattr(644,root,root,755)
