@@ -29,7 +29,7 @@ Summary(pt_BR.UTF-8):	Linguagem de programação interpretada de alto nível
 Summary(ru.UTF-8):	Язык программирования очень высокого уровня с X-интерфейсом
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
-Name:		python30
+Name:		python3
 Version:	%{py_ver}.1
 Release:	1
 Epoch:		1
@@ -191,7 +191,7 @@ Group:		Libraries/Python
 Provides:	python(abi) = %{py_ver}
 # for compatibility with existing Ac packages
 Provides:	python(bytecode) = %{py_ver}
-%{!?with_info:Obsoletes:	python30-doc-info}
+%{!?with_info:Obsoletes:	python3-doc-info}
 
 %description libs
 Python shared library and very essental modules for Python binary.
@@ -224,28 +224,28 @@ Python officially distributed sqlite module.
 %description modules-sqlite -l pl.UTF-8
 Oficjalnie rozprowadzany moduł sqlite języka Python.
 
-%package -n pydoc30
+%package -n pydoc3
 Summary:	Python interactive module documentation access support
 Summary(pl.UTF-8):	Interaktywne korzystanie z dokumentacji modułów języka Python
 Group:		Applications
 Requires:	%{name}-modules = %{epoch}:%{version}-%{release}
 
-%description -n pydoc30
+%description -n pydoc3
 Python interactive module documentation access support.
 
-%description -n pydoc30 -l pl.UTF-8
+%description -n pydoc3 -l pl.UTF-8
 Interaktywne korzystanie z dokumentacji modułów języka Python.
 
-%package -n idle30
+%package -n idle3
 Summary:	IDE for Python language
 Summary(pl.UTF-8):	IDE dla języka Python
 Group:		Applications
 Requires:	%{name}-tkinter = %{epoch}:%{version}-%{release}
 
-%description -n idle30
+%description -n idle3
 IDE for Python language.
 
-%description -n idle30 -l pl.UTF-8
+%description -n idle3 -l pl.UTF-8
 IDE dla języka Python.
 
 %package devel
@@ -828,12 +828,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_scriptdir}/encodings
 %{py_scriptdir}/encodings/*.py[co]
 
-%files -n pydoc30
+%files -n pydoc3
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/pydoc%{py_ver}
 %{py_scriptdir}/pydoc.py[co]
 
-%files -n idle30
+%files -n idle3
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/idle%{py_ver}
 %dir %{py_scriptdir}/idlelib
