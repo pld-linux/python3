@@ -11,7 +11,7 @@
 # tests which may fail because of builder environment limitations (no /proc or /dev/pts)
 %define		nobuilder_tests test_resource test_openpty test_socket test_nis test_posix test_locale test_pty
 # tests which fail because of some unknown/unresolved reason (this list should be empty)
-%define		broken_tests test_anydbm test_bsddb test_re test_shelve test_whichdb test_zipimport test_distutils
+%define		broken_tests test_httpservers
 
 %define	beta		%{nil}
 
@@ -41,8 +41,8 @@ Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}%{beta}.ta
 Patch1:		%{name}-pythonpath.patch
 Patch2:		%{name}-no_ndbm.patch
 Patch3:		%{name}-ac_fixes.patch
-Patch4:		%{name}-noarch_to_datadir.patch
-Patch5:		%{name}-lib64.patch
+Patch4:		%{name}-lib64.patch
+Patch5:		%{name}-noarch_to_datadir.patch
 Patch6:		%{name}-doc_path.patch
 Patch7:		%{name}-db4.6.patch
 URL:		http://www.python.org/
@@ -484,8 +484,8 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 #patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch5 -p1
-#patch4 -p1
+%patch4 -p1
+%patch5 -p1 -b .wiget
 #patch6 -p1
 #patch7 -p1
 
@@ -493,6 +493,7 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 sed -i -e 's#-ltermcap#-ltinfo#g' configure*
 %{__autoconf}
 CPPFLAGS="-I/usr/include/ncursesw"; export CPPFLAGS
+#	--with-wctype-functions \
 %configure \
 	--with-cxx-main="%{__cxx}" \
 	--enable-shared \
@@ -502,7 +503,6 @@ CPPFLAGS="-I/usr/include/ncursesw"; export CPPFLAGS
 	--with-tsc \
 	--with-threads \
 	--with-doc-strings \
-	--with-wctype-functions \
 	--with-fpectl \
 	--with-system-ffi \
 	LINKCC='$(PURIFY) $(CXX)' \
@@ -593,7 +593,7 @@ install Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 for script in idle pydoc; do
 	mv $RPM_BUILD_ROOT%{_bindir}/${script} $RPM_BUILD_ROOT%{_bindir}/${script}%{py_ver}
 done
-mv $RPM_BUILD_ROOT%{_mandir}/man1/python.1 $RPM_BUILD_ROOT%{_mandir}/man1/python%{py_ver}.1
+#mv $RPM_BUILD_ROOT%{_mandir}/man1/python.1 $RPM_BUILD_ROOT%{_mandir}/man1/python%{py_ver}.1
 
 # just to cut the noise, as they are not packaged (now)
 # first tests
@@ -603,13 +603,17 @@ rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/ctypes/test
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/distutils/tests
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/email/test
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/sqlite3/test
+rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/json/tests
+rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/lib2to3/tests
 
 # other files
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/plat-*/regen
-find $RPM_BUILD_ROOT%{py_scriptdir} -name \*.egg-info -exec rm {} \;
-find $RPM_BUILD_ROOT%{py_scriptdir} -name \*.bat -exec rm {} \;
-find $RPM_BUILD_ROOT%{py_scriptdir} -name \*.txt -exec rm {} \;
-find $RPM_BUILD_ROOT%{py_scriptdir} -name README\* -exec rm {} \;
+rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/ctypes/macholib/fetch_macholib*
+rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/site-packages/README
+rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/distutils/command/wininst*.exe
+# already in %%doc
+rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/pdb.doc
+rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/LICENSE.txt
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -625,16 +629,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-#%attr(755,root,root) %{_bindir}/python
 %attr(755,root,root) %{_bindir}/python%{py_ver}
-%{_mandir}/man1/*
+%attr(755,root,root) %{_bindir}/2to3
+#%{_mandir}/man1/*
 
 %files modules
 %defattr(644,root,root,755)
 /etc/shrc.d/python*-modules*
-%exclude %{py_scriptdir}/UserDict.py[co]
+#exclude %{py_scriptdir}/UserDict.py[co]
 %exclude %{py_scriptdir}/codecs.py[co]
-%exclude %{py_scriptdir}/copy_reg.py[co]
+%exclude %{py_scriptdir}/copyreg.py[co]
 %exclude %{py_scriptdir}/locale.py[co]
 %exclude %{py_scriptdir}/posixpath.py[co]
 %exclude %{py_scriptdir}/pdb.py[co]
@@ -672,7 +676,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/audioop.so
 %attr(755,root,root) %{py_dyndir}/binascii.so
 %attr(755,root,root) %{py_dyndir}/_bisect.so
-%attr(755,root,root) %{py_dyndir}/_bsddb.so
+#%attr(755,root,root) %{py_dyndir}/_bsddb.so
 %attr(755,root,root) %{py_dyndir}/bz2.so
 %attr(755,root,root) %{py_dyndir}/cmath.so
 %attr(755,root,root) %{py_dyndir}/_codecs_cn.so
@@ -682,7 +686,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_codecs_kr.so
 %attr(755,root,root) %{py_dyndir}/_codecs_tw.so
 %attr(755,root,root) %{py_dyndir}/_collections.so
-#%attr(755,root,root) %{py_dyndir}/cPickle.so
 %attr(755,root,root) %{py_dyndir}/crypt.so
 #%attr(755,root,root) %{py_dyndir}/cStringIO.so
 %attr(755,root,root) %{py_dyndir}/_csv.so
@@ -694,20 +697,23 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_functools.so
 %attr(755,root,root) %{py_dyndir}/_hashlib.so
 %attr(755,root,root) %{py_dyndir}/_heapq.so
+%attr(755,root,root) %{py_dyndir}/_json.so
 %attr(755,root,root) %{py_dyndir}/_locale.so
 %attr(755,root,root) %{py_dyndir}/_lsprof.so
 %attr(755,root,root) %{py_dyndir}/_multibytecodec.so
+%attr(755,root,root) %{py_dyndir}/_multiprocessing.so
+%attr(755,root,root) %{py_dyndir}/_pickle.so
 %attr(755,root,root) %{py_dyndir}/_random.so
 %{?with_openssl097:%attr(755,root,root) %{py_dyndir}/_sha*.so}
 %attr(755,root,root) %{py_dyndir}/_socket.so
 %attr(755,root,root) %{py_dyndir}/_ssl.so
 %attr(755,root,root) %{py_dyndir}/_testcapi.so
-%attr(755,root,root) %{py_dyndir}/_weakref.so
+#%attr(755,root,root) %{py_dyndir}/_weakref.so
 %ifnarch sparc64
-%attr(755,root,root) %{py_dyndir}/dbm.so
+%attr(755,root,root) %{py_dyndir}/_dbm.so
 %endif
 %attr(755,root,root) %{py_dyndir}/fcntl.so
-%attr(755,root,root) %{py_dyndir}/gdbm.so
+%attr(755,root,root) %{py_dyndir}/_gdbm.so
 %attr(755,root,root) %{py_dyndir}/grp.so
 %attr(755,root,root) %{py_dyndir}/itertools.so
 #%attr(755,root,root) %{py_dyndir}/linuxaudiodev.so
@@ -732,8 +738,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_scriptdir}/plat-*
 %{py_scriptdir}/plat-*/*.py[co]
 
-%dir %{py_scriptdir}/bsddb
-%{py_scriptdir}/bsddb/*.py[co]
+#%dir %{py_scriptdir}/bsddb
+#%{py_scriptdir}/bsddb/*.py[co]
 
 #%dir %{py_scriptdir}/compiler
 #%{py_scriptdir}/compiler/*.py[co]
@@ -743,25 +749,58 @@ rm -rf $RPM_BUILD_ROOT
 
 %{py_scriptdir}/ctypes/*.py[co]
 %{py_scriptdir}/ctypes/macholib/*.py[co]
+%doc %{py_scriptdir}/ctypes/macholib/README.ctypes
 
 %dir %{py_scriptdir}/curses
 %{py_scriptdir}/curses/*.py[co]
 
+%dir %{py_scriptdir}/dbm
+%{py_scriptdir}/dbm/*.py[co]
+
 %dir %{py_scriptdir}/distutils
 %dir %{py_scriptdir}/distutils/command
+%doc %{py_scriptdir}/distutils/README
 %{py_scriptdir}/distutils/*.py[co]
 %{py_scriptdir}/distutils/command/*.py[co]
+%{py_scriptdir}/distutils/command/command_template
 
 %dir %{py_scriptdir}/email
 %dir %{py_scriptdir}/email/mime
 %{py_scriptdir}/email/*.py[co]
 %{py_scriptdir}/email/mime/*.py[co]
 
+%dir %{py_scriptdir}/html
+%{py_scriptdir}/html/*.py[co]
+
+%dir %{py_scriptdir}/http
+%{py_scriptdir}/http/*.py[co]
+
+%dir %{py_scriptdir}/json
+%{py_scriptdir}/json/*.py[co]
+
+%dir %{py_scriptdir}/lib2to3
+%{py_scriptdir}/lib2to3/*.txt
+%{py_scriptdir}/lib2to3/*.pickle
+%{py_scriptdir}/lib2to3/*.py[co]
+%dir %{py_scriptdir}/lib2to3/fixes
+%{py_scriptdir}/lib2to3/fixes/*.py[co]
+%dir %{py_scriptdir}/lib2to3/pgen2
+%{py_scriptdir}/lib2to3/pgen2/*.py[co]
+
 %dir %{py_scriptdir}/logging
 %{py_scriptdir}/logging/*.py[co]
 
+%dir %{py_scriptdir}/multiprocessing
+%{py_scriptdir}/multiprocessing/*.py[co]
+%dir %{py_scriptdir}/multiprocessing/dummy
+%{py_scriptdir}/multiprocessing/dummy/*.py[co]
+
+%dir %{py_scriptdir}/urllib
+%{py_scriptdir}/urllib/*.py[co]
+
 %dir %{py_scriptdir}/wsgiref
 %{py_scriptdir}/wsgiref/*.py[co]
+%{py_scriptdir}/wsgiref.egg-info
 
 %dir %{py_scriptdir}/xml
 %dir %{py_scriptdir}/xml/dom
@@ -774,6 +813,9 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/xml/parsers/*.py[co]
 %{py_scriptdir}/xml/sax/*.py[co]
 
+%dir %{py_scriptdir}/xmlrpc
+%{py_scriptdir}/xmlrpc/*.py[co]
+
 %files modules-sqlite
 %defattr(644,root,root,755)
 %attr(755,root,root) %{py_dyndir}/_sqlite3.so
@@ -782,6 +824,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
+%doc LICENSE
 %attr(755,root,root) %{_libdir}/libpython*.so.*
 
 %dir %{py_dyndir}
@@ -794,9 +837,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_struct.so
 
 # modules required by python library
-%{py_scriptdir}/UserDict.py[co]
+#%{py_scriptdir}/UserDict.py[co]
 %{py_scriptdir}/codecs.py[co]
-%{py_scriptdir}/copy_reg.py[co]
+%{py_scriptdir}/copyreg.py[co]
 %{py_scriptdir}/locale.py[co]
 %{py_scriptdir}/posixpath.py[co]
 %{py_scriptdir}/site.py[co]
@@ -820,13 +863,15 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_scriptdir}/idlelib
 %dir %{py_scriptdir}/idlelib/Icons
 %{py_scriptdir}/idlelib/*.py[co]
+%doc %{py_scriptdir}/idlelib/*.txt
+%doc %{py_scriptdir}/idlelib/ChangeLog
 %{py_scriptdir}/idlelib/Icons/*
 %{py_scriptdir}/idlelib/*.def
 
 %files devel
 %defattr(644,root,root,755)
 %doc Misc/{ACKS,NEWS,README,README.valgrind,valgrind-python.supp}
-%attr(755,root,root) %{_bindir}/python-config
+#%attr(755,root,root) %{_bindir}/python-config
 %attr(755,root,root) %{_bindir}/python%{py_ver}-config
 %attr(755,root,root) %{_libdir}/lib*.so
 %dir %{py_incdir}
@@ -848,24 +893,35 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(-,root,root) %{py_scriptdir}/*.py
 %{py_scriptdir}/plat-*/*.py
-%{py_scriptdir}/bsddb/*.py
+#%{py_scriptdir}/bsddb/*.py
 %{py_scriptdir}/ctypes/*.py
 %{py_scriptdir}/ctypes/macholib/*.py
 #%{py_scriptdir}/compiler/*.py
 %{py_scriptdir}/curses/*.py
+%{py_scriptdir}/dbm/*.py
 %{py_scriptdir}/distutils/*.py
 %{py_scriptdir}/distutils/command/*.py
 %{py_scriptdir}/email/*.py
 %{py_scriptdir}/email/mime/*.py
-%{py_scriptdir}/hotshot/*.py
+%{py_scriptdir}/html/*.py
+%{py_scriptdir}/http/*.py
+%{py_scriptdir}/json/*.py
+%{py_scriptdir}/lib2to3/*.py
+%{py_scriptdir}/lib2to3/fixes/*.py
+%{py_scriptdir}/lib2to3/pgen2/*.py
 %{py_scriptdir}/logging/*.py
+%{py_scriptdir}/multiprocessing/*.py
+%{py_scriptdir}/multiprocessing/dummy/*.py
 %{py_scriptdir}/sqlite3/*.py
+%{py_scriptdir}/urllib/*.py
 %{py_scriptdir}/wsgiref/*.py
+%{py_scriptdir}/tkinter/*.py
 %{py_scriptdir}/xml/*.py
 %{py_scriptdir}/xml/dom/*.py
 %{py_scriptdir}/xml/etree/*.py
 %{py_scriptdir}/xml/parsers/*.py
 %{py_scriptdir}/xml/sax/*.py
+%{py_scriptdir}/xmlrpc/*.py
 %{py_scriptdir}/encodings/*.py
 %{py_scriptdir}/idlelib/*.py
 
@@ -876,9 +932,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(755,root,root) %{_bindir}/pygettext%{py_ver}
 
-%attr(755,root,root) %{py_dyndir}/_hotshot.so
-%dir %{py_scriptdir}/hotshot
-%{py_scriptdir}/hotshot/*.py[co]
+#%attr(755,root,root) %{py_dyndir}/_hotshot.so
+#%dir %{py_scriptdir}/hotshot
+#%{py_scriptdir}/hotshot/*.py[co]
 %{py_scriptdir}/pdb.py[co]
 %{py_scriptdir}/profile.py[co]
 %{py_scriptdir}/pstats.py[co]
@@ -906,6 +962,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with tkinter}
 %files tkinter
 %defattr(644,root,root,755)
-%{py_scriptdir}/lib-tk
+%dir %{py_scriptdir}/tkinter
+%{py_scriptdir}/tkinter/*.py[co]
 %attr(755,root,root) %{py_dyndir}/_tkinter.so
 %endif
