@@ -66,6 +66,7 @@ BuildRequires:	sqlite3-devel >= 3.3.5
 BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+%define		specflags_ppc	-D__ppc__=1
 
 %if %{with verbose_tests}
 %define test_flags -v -l -x
