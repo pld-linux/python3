@@ -485,7 +485,7 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1 -b .wiget
+%patch5 -p1
 #patch6 -p1
 #patch7 -p1
 
@@ -493,7 +493,6 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 sed -i -e 's#-ltermcap#-ltinfo#g' configure*
 %{__autoconf}
 CPPFLAGS="-I/usr/include/ncursesw"; export CPPFLAGS
-#	--with-wctype-functions \
 %configure \
 	--with-cxx-main="%{__cxx}" \
 	--enable-shared \
