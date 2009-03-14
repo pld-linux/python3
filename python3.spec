@@ -31,7 +31,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.1
-Release:	1
+Release:	2
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -494,6 +494,7 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+sed -i -e 's=@EXENAME@=%{_bindir}/python3=' Misc/python-config.in
 
 %build
 sed -i -e 's#-ltermcap#-ltinfo#g' configure*
@@ -598,6 +599,8 @@ for script in idle pydoc; do
 	mv $RPM_BUILD_ROOT%{_bindir}/${script} $RPM_BUILD_ROOT%{_bindir}/${script}%{py_ver}
 done
 
+ln -s python%{py_ver} $RPM_BUILD_ROOT%{_bindir}/python3
+
 # just to cut the noise, as they are not packaged (now)
 # first tests
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/test
@@ -636,6 +639,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/python%{py_ver}
+%attr(755,root,root) %{_bindir}/python3
 
 %files modules
 %defattr(644,root,root,755)
