@@ -31,7 +31,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.1
-Release:	2
+Release:	3
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -644,8 +644,13 @@ rm -rf $RPM_BUILD_ROOT
 %files modules
 %defattr(644,root,root,755)
 /etc/shrc.d/python*-modules*
+%exclude %{py_scriptdir}/_abcoll.py[co]
+%exclude %{py_scriptdir}/_weakrefset.py[co]
+%exclude %{py_scriptdir}/abc.py[co]
 %exclude %{py_scriptdir}/codecs.py[co]
 %exclude %{py_scriptdir}/copyreg.py[co]
+%exclude %{py_scriptdir}/genericpath.py[co]
+%exclude %{py_scriptdir}/io.py[co]
 %exclude %{py_scriptdir}/locale.py[co]
 %exclude %{py_scriptdir}/posixpath.py[co]
 %exclude %{py_scriptdir}/pdb.py[co]
@@ -818,9 +823,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_struct.so
 
 # modules required by python library
+%{py_scriptdir}/_abcoll.py[co]
+%{py_scriptdir}/_weakrefset.py[co]
+%{py_scriptdir}/abc.py[co]
 %{py_scriptdir}/codecs.py[co]
 %{py_scriptdir}/copyreg.py[co]
+%{py_scriptdir}/genericpath.py[co]
 %{py_scriptdir}/locale.py[co]
+%{py_scriptdir}/io.py[co]
 %{py_scriptdir}/posixpath.py[co]
 %{py_scriptdir}/site.py[co]
 %{py_scriptdir}/stat.py[co]
