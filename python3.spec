@@ -1,3 +1,7 @@
+#
+# TODO:
+# - fix tests
+# - check unpackaged files
 
 # Conditional build:
 %bcond_with	info			# info pages (requires emacs)
@@ -14,7 +18,7 @@
 
 %define	beta		%{nil}
 
-%define py_ver		3.0
+%define py_ver		3.1
 %define py_prefix	%{_prefix}
 %define py_libdir	%{py_prefix}/%{_lib}/python%{py_ver}
 %define py_incdir	%{_includedir}/python%{py_ver}
@@ -30,18 +34,19 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.1
-Release:	3
+Version:	%{py_ver}
+Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Applications
 Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}%{beta}.tar.bz2
-# Source0-md5:	7291eac6a9a7a3642e309c78b8d744e5
+# Source0-md5:	f64437a24d39f1917aa1878cc70621f6
 Patch1:		%{name}-pythonpath.patch
 Patch2:		%{name}-no_ndbm.patch
 Patch3:		%{name}-ac_fixes.patch
 Patch4:		%{name}-lib64.patch
 Patch5:		%{name}-noarch_to_datadir.patch
+Patch6:		%{name}-cast-fix.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf
 BuildRequires:	bluez-libs-devel
@@ -490,10 +495,11 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %prep
 %setup -q -n Python-%{version}%{beta}
 %patch1 -p1
-%patch2 -p1
+#%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 sed -i -e 's=@EXENAME@=%{_bindir}/python3=' Misc/python-config.in
 
 %build
@@ -504,6 +510,7 @@ CPPFLAGS="-I/usr/include/ncursesw"; export CPPFLAGS
 	--with-cxx-main="%{__cxx}" \
 	--enable-shared \
 	--enable-ipv6 \
+	--with-dbmliborder=gdbm:bdb \
 	--with-wide-unicode \
 	--with-signal-module \
 	--with-tsc \
@@ -594,13 +601,6 @@ sed 's/=/ /' \
 # pygettext.py is provided for compatibility
 install Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 
-# add py_ver
-for script in idle pydoc; do
-	mv $RPM_BUILD_ROOT%{_bindir}/${script} $RPM_BUILD_ROOT%{_bindir}/${script}%{py_ver}
-done
-
-ln -s python%{py_ver} $RPM_BUILD_ROOT%{_bindir}/python3
-
 # just to cut the noise, as they are not packaged (now)
 # first tests
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/test
@@ -640,6 +640,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/python%{py_ver}
 %attr(755,root,root) %{_bindir}/python3
+%{_mandir}/man1/python*.1*
 
 %files modules
 %defattr(644,root,root,755)
@@ -699,11 +700,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_curses.so
 %attr(755,root,root) %{py_dyndir}/datetime.so
 %attr(755,root,root) %{py_dyndir}/_elementtree.so
-%attr(755,root,root) %{py_dyndir}/_functools.so
+#%attr(755,root,root) %{py_dyndir}/_functools.so
 %attr(755,root,root) %{py_dyndir}/_hashlib.so
 %attr(755,root,root) %{py_dyndir}/_heapq.so
 %attr(755,root,root) %{py_dyndir}/_json.so
-%attr(755,root,root) %{py_dyndir}/_locale.so
+#%attr(755,root,root) %{py_dyndir}/_locale.so
 %attr(755,root,root) %{py_dyndir}/_lsprof.so
 %attr(755,root,root) %{py_dyndir}/_multibytecodec.so
 %attr(755,root,root) %{py_dyndir}/_multiprocessing.so
@@ -844,12 +845,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n pydoc3
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/pydoc%{py_ver}
+%attr(755,root,root) %{_bindir}/pydoc3
 %{py_scriptdir}/pydoc.py[co]
 
 %files -n idle3
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/idle%{py_ver}
+%attr(755,root,root) %{_bindir}/idle3
 %dir %{py_scriptdir}/idlelib
 %dir %{py_scriptdir}/idlelib/Icons
 %{py_scriptdir}/idlelib/*.py[co]
@@ -861,7 +862,7 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %doc Misc/{ACKS,NEWS,README,README.valgrind,valgrind-python.supp}
-%attr(755,root,root) %{_bindir}/python%{py_ver}-config
+%attr(755,root,root) %{_bindir}/python*-config
 %attr(755,root,root) %{_libdir}/lib*.so
 %dir %{py_incdir}
 %{py_incdir}/*.h
