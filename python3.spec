@@ -41,11 +41,11 @@ License:	PSF
 Group:		Applications
 Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}%{beta}.tar.bz2
 # Source0-md5:	f64437a24d39f1917aa1878cc70621f6
-Patch1:		%{name}-pythonpath.patch
-Patch3:		%{name}-ac_fixes.patch
-Patch4:		%{name}-lib64.patch
-Patch5:		%{name}-noarch_to_datadir.patch
-Patch6:		%{name}-cast-fix.patch
+Patch0:		%{name}-pythonpath.patch
+Patch1:		%{name}-ac_fixes.patch
+Patch2:		%{name}-lib64.patch
+Patch3:		%{name}-noarch_to_datadir.patch
+Patch4:		%{name}-cast-fix.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf
 BuildRequires:	bluez-libs-devel
@@ -493,11 +493,11 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 
 %prep
 %setup -q -n Python-%{version}%{beta}
+%patch0 -p1
 %patch1 -p1
+%patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
-%patch6 -p1
 sed -i -e 's=@EXENAME@=%{_bindir}/python3=' Misc/python-config.in
 
 %build
