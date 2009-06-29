@@ -42,7 +42,6 @@ Group:		Applications
 Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}%{beta}.tar.bz2
 # Source0-md5:	f64437a24d39f1917aa1878cc70621f6
 Patch1:		%{name}-pythonpath.patch
-Patch2:		%{name}-no_ndbm.patch
 Patch3:		%{name}-ac_fixes.patch
 Patch4:		%{name}-lib64.patch
 Patch5:		%{name}-noarch_to_datadir.patch
@@ -495,7 +494,6 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %prep
 %setup -q -n Python-%{version}%{beta}
 %patch1 -p1
-#%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
