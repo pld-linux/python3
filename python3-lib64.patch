@@ -104,14 +104,6 @@ diff -Nur Python-2.5b2.orig/Lib/distutils/sysconfig.py Python-2.5b2/Lib/distutil
 diff -Nur Python-2.5b2.orig/Lib/distutils/tests/test_install.py Python-2.5b2/Lib/distutils/tests/test_install.py
 --- Python-2.5b2.orig/Lib/distutils/tests/test_install.py	2004-06-26 00:02:59.000000000 +0100
 +++ Python-2.5b2/Lib/distutils/tests/test_install.py	2006-07-12 17:42:51.000000000 +0100
-@@ -1,6 +1,6 @@
- """Tests for distutils.command.install."""
- 
--import os
-+import os,sys
- import unittest
- 
- from distutils.command.install import install
 @@ -39,8 +39,9 @@
              self.assertEqual(got, expected)
  

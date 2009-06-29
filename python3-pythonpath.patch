@@ -215,12 +215,12 @@
  Invoking the Interpreter
  ========================
  
--The Python interpreter is usually installed as :file:`/usr/local/bin/python3.0`
+-The Python interpreter is usually installed as :file:`/usr/local/bin/python3.1`
 +The Python interpreter is usually installed as :file:`/usr/local/bin/python3`
  on those machines where it is available; putting :file:`/usr/local/bin` in your
  Unix shell's search path makes it possible to start it by typing the command ::
  
--   python3.0
+-   python3.1
 +   python3
  
  to the shell. [#]_ Since the choice of the directory where the interpreter lives
