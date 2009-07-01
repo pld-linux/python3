@@ -508,6 +508,7 @@ CPPFLAGS="-I/usr/include/ncursesw"; export CPPFLAGS
 	--with-cxx-main="%{__cxx}" \
 	--enable-shared \
 	--enable-ipv6 \
+	--with-computed-gotos \
 	--with-dbmliborder=gdbm:bdb \
 	--with-wide-unicode \
 	--with-signal-module \
