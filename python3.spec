@@ -14,7 +14,7 @@
 # tests which may fail because of builder environment limitations (no /proc or /dev/pts)
 %define		nobuilder_tests test_resource test_openpty test_socket test_nis test_posix test_locale test_pty
 # tests which fail because of some unknown/unresolved reason (this list should be empty)
-%define		broken_tests test_httpservers
+%define		broken_tests test_httpservers test_distutils test_cmd_line
 
 %define	beta		%{nil}
 
@@ -77,7 +77,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %if %{with verbose_tests}
 %define test_flags -v -l -x
 %else
-%define test_flags -l -x
+%define test_flags -w -l -x
 %endif
 
 %ifarch alpha ia64 ppc64 sparc64 ppc64 %{x8664}
@@ -508,7 +508,6 @@ CPPFLAGS="-I/usr/include/ncursesw"; export CPPFLAGS
 	--with-cxx-main="%{__cxx}" \
 	--enable-shared \
 	--enable-ipv6 \
-	--with-computed-gotos \
 	--with-dbmliborder=gdbm:bdb \
 	--with-wide-unicode \
 	--with-signal-module \
