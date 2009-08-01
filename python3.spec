@@ -35,7 +35,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}
-Release:	1
+Release:	2
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -209,24 +209,13 @@ Summary:	Python modules
 Summary(pl.UTF-8):	Moduły języka Python
 Group:		Libraries/Python
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Obsoletes:	python3-modules-sqlite
 
 %description modules
 Python officially distributed modules.
 
 %description modules -l pl.UTF-8
 Oficjalnie rozprowadzane moduły języka Python.
-
-%package modules-sqlite
-Summary:	Python SQLite modules
-Summary(pl.UTF-8):	Moduły SQLite języka Python
-Group:		Libraries/Python
-Requires:	%{name}-modules = %{epoch}:%{version}-%{release}
-
-%description modules-sqlite
-Python officially distributed sqlite module.
-
-%description modules-sqlite -l pl.UTF-8
-Oficjalnie rozprowadzany moduł sqlite języka Python.
 
 %package -n pydoc3
 Summary:	Python interactive module documentation access support
@@ -609,6 +598,7 @@ rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/email/test
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/sqlite3/test
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/json/tests
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/lib2to3/tests
+rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/importlib/test
 
 # other files
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/plat-*/regen
@@ -769,6 +759,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_scriptdir}/http
 %{py_scriptdir}/http/*.py[co]
 
+%dir %{py_scriptdir}/importlib
+%{py_scriptdir}/importlib/*.py[co]
+
 %dir %{py_scriptdir}/json
 %{py_scriptdir}/json/*.py[co]
 
@@ -801,8 +794,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_scriptdir}/xmlrpc
 %{py_scriptdir}/xmlrpc/*.py[co]
 
-%files modules-sqlite
-%defattr(644,root,root,755)
 %attr(755,root,root) %{py_dyndir}/_sqlite3.so
 %dir %{py_scriptdir}/sqlite3
 %{py_scriptdir}/sqlite3/*.py[co]
@@ -845,6 +836,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/pydoc3
 %{py_scriptdir}/pydoc.py[co]
+%dir %{py_scriptdir}/pydoc_data
+%{py_scriptdir}/pydoc_data/*.py[co]
 
 %files -n idle3
 %defattr(644,root,root,755)
@@ -864,6 +857,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/lib*.so
 %dir %{py_incdir}
 %{py_incdir}/*.h
+%{_pkgconfigdir}/python*.pc
 
 %dir %{py_libdir}/config
 %attr(755,root,root) %{py_libdir}/config/makesetup
@@ -889,8 +883,11 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/distutils/command/*.py
 %{py_scriptdir}/email/*.py
 %{py_scriptdir}/email/mime/*.py
+%{py_scriptdir}/encodings/*.py
 %{py_scriptdir}/html/*.py
 %{py_scriptdir}/http/*.py
+%{py_scriptdir}/idlelib/*.py
+%{py_scriptdir}/importlib/*.py
 %{py_scriptdir}/json/*.py
 %{py_scriptdir}/lib2to3/*.py
 %{py_scriptdir}/lib2to3/fixes/*.py
@@ -898,18 +895,17 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/logging/*.py
 %{py_scriptdir}/multiprocessing/*.py
 %{py_scriptdir}/multiprocessing/dummy/*.py
+%{py_scriptdir}/pydoc_data/*.py
 %{py_scriptdir}/sqlite3/*.py
+%{py_scriptdir}/tkinter/*.py
 %{py_scriptdir}/urllib/*.py
 %{py_scriptdir}/wsgiref/*.py
-%{py_scriptdir}/tkinter/*.py
 %{py_scriptdir}/xml/*.py
 %{py_scriptdir}/xml/dom/*.py
 %{py_scriptdir}/xml/etree/*.py
 %{py_scriptdir}/xml/parsers/*.py
 %{py_scriptdir}/xml/sax/*.py
 %{py_scriptdir}/xmlrpc/*.py
-%{py_scriptdir}/encodings/*.py
-%{py_scriptdir}/idlelib/*.py
 
 %files devel-tools
 %defattr(644,root,root,755)
