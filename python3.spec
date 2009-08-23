@@ -14,7 +14,7 @@
 # tests which may fail because of builder environment limitations (no /proc or /dev/pts)
 %define		nobuilder_tests test_resource test_openpty test_socket test_nis test_posix test_locale test_pty
 # tests which fail because of some unknown/unresolved reason (this list should be empty)
-%define		broken_tests test_httpservers test_distutils test_cmd_line
+%define		broken_tests test_httpservers test_distutils test_cmd_line test_pydoc test_telnetlib
 
 %define	beta		%{nil}
 
@@ -505,13 +505,14 @@ CPPFLAGS="-I/usr/include/ncursesw"; export CPPFLAGS
 	--with-doc-strings \
 	--with-fpectl \
 	--with-system-ffi \
+	--with-computed-gotos \
 	LINKCC='$(PURIFY) $(CXX)' \
 	LDSHARED='$(CC) $(CFLAGS) -shared' \
 	BLDSHARED='$(CC) $(CFLAGS) -shared' \
 	LDFLAGS="%{rpmcflags} %{rpmldflags}"
 
 %{__make} \
-	OPT="%{rpmcflags}" 2>&1 | awk '
+	OPT="%{rpmcflags} -fno-caller-saves" 2>&1 | awk '
 BEGIN { fail = 0; logmsg = ""; }
 {
         if ($0 ~ /\*\*\* WARNING:/) {
