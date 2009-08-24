@@ -492,7 +492,7 @@ sed -i -e 's=@EXENAME@=%{_bindir}/python3=' Misc/python-config.in
 %build
 sed -i -e 's#-ltermcap#-ltinfo#g' configure*
 %{__autoconf}
-CPPFLAGS="-I/usr/include/ncursesw"; export CPPFLAGS
+CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags}"; export CPPFLAGS
 %configure \
 	--with-cxx-main="%{__cxx}" \
 	--enable-shared \
