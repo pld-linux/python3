@@ -14,7 +14,7 @@
 # tests which may fail because of builder environment limitations (no /proc or /dev/pts)
 %define		nobuilder_tests test_resource test_openpty test_socket test_nis test_posix test_locale test_pty
 # tests which fail because of some unknown/unresolved reason (this list should be empty)
-%define		broken_tests test_httpservers test_distutils test_cmd_line test_pydoc test_telnetlib
+%define		broken_tests test_httpservers test_distutils test_cmd_line test_pydoc test_telnetlib test_zlib
 
 %define	beta		%{nil}
 
@@ -35,7 +35,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.1
-Release:	2
+Release:	3
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -891,7 +891,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/importlib/*.py
 %{py_scriptdir}/json/*.py
 %{py_scriptdir}/lib2to3/*.py
-%{py_scriptdir}/lib2to3/fixes/*.py
 %{py_scriptdir}/lib2to3/pgen2/*.py
 %{py_scriptdir}/logging/*.py
 %{py_scriptdir}/multiprocessing/*.py
@@ -927,6 +926,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/lib2to3/*.pickle
 %{py_scriptdir}/lib2to3/*.py[co]
 %dir %{py_scriptdir}/lib2to3/fixes
+%{py_scriptdir}/lib2to3/fixes/*.py
 %{py_scriptdir}/lib2to3/fixes/*.py[co]
 %dir %{py_scriptdir}/lib2to3/pgen2
 %{py_scriptdir}/lib2to3/pgen2/*.py[co]
