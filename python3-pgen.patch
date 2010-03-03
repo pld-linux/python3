@@ -1,0 +1,13 @@
+--- Python-3.1.1/Makefile.pre.in.wiget	2010-03-03 23:06:15.000000000 +0100
++++ Python-3.1.1/Makefile.pre.in	2010-03-03 23:08:44.000000000 +0100
+@@ -545,6 +545,10 @@ $(IO_OBJS): $(IO_H)
+ $(GRAMMAR_H) $(GRAMMAR_C): $(PGEN) $(GRAMMAR_INPUT)
+ 		-@$(INSTALL) -d Include
+ 		-$(PGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C)
++		-echo "======================== $(GRAMMAR_C) ============================="
++		-cat $(GRAMMAR_C)
++		-echo "======================== $(GRAMMAR_H) ============================="
++		-cat $(GRAMMAR_H)
+ 
+ $(PGEN):	$(PGENOBJS)
+ 		$(CC) $(OPT) $(LDFLAGS) $(PGENOBJS) $(LIBS) -o $(PGEN)
