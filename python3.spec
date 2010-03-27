@@ -34,13 +34,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.1
-Release:	3
+Version:	%{py_ver}.2
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Applications
 Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}%{beta}.tar.bz2
-# Source0-md5:	d1ddd9f16e3c6a51c7208f33518cd674
+# Source0-md5:	45350b51b58a46b029fb06c61257e350
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-lib64.patch
@@ -589,6 +589,9 @@ sed 's/=/ /' \
 # pygettext.py is provided for compatibility
 install Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 
+# rename file conflicting with python 2.*
+mv $RPM_BUILD_ROOT%{_bindir}/2to3{,-%{py_ver}}
+
 # just to cut the noise, as they are not packaged (now)
 # first tests
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/test
@@ -600,6 +603,7 @@ rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/sqlite3/test
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/json/tests
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/lib2to3/tests
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/importlib/test
+rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/tkinter/test
 
 # other files
 rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/plat-*/regen
@@ -920,7 +924,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/timeit.py[co]
 
 %files 2to3
-%attr(755,root,root) %{_bindir}/2to3
+%attr(755,root,root) %{_bindir}/2to3-%{py_ver}
 %dir %{py_scriptdir}/lib2to3
 %{py_scriptdir}/lib2to3/*.txt
 %{py_scriptdir}/lib2to3/*.pickle
