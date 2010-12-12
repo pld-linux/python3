@@ -16,9 +16,9 @@
 # tests which fail because of some unknown/unresolved reason (this list should be empty)
 %define		broken_tests test_httpservers test_distutils test_cmd_line test_pydoc test_telnetlib test_zlib
 
-%define	beta		%{nil}
+%define	beta		b1
 
-%define py_ver		3.1
+%define py_ver		3.2
 %define py_prefix	%{_prefix}
 %define py_libdir	%{py_prefix}/%{_lib}/python%{py_ver}
 %define py_incdir	%{_includedir}/python%{py_ver}
@@ -34,13 +34,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.2
-Release:	3
+Version:	%{py_ver}
+Release:	0.%{beta}.1
 Epoch:		1
 License:	PSF
 Group:		Applications
 Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}%{beta}.tar.bz2
-# Source0-md5:	45350b51b58a46b029fb06c61257e350
+# Source0-md5:	3ad06a5b080d7b32958b4af2e44b64d3
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-lib64.patch
@@ -355,59 +355,6 @@ Static python library.
 %description static -l pl.UTF-8
 Statyczna biblioteka Pythona.
 
-%package doc
-Summary:	Documentation on Python
-Summary(de.UTF-8):	Dokumentation zu Python
-Summary(es.UTF-8):	Documentación para Python
-Summary(fr.UTF-8):	Documentation sur Python
-Summary(pl.UTF-8):	Dokumentacja do Pythona
-Summary(pt_BR.UTF-8):	Documentação para a linguagem de programação Python
-Summary(ru.UTF-8):	Документация по языку Python
-Summary(tr.UTF-8):	Python belgeleri
-Summary(uk.UTF-8):	Документація по мові Python
-Group:		Documentation
-
-%description doc
-This package contains documentation on the Python language and
-interpretor as a mix of plain ASCII files and LaTeX sources.
-
-%description doc -l de.UTF-8
-Dieses Paket enthält Dokumentationen zu Python (Sprache und
-Interpreter) in Form von einfachen ASCII-Dateien und LaTeX-Quellen.
-
-%description doc -l es.UTF-8
-Documentación para Python. Contiene archivos en texto y PostScript.
-
-%description doc -l fr.UTF-8
-Ce paquetage contient la documentation sur le langage python et sur
-son interpréteur sous forme de fichiers ASCII et LaTeX.
-
-%description doc -l pl.UTF-8
-Oficjalna dokumentacja do Pythona. Zawiera przykładowe programy,
-narzędzia i dokumentację. Strony podręcznika man znajdują się w
-głównym pakiecie. Ten pakiet nie zawiera źródeł dokumentacji
-napisanych w LaTeXu, tylko gotowe do wykorzystania pliki postscriptowe
-i HTML.
-
-%description doc -l pt_BR.UTF-8
-O pacote python-doc contém documentação para a linguagem de
-programação e para o interpretador Python. Fornecida em arquivos texto
-e Postcript.
-
-%description doc -l ru.UTF-8
-Этот пакет содержит документацию по собственно языку Python и по
-исполняющему его интерпретатору в виде набора текстовых файлов и
-исходных текстов в формате LaTeX.
-
-%description doc -l tr.UTF-8
-Bu paket, Python dili ile ilgili belgeleri ve düz ASCII dosyaları ve
-LaTeX kaynaklarının bir karışımı olan yorumlayıcıyı içerir.
-
-%description doc -l uk.UTF-8
-Цей пакет містить документацію по власне мові Python та по виконуючому
-її інтерпретатору у вигляді набора текстових файлів та вихідних
-текстів у форматі LaTeX.
-
 %package doc-info
 Summary:	Documentation on Python in texinfo format
 Summary(pl.UTF-8):	Dokumentacja do Pythona w formacie texinfo
@@ -483,11 +430,10 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %prep
 %setup -q -n Python-%{version}%{beta}
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-sed -i -e 's=@EXENAME@=%{_bindir}/python3=' Misc/python-config.in
+#%patch1 -p1
+#%patch2 -p1
+#%patch3 -p1
+#%patch4 -p1
 
 %build
 sed -i -e 's#-ltermcap#-ltinfo#g' configure*
@@ -547,12 +493,6 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}} \
 %{__make} -C Doc/info
 install Doc/info/python*info* $RPM_BUILD_ROOT%{_infodir}
 %endif
-
-install Makefile.pre.in $RPM_BUILD_ROOT%{py_libdir}/config
-
-mv $RPM_BUILD_ROOT{%{py_libdir}/config,%{_libdir}}/libpython%{py_ver}.a
-ln -sf libpython%{py_ver}.a $RPM_BUILD_ROOT%{_libdir}/libpython.a
-ln -sf libpython%{py_ver}.so.1.0 $RPM_BUILD_ROOT%{_libdir}/libpython%{py_ver}.so
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 cp -a Tools Demo $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
