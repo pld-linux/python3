@@ -35,7 +35,8 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}
-Release:	0.%{beta}.1
+#Release:	0.%{beta}.1
+Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -495,7 +496,7 @@ install Doc/info/python*info* $RPM_BUILD_ROOT%{_infodir}
 %endif
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
-cp -a Tools Demo $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+cp -a Tools $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 #
 # create several useful aliases, such as timeit.py, profile.py, pdb.py, smtpd.py
@@ -528,9 +529,6 @@ sed 's/=/ /' \
 # this way there are no import (which is impossible now) conflicts and
 # pygettext.py is provided for compatibility
 install Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
-
-# rename file conflicting with python 2.*
-mv $RPM_BUILD_ROOT%{_bindir}/2to3{,-%{py_ver}}
 
 # just to cut the noise, as they are not packaged (now)
 # first tests
