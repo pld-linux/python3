@@ -16,7 +16,7 @@
 # tests which fail because of some unknown/unresolved reason (this list should be empty)
 %define		broken_tests test_httpservers test_distutils test_cmd_line test_pydoc test_telnetlib test_zlib
 
-%define	beta		b1
+%define	beta		%{nil}
 
 %define py_ver		3.2
 %define py_prefix	%{_prefix}
@@ -40,7 +40,7 @@ Epoch:		1
 License:	PSF
 Group:		Applications
 Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}%{beta}.tar.bz2
-# Source0-md5:	3ad06a5b080d7b32958b4af2e44b64d3
+# Source0-md5:	92e94b5b6652b96349d6362b8337811d
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-lib64.patch
