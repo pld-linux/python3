@@ -40,13 +40,12 @@ Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Applications
-Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}%{beta}.tar.bz2
-# Source0-md5:	92e94b5b6652b96349d6362b8337811d
+Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}%{beta}.tar.xz
+# Source0-md5:	563c0b4b8c8596e332cc076c4f013971
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-lib64.patch
 Patch3:		%{name}-noarch_to_datadir.patch
-Patch4:		%{name}-cast-fix.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf
 BuildRequires:	bluez-libs-devel
@@ -434,7 +433,6 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch1 -p1
 #%patch2 -p1
 #%patch3 -p1
-#%patch4 -p1
 
 %build
 sed -i -e 's#-ltermcap#-ltinfo#g' configure*
