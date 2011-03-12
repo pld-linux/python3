@@ -16,8 +16,6 @@
 # tests which fail because of some unknown/unresolved reason (this list should be empty)
 %define		broken_tests test_httpservers test_distutils test_cmd_line test_pydoc test_telnetlib test_zlib
 
-%define	beta		%{nil}
-
 %define py_ver		3.2
 %define py_prefix	%{_prefix}
 %define py_libdir	%{py_prefix}/%{_lib}/python%{py_ver}
@@ -35,12 +33,11 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}
-#Release:	0.%{beta}.1
 Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Applications
-Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}%{beta}.tar.xz
+Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
 # Source0-md5:	563c0b4b8c8596e332cc076c4f013971
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
@@ -332,16 +329,27 @@ debugger.
 
 %package 2to3
 Summary:	Automated Python 2 to 3 code translation
-Summary(pl.UTF-8):	Automatyczne tłumaczenie kody Pythona 2 do 3
+Summary(pl.UTF-8):	Automatyczne tłumaczenie kodu Pythona 2 do 3
 Group:		Development/Languages/Pythona
 
 %description 2to3
-2to3 is a Python program that reads Python 2.x source code and applies a series
-of fixers to transform it into valid Python 3.x code. The standard library
-contains a rich set of fixers that will handle almost all code. 2to3 supporting
-library lib2to3 is, however, a flexible and generic library, so it is possible
-to write your own fixers for 2to3. lib2to3 could also be adapted to custom
-applications in which Python code needs to be edited automatically.
+2to3 is a Python program that reads Python 2.x source code and applies
+a series of fixers to transform it into valid Python 3.x code. The
+standard library contains a rich set of fixers that will handle almost
+all code. 2to3 supporting library lib2to3 is, however, a flexible and
+generic library, so it is possible to write your own fixers for 2to3.
+lib2to3 could also be adapted to custom applications in which Python
+code needs to be edited automatically.
+
+%description 2to3 -l pl.UTF-8
+2to3 to program w Pythonie czytający od źródłowy w Pythonie 2.x i
+aplikujący serię poprawek przekształcających go w poprawny kod w
+Pythonie 3.x. Biblioteka standardowa zawiera duży zbiór poprawek
+obsługujących większość kodu. Biblioteka wspierająca 2to3 (lib2to3)
+jest jednak elastyczną i ogólną biblioteką, więc można pisać własne
+poprawki dla 2to3. lib2to3 można także zaadaptować na potrzeby
+własnych zastosowań, w których kod w Pythonie musi być modyfikowany
+automatycznie.
 
 %package static
 Summary:	Static python library
@@ -428,7 +436,7 @@ Przykładowe programy w Pythonie.
 Przykłady te są dla Pythona 2.3.4, nie %{version}.
 
 %prep
-%setup -q -n Python-%{version}%{beta}
+%setup -q -n Python-%{version}
 %patch0 -p1
 %patch1 -p1
 #%patch2 -p1
