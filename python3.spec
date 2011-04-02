@@ -855,7 +855,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel-tools
 %defattr(644,root,root,755)
-%doc Lib/pdb.doc
 /etc/shrc.d/python*-devel*
 
 %attr(755,root,root) %{_bindir}/pygettext%{py_ver}
