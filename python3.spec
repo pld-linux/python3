@@ -439,11 +439,10 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %setup -q -n Python-%{version}
 %patch0 -p1
 %patch1 -p1
-#%patch2 -p1
-#%patch3 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
-sed -i -e 's#-ltermcap#-ltinfo#g' configure*
 %{__autoconf}
 CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags}"; export CPPFLAGS
 %configure \
@@ -538,28 +537,24 @@ install Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 
 # just to cut the noise, as they are not packaged (now)
 # first tests
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/test
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/bsddb/test
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/ctypes/test
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/distutils/tests
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/email/test
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/sqlite3/test
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/json/tests
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/lib2to3/tests
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/importlib/test
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/tkinter/test
+%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/test
+%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/ctypes/test
+%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/distutils/tests
+%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/email/test
+%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/importlib/test
+%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/lib2to3/tests
+%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/sqlite3/test
+%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/tkinter/test
 
 # other files
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/plat-*/regen
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/ctypes/macholib/fetch_macholib*
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/site-packages/README
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/distutils/command/wininst*.exe
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/idlelib/*.bat
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/idlelib/*.pyw
-rm -rf $RPM_BUILD_ROOT%{_bindir}/smtpd.py
+%{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/plat-*/regen
+%{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/ctypes/macholib/fetch_macholib*
+%{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/site-packages/README
+%{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/distutils/command/wininst*.exe
+%{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/idlelib/*.bat
+%{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/idlelib/*.pyw
 # already in %%doc
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/pdb.doc
-rm -rf $RPM_BUILD_ROOT%{py_scriptdir}/LICENSE.txt
+%{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/LICENSE.txt
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -567,10 +562,10 @@ rm -rf $RPM_BUILD_ROOT
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
 
-%post doc-info	-p	/sbin/postshell
+%post	doc-info -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
-%postun doc-info	-p	/sbin/postshell
+%postun	doc-info -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
 %files

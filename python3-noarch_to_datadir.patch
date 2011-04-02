@@ -1,6 +1,6 @@
---- Python-3.0.1/Modules/getpath.c.wiget	2009-02-25 10:58:09.000000000 +0100
-+++ Python-3.0.1/Modules/getpath.c	2009-02-25 11:21:43.000000000 +0100
-@@ -126,7 +126,8 @@
+--- Python-3.2/Modules/getpath.c.orig	2011-04-02 08:25:12.289739787 +0200
++++ Python-3.2/Modules/getpath.c	2011-04-02 08:31:24.349729730 +0200
+@@ -131,7 +131,8 @@
  
  #ifndef PYTHONPATH
  #define PYTHONPATH PREFIX "/" LIB_PYTHON VERSION ":" \
@@ -10,15 +10,15 @@
  #endif
  
  #ifndef LANDMARK
-@@ -138,6 +139,7 @@ static wchar_t exec_prefix[MAXPATHLEN+1]
+@@ -143,6 +144,7 @@
  static wchar_t progpath[MAXPATHLEN+1];
  static wchar_t *module_search_path = NULL;
- static wchar_t lib_python[] = LIB_PYTHON VERSION;
+ static wchar_t *lib_python = LIB_PYTHON VERSION;
 +static wchar_t share_python[] = L"share/python" VERSION;
  
- /* In principle, this should use HAVE__WSTAT, and _wstat
-    should be detected by autoconf. However, no current
-@@ -338,7 +340,7 @@ search_for_prefix(wchar_t *argv0_path, w
+ static void
+ reduce(wchar_t *dir)
+@@ -283,7 +285,7 @@
          delim = wcschr(prefix, DELIM);
          if (delim)
              *delim = L'\0';
@@ -27,8 +27,8 @@
          joinpath(prefix, LANDMARK);
          return 1;
      }
-@@ -361,7 +363,7 @@ search_for_prefix(wchar_t *argv0_path, w
-     copy_absolute(prefix, argv0_path);
+@@ -309,7 +311,7 @@
+     copy_absolute(prefix, argv0_path, MAXPATHLEN+1);
      do {
          n = wcslen(prefix);
 -        joinpath(prefix, lib_python);
@@ -36,51 +36,47 @@
          joinpath(prefix, LANDMARK);
          if (ismodule(prefix))
              return 1;
-@@ -371,7 +373,7 @@ search_for_prefix(wchar_t *argv0_path, w
+@@ -319,7 +321,7 @@
  
      /* Look at configure's PREFIX */
-     wcsncpy(prefix, L"" PREFIX, MAXPATHLEN);
+     wcsncpy(prefix, _prefix, MAXPATHLEN);
 -    joinpath(prefix, lib_python);
 +    joinpath(prefix, share_python);
      joinpath(prefix, LANDMARK);
      if (ismodule(prefix))
          return 1;
-@@ -598,7 +600,7 @@ calculate_path(void)
+@@ -577,7 +579,7 @@
              fprintf(stderr,
                  "Could not find platform independent libraries <prefix>\n");
-         wcsncpy(prefix, L"" PREFIX, MAXPATHLEN);
+         wcsncpy(prefix, _prefix, MAXPATHLEN);
 -        joinpath(prefix, lib_python);
 +        joinpath(prefix, share_python);
      }
      else
          reduce(prefix);
-@@ -611,7 +613,7 @@ calculate_path(void)
+@@ -590,7 +592,7 @@
      }
      else
-         wcsncpy(zip_path, L"" PREFIX, MAXPATHLEN);
+         wcsncpy(zip_path, _prefix, MAXPATHLEN);
 -    joinpath(zip_path, L"lib/python00.zip");
 +    joinpath(zip_path, LIB_PYTHON "00.zip");
-     bufsz = wcslen(zip_path);	/* Replace "00" with version */
+     bufsz = wcslen(zip_path);   /* Replace "00" with version */
      zip_path[bufsz - 6] = VERSION[0];
      zip_path[bufsz - 5] = VERSION[2];
---- Python-3.0.1/Lib/site.py.wiget	2009-02-25 10:58:09.000000000 +0100
-+++ Python-3.0.1/Lib/site.py	2009-02-25 11:03:48.000000000 +0100
-@@ -262,11 +262,10 @@ def addsitepackages(known_paths):
+--- Python-3.2/Lib/site.py.orig	2011-04-02 08:25:12.000000000 +0200
++++ Python-3.2/Lib/site.py	2011-04-02 08:32:32.061730568 +0200
+@@ -289,9 +289,8 @@
                                          "python" + sys.version[:3],
                                          "site-packages"))
-             sitedirs.append(os.path.join(prefix, sys.lib, "site-python"))
+             sitepackages.append(os.path.join(prefix, sys.lib, "site-python"))
 -            if sys.lib != 'lib':
--                sitedirs.append(os.path.join(prefix, 'lib',
--                                            "python" + sys.version[:3],
--                                            "site-packages"))
--                sitedirs.append(os.path.join(prefix, 'lib', "site-python"))
-+            sitedirs.append(os.path.join(prefix, 'share',
-+                                        "python" + sys.version[:3],
-+                                        "site-packages"))
-+            sitedirs.append(os.path.join(prefix, 'share', "site-python"))
-         	
+-                sitepackages.append(os.path.join(prefix, "lib", "python" + sys.version[:3], "site-packages"))
+-                sitepackages.append(os.path.join(prefix, "lib", "site-python"))
++            sitepackages.append(os.path.join(prefix, "share", "python" + sys.version[:3], "site-packages"))
++            sitepackages.append(os.path.join(prefix, "share", "site-python"))
          else:
-             sitedirs.append(prefix)
+             sitepackages.append(prefix)
+             sitepackages.append(os.path.join(prefix, sys.lib, "site-packages"))
 --- Python-3.0.1/Lib/distutils/sysconfig.py.wiget	2009-02-25 10:58:09.000000000 +0100
 +++ Python-3.0.1/Lib/distutils/sysconfig.py	2009-02-25 10:58:09.000000000 +0100
 @@ -114,12 +114,12 @@ def get_python_lib(plat_specific=0, stan
@@ -101,16 +97,16 @@
          if standard_lib:
              return libpython
          else:
---- Python-3.0.1/Lib/distutils/command/install.py.wiget	2009-02-25 10:58:09.000000000 +0100
-+++ Python-3.0.1/Lib/distutils/command/install.py	2009-02-25 10:58:09.000000000 +0100
-@@ -40,14 +40,14 @@ else:
+--- Python-3.2/Lib/distutils/command/install.py.orig	2011-04-02 08:25:12.000000000 +0200
++++ Python-3.2/Lib/distutils/command/install.py	2011-04-02 08:33:35.957734759 +0200
+@@ -48,14 +48,14 @@
  
  INSTALL_SCHEMES = {
      'unix_prefix': {
 -        'purelib': '$base/lib/python$py_version_short/site-packages',
 +        'purelib': '$base/share/python$py_version_short/site-packages',
          'platlib': '$platbase/'+libname+'/python$py_version_short/site-packages',
-         'headers': '$base/include/python$py_version_short/$dist_name',
+         'headers': '$base/include/python$py_version_short$abiflags/$dist_name',
          'scripts': '$base/bin',
          'data'   : '$base',
          },
@@ -120,17 +116,17 @@
          'platlib': '$base/'+libname+'/python',
          'headers': '$base/include/python/$dist_name',
          'scripts': '$base/bin',
---- Python-3.0.1/Makefile.pre.in.wiget	2009-02-25 10:58:09.000000000 +0100
-+++ Python-3.0.1/Makefile.pre.in	2009-02-25 10:58:09.000000000 +0100
-@@ -93,7 +93,7 @@ LIBDIR=		$(exec_prefix)/$(LIB)
+--- Python-3.2/Makefile.pre.in.orig	2011-04-02 08:25:12.000000000 +0200
++++ Python-3.2/Makefile.pre.in	2011-04-02 08:34:06.809736435 +0200
+@@ -104,7 +104,7 @@
  MANDIR=		@mandir@
  INCLUDEDIR=	@includedir@
  CONFINCLUDEDIR=	$(exec_prefix)/include
 -SCRIPTDIR=	$(prefix)/$(LIB)
 +SCRIPTDIR=	$(prefix)/share
+ ABIFLAGS=	@ABIFLAGS@
  
  # Detailed destination directories
- BINLIBDEST=	$(LIBDIR)/python$(VERSION)
 --- Python-3.0.1/Lib/distutils/tests/test_install.py.wig	2009-02-25 11:42:38.000000000 +0100
 +++ Python-3.0.1/Lib/distutils/tests/test_install.py	2009-02-25 11:51:23.000000000 +0100
 @@ -38,7 +38,7 @@ class InstallTestCase(support.TempdirMan
