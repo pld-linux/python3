@@ -878,7 +878,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files static
 %defattr(644,root,root,755)
-%{py_libdir}/config-%{py_abi}/libpython%{py_abi}.a
+%{_libdir}/libpython%{py_abi}.a
 
 %files examples
 %defattr(644,root,root,755)

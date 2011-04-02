@@ -127,6 +127,26 @@
  ABIFLAGS=	@ABIFLAGS@
  
  # Detailed destination directories
+@@ -1036,7 +1036,7 @@
+ 
+ # Install the library and miscellaneous stuff needed for extending/embedding
+ # This goes into $(exec_prefix)
+-LIBPL=		$(LIBDEST)/config-$(LDVERSION)
++LIBPL=		$(BINLIBDEST)/config-$(LDVERSION)
+ 
+ # pkgconfig directory
+ LIBPC=		$(LIBDIR)/pkgconfig
+@@ -1055,8 +1055,8 @@
+ 			if test "$(SO)" = .dll; then \
+ 				$(INSTALL_DATA) $(LDLIBRARY) $(DESTDIR)$(LIBPL) ; \
+ 			else \
+-				$(INSTALL_DATA) $(LIBRARY) $(DESTDIR)$(LIBPL)/$(LIBRARY) ; \
+-				$(RANLIB) $(DESTDIR)$(LIBPL)/$(LIBRARY) ; \
++				$(INSTALL_DATA) $(LIBRARY) $(DESTDIR)$(LIBDIR)/$(LIBRARY) ; \
++				$(RANLIB) $(DESTDIR)$(LIBDIR)/$(LIBRARY) ; \
+ 			fi; \
+ 		else \
+ 			echo Skip install of $(LIBRARY) - use make frameworkinstall; \
 --- Python-3.0.1/Lib/distutils/tests/test_install.py.wig	2009-02-25 11:42:38.000000000 +0100
 +++ Python-3.0.1/Lib/distutils/tests/test_install.py	2009-02-25 11:51:23.000000000 +0100
 @@ -38,7 +38,7 @@ class InstallTestCase(support.TempdirMan
