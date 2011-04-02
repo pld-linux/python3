@@ -1,5 +1,8 @@
 #
 # TODO:
+# - decide what to do with __pycache__:
+#   1) package *.py sources in main and use __pycache__ dirs (and package them)
+#   2) don't package __pycache__, manually invoke py_compileall everywhere (i.e. stick to python2-way)
 # - fix tests
 # - check unpackaged files
 
@@ -17,9 +20,10 @@
 %define		broken_tests test_httpservers test_distutils test_cmd_line test_pydoc test_telnetlib test_zlib
 
 %define py_ver		3.2
+%define py_abi		%{py_ver}mu
 %define py_prefix	%{_prefix}
 %define py_libdir	%{py_prefix}/%{_lib}/python%{py_ver}
-%define py_incdir	%{_includedir}/python%{py_ver}
+%define py_incdir	%{_includedir}/python%{py_abi}
 %define py_sitedir	%{py_libdir}/site-packages
 %define py_dyndir	%{py_libdir}/lib-dynload
 
@@ -571,8 +575,43 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/python%{py_ver}
+%attr(755,root,root) %{_bindir}/python%{py_abi}
 %attr(755,root,root) %{_bindir}/python3
-%{_mandir}/man1/python*.1*
+%{_mandir}/man1/python%{py_ver}.1*
+
+%files libs
+%defattr(644,root,root,755)
+%doc LICENSE
+%attr(755,root,root) %{_libdir}/libpython%{py_abi}.so.*.*
+
+%dir %{py_libdir}
+%dir %{py_dyndir}
+%dir %{py_sitedir}
+%dir %{py_scriptdir}
+%dir %{py_sitescriptdir}
+
+# shared modules required by python library
+%attr(755,root,root) %{py_dyndir}/_struct.cpython-*.so
+
+# modules required by python library
+%{py_scriptdir}/_abcoll.py[co]
+%{py_scriptdir}/_weakrefset.py[co]
+%{py_scriptdir}/abc.py[co]
+%{py_scriptdir}/codecs.py[co]
+%{py_scriptdir}/copyreg.py[co]
+%{py_scriptdir}/genericpath.py[co]
+%{py_scriptdir}/locale.py[co]
+%{py_scriptdir}/io.py[co]
+%{py_scriptdir}/posixpath.py[co]
+%{py_scriptdir}/site.py[co]
+%{py_scriptdir}/stat.py[co]
+%{py_scriptdir}/os.py[co]
+# needed by the dynamic sys.lib patch
+%{py_scriptdir}/types.py[co]
+
+# encodings required by python library
+%dir %{py_scriptdir}/encodings
+%{py_scriptdir}/encodings/*.py[co]
 
 %files modules
 %defattr(644,root,root,755)
@@ -599,7 +638,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{py_scriptdir}/*.py[co]
 
-%{py_dyndir}/*.egg-info
+%{py_dyndir}/Python-%{py_ver}-py*.egg-info
 
 #
 # list .so modules to be sure that all of them are built
@@ -608,66 +647,60 @@ rm -rf $RPM_BUILD_ROOT
 # modules below do not work on 64-bit architectures
 # see Python README file for explanation
 %ifnarch alpha ia64 ppc64 sparc64 %{x8664}
-%attr(755,root,root) %{py_dyndir}/audioop.so
+%attr(755,root,root) %{py_dyndir}/audioop.cpython-*.so
 %endif
 
-%attr(755,root,root) %{py_dyndir}/array.so
-%attr(755,root,root) %{py_dyndir}/atexit.so
-%attr(755,root,root) %{py_dyndir}/audioop.so
-%attr(755,root,root) %{py_dyndir}/binascii.so
-%attr(755,root,root) %{py_dyndir}/_bisect.so
-%attr(755,root,root) %{py_dyndir}/bz2.so
-%attr(755,root,root) %{py_dyndir}/cmath.so
-%attr(755,root,root) %{py_dyndir}/_codecs_cn.so
-%attr(755,root,root) %{py_dyndir}/_codecs_hk.so
-%attr(755,root,root) %{py_dyndir}/_codecs_iso2022.so
-%attr(755,root,root) %{py_dyndir}/_codecs_jp.so
-%attr(755,root,root) %{py_dyndir}/_codecs_kr.so
-%attr(755,root,root) %{py_dyndir}/_codecs_tw.so
-%attr(755,root,root) %{py_dyndir}/_collections.so
-%attr(755,root,root) %{py_dyndir}/crypt.so
-%attr(755,root,root) %{py_dyndir}/_csv.so
-%attr(755,root,root) %{py_dyndir}/_ctypes*.so
-%attr(755,root,root) %{py_dyndir}/_curses_panel.so
-%attr(755,root,root) %{py_dyndir}/_curses.so
-%attr(755,root,root) %{py_dyndir}/datetime.so
-%attr(755,root,root) %{py_dyndir}/_elementtree.so
-#%attr(755,root,root) %{py_dyndir}/_functools.so
-%attr(755,root,root) %{py_dyndir}/_hashlib.so
-%attr(755,root,root) %{py_dyndir}/_heapq.so
-%attr(755,root,root) %{py_dyndir}/_json.so
-#%attr(755,root,root) %{py_dyndir}/_locale.so
-%attr(755,root,root) %{py_dyndir}/_lsprof.so
-%attr(755,root,root) %{py_dyndir}/_multibytecodec.so
-%attr(755,root,root) %{py_dyndir}/_multiprocessing.so
-%attr(755,root,root) %{py_dyndir}/_pickle.so
-%attr(755,root,root) %{py_dyndir}/_random.so
-%attr(755,root,root) %{py_dyndir}/_socket.so
-%attr(755,root,root) %{py_dyndir}/_ssl.so
-%attr(755,root,root) %{py_dyndir}/_testcapi.so
+%attr(755,root,root) %{py_dyndir}/_bisect.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_codecs_cn.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_codecs_hk.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_codecs_iso2022.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_codecs_jp.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_codecs_kr.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_codecs_tw.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_csv.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_ctypes*.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_curses_panel.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_curses.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_datetime.cpython-*.so
 %ifnarch sparc64
-%attr(755,root,root) %{py_dyndir}/_dbm.so
+%attr(755,root,root) %{py_dyndir}/_dbm.cpython-*.so
 %endif
-%attr(755,root,root) %{py_dyndir}/fcntl.so
-%attr(755,root,root) %{py_dyndir}/_gdbm.so
-%attr(755,root,root) %{py_dyndir}/grp.so
-%attr(755,root,root) %{py_dyndir}/itertools.so
-%attr(755,root,root) %{py_dyndir}/math.so
-%attr(755,root,root) %{py_dyndir}/mmap.so
-%attr(755,root,root) %{py_dyndir}/nis.so
-%attr(755,root,root) %{py_dyndir}/operator.so
-%attr(755,root,root) %{py_dyndir}/ossaudiodev.so
-%attr(755,root,root) %{py_dyndir}/parser.so
-%attr(755,root,root) %{py_dyndir}/pyexpat.so
-%attr(755,root,root) %{py_dyndir}/readline.so
-%attr(755,root,root) %{py_dyndir}/resource.so
-%attr(755,root,root) %{py_dyndir}/select.so
-%attr(755,root,root) %{py_dyndir}/syslog.so
-%attr(755,root,root) %{py_dyndir}/termios.so
-%attr(755,root,root) %{py_dyndir}/time.so
-%attr(755,root,root) %{py_dyndir}/spwd.so
-%attr(755,root,root) %{py_dyndir}/unicodedata.so
-%attr(755,root,root) %{py_dyndir}/zlib.so
+%attr(755,root,root) %{py_dyndir}/_elementtree.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_gdbm.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_hashlib.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_heapq.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_json.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_lsprof.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_multibytecodec.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_multiprocessing.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_pickle.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_random.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_socket.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_ssl.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_testcapi.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/array.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/atexit.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/binascii.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/bz2.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/cmath.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/crypt.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/fcntl.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/grp.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/math.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/mmap.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/nis.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/ossaudiodev.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/parser.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/pyexpat.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/readline.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/resource.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/select.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/syslog.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/termios.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/time.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/spwd.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/unicodedata.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/zlib.cpython-*.so
 
 %dir %{py_scriptdir}/plat-*
 %{py_scriptdir}/plat-*/*.py[co]
@@ -738,43 +771,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_scriptdir}/xmlrpc
 %{py_scriptdir}/xmlrpc/*.py[co]
 
-%attr(755,root,root) %{py_dyndir}/_sqlite3.so
+%attr(755,root,root) %{py_dyndir}/_sqlite3.cpython-*.so
 %dir %{py_scriptdir}/sqlite3
 %{py_scriptdir}/sqlite3/*.py[co]
-
-%files libs
-%defattr(644,root,root,755)
-%doc LICENSE
-%attr(755,root,root) %{_libdir}/libpython*.so.*
-
-%dir %{py_dyndir}
-%dir %{py_scriptdir}
-%dir %{py_libdir}
-%dir %{py_sitescriptdir}
-%dir %{py_sitedir}
-
-# shared modules required by python library
-%attr(755,root,root) %{py_dyndir}/_struct.so
-
-# modules required by python library
-%{py_scriptdir}/_abcoll.py[co]
-%{py_scriptdir}/_weakrefset.py[co]
-%{py_scriptdir}/abc.py[co]
-%{py_scriptdir}/codecs.py[co]
-%{py_scriptdir}/copyreg.py[co]
-%{py_scriptdir}/genericpath.py[co]
-%{py_scriptdir}/locale.py[co]
-%{py_scriptdir}/io.py[co]
-%{py_scriptdir}/posixpath.py[co]
-%{py_scriptdir}/site.py[co]
-%{py_scriptdir}/stat.py[co]
-%{py_scriptdir}/os.py[co]
-# needed by the dynamic sys.lib patch
-%{py_scriptdir}/types.py[co]
-
-# encodings required by python library
-%dir %{py_scriptdir}/encodings
-%{py_scriptdir}/encodings/*.py[co]
 
 %files -n pydoc3
 %defattr(644,root,root,755)
@@ -797,23 +796,27 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %doc Misc/{ACKS,NEWS,README,README.valgrind,valgrind-python.supp}
-%attr(755,root,root) %{_bindir}/python*-config
-%attr(755,root,root) %{_libdir}/lib*.so
+%attr(755,root,root) %{_bindir}/python%{py_ver}-config
+%attr(755,root,root) %{_bindir}/python%{py_abi}-config
+%attr(755,root,root) %{_bindir}/python3-config
+%attr(755,root,root) %{_libdir}/libpython%{py_abi}.so
+%attr(755,root,root) %{_libdir}/libpython3.so
 %dir %{py_incdir}
 %{py_incdir}/*.h
-%{_pkgconfigdir}/python*.pc
+%{_pkgconfigdir}/python-%{py_ver}.pc
+%{_pkgconfigdir}/python-%{py_abi}.pc
+%{_pkgconfigdir}/python3.pc
 
-%dir %{py_libdir}/config
-%attr(755,root,root) %{py_libdir}/config/makesetup
-%attr(755,root,root) %{py_libdir}/config/install-sh
-%{py_libdir}/config/Makefile
-%{py_libdir}/config/Makefile.pre.in
-%{py_libdir}/config/Setup
-%{py_libdir}/config/Setup.config
-%{py_libdir}/config/Setup.local
-%{py_libdir}/config/config.c
-%{py_libdir}/config/config.c.in
-%{py_libdir}/config/python.o
+%dir %{py_libdir}/config-%{py_abi}
+%attr(755,root,root) %{py_libdir}/config-%{py_abi}/makesetup
+%attr(755,root,root) %{py_libdir}/config-%{py_abi}/install-sh
+%{py_libdir}/config-%{py_abi}/Makefile
+%{py_libdir}/config-%{py_abi}/Setup
+%{py_libdir}/config-%{py_abi}/Setup.config
+%{py_libdir}/config-%{py_abi}/Setup.local
+%{py_libdir}/config-%{py_abi}/config.c
+%{py_libdir}/config-%{py_abi}/config.c.in
+%{py_libdir}/config-%{py_abi}/python.o
 
 %files devel-src
 %defattr(644,root,root,755)
@@ -876,7 +879,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/lib*.a
+%{py_libdir}/config-%{py_abi}/libpython%{py_abi}.a
 
 %files examples
 %defattr(644,root,root,755)
@@ -893,5 +896,5 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %dir %{py_scriptdir}/tkinter
 %{py_scriptdir}/tkinter/*.py[co]
-%attr(755,root,root) %{py_dyndir}/_tkinter.so
+%attr(755,root,root) %{py_dyndir}/_tkinter.cpython-*.so
 %endif
