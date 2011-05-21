@@ -1,8 +1,8 @@
-diff -Nur Python-2.5b2.orig/configure.in Python-2.5b2/configure.in
---- Python-2.5b2.orig/configure.in	2006-07-06 11:13:35.000000000 +0100
-+++ Python-2.5b2/configure.in	2006-07-12 17:42:51.000000000 +0100
-@@ -503,6 +503,41 @@
-     ;;
+diff -Nur Python-3.2.orig//configure.in Python-3.2/configure.in
+--- Python-3.2.orig//configure.in	2011-02-19 08:58:23.000000000 +0000
++++ Python-3.2/configure.in	2011-05-21 21:16:30.000000000 +0100
+@@ -580,6 +580,41 @@
+     esac;;
  esac
  
 +AC_SUBST(ARCH)
@@ -43,10 +43,10 @@ diff -Nur Python-2.5b2.orig/configure.in Python-2.5b2/configure.in
  
  AC_SUBST(LIBRARY)
  AC_MSG_CHECKING(LIBRARY)
-diff -Nur Python-2.5b2.orig/Include/pythonrun.h Python-2.5b2/Include/pythonrun.h
---- Python-2.5b2.orig/Include/pythonrun.h	2006-04-03 07:26:32.000000000 +0100
-+++ Python-2.5b2/Include/pythonrun.h	2006-07-12 17:42:51.000000000 +0100
-@@ -107,6 +107,8 @@
+diff -Nur Python-3.2.orig//Include/pythonrun.h Python-3.2/Include/pythonrun.h
+--- Python-3.2.orig//Include/pythonrun.h	2010-12-27 01:49:31.000000000 +0000
++++ Python-3.2/Include/pythonrun.h	2011-05-21 21:16:30.000000000 +0100
+@@ -175,6 +175,8 @@
  /* In their own files */
  PyAPI_FUNC(const char *) Py_GetVersion(void);
  PyAPI_FUNC(const char *) Py_GetPlatform(void);
@@ -55,8 +55,264 @@ diff -Nur Python-2.5b2.orig/Include/pythonrun.h Python-2.5b2/Include/pythonrun.h
  PyAPI_FUNC(const char *) Py_GetCopyright(void);
  PyAPI_FUNC(const char *) Py_GetCompiler(void);
  PyAPI_FUNC(const char *) Py_GetBuildInfo(void);
---- Python-3.2/Lib/distutils/command/install.py.orig	2010-11-25 04:46:44.000000000 +0100
-+++ Python-3.2/Lib/distutils/command/install.py	2011-04-02 08:13:23.765733920 +0200
+diff -Nur Python-3.2.orig//Include/pythonrun.h.orig Python-3.2/Include/pythonrun.h.orig
+--- Python-3.2.orig//Include/pythonrun.h.orig	1970-01-01 01:00:00.000000000 +0100
++++ Python-3.2/Include/pythonrun.h.orig	2010-12-27 01:49:31.000000000 +0000
+@@ -0,0 +1,251 @@
++
++/* Interfaces to parse and execute pieces of python code */
++
++#ifndef Py_PYTHONRUN_H
++#define Py_PYTHONRUN_H
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++#define PyCF_MASK (CO_FUTURE_DIVISION | CO_FUTURE_ABSOLUTE_IMPORT | \
++                   CO_FUTURE_WITH_STATEMENT | CO_FUTURE_PRINT_FUNCTION | \
++                   CO_FUTURE_UNICODE_LITERALS | CO_FUTURE_BARRY_AS_BDFL)
++#define PyCF_MASK_OBSOLETE (CO_NESTED)
++#define PyCF_SOURCE_IS_UTF8  0x0100
++#define PyCF_DONT_IMPLY_DEDENT 0x0200
++#define PyCF_ONLY_AST 0x0400
++#define PyCF_IGNORE_COOKIE 0x0800
++
++#ifndef Py_LIMITED_API
++typedef struct {
++    int cf_flags;  /* bitmask of CO_xxx flags relevant to future */
++} PyCompilerFlags;
++#endif
++
++PyAPI_FUNC(void) Py_SetProgramName(wchar_t *);
++PyAPI_FUNC(wchar_t *) Py_GetProgramName(void);
++
++PyAPI_FUNC(void) Py_SetPythonHome(wchar_t *);
++PyAPI_FUNC(wchar_t *) Py_GetPythonHome(void);
++
++PyAPI_FUNC(void) Py_Initialize(void);
++PyAPI_FUNC(void) Py_InitializeEx(int);
++PyAPI_FUNC(void) Py_Finalize(void);
++PyAPI_FUNC(int) Py_IsInitialized(void);
++PyAPI_FUNC(PyThreadState *) Py_NewInterpreter(void);
++PyAPI_FUNC(void) Py_EndInterpreter(PyThreadState *);
++
++#ifndef Py_LIMITED_API
++PyAPI_FUNC(int) PyRun_SimpleStringFlags(const char *, PyCompilerFlags *);
++PyAPI_FUNC(int) PyRun_AnyFileFlags(FILE *, const char *, PyCompilerFlags *);
++PyAPI_FUNC(int) PyRun_AnyFileExFlags(
++    FILE *fp,
++    const char *filename,       /* decoded from the filesystem encoding */
++    int closeit,
++    PyCompilerFlags *flags);
++PyAPI_FUNC(int) PyRun_SimpleFileExFlags(
++    FILE *fp,
++    const char *filename,       /* decoded from the filesystem encoding */
++    int closeit,
++    PyCompilerFlags *flags);
++PyAPI_FUNC(int) PyRun_InteractiveOneFlags(
++    FILE *fp,
++    const char *filename,       /* decoded from the filesystem encoding */
++    PyCompilerFlags *flags);
++PyAPI_FUNC(int) PyRun_InteractiveLoopFlags(
++    FILE *fp,
++    const char *filename,       /* decoded from the filesystem encoding */
++    PyCompilerFlags *flags);
++
++PyAPI_FUNC(struct _mod *) PyParser_ASTFromString(
++    const char *s,
++    const char *filename,       /* decoded from the filesystem encoding */
++    int start,
++    PyCompilerFlags *flags,
++    PyArena *arena);
++PyAPI_FUNC(struct _mod *) PyParser_ASTFromFile(
++    FILE *fp,
++    const char *filename,       /* decoded from the filesystem encoding */
++    const char* enc,
++    int start,
++    char *ps1,
++    char *ps2,
++    PyCompilerFlags *flags,
++    int *errcode,
++    PyArena *arena);
++#endif
++
++#ifndef PyParser_SimpleParseString
++#define PyParser_SimpleParseString(S, B) \
++    PyParser_SimpleParseStringFlags(S, B, 0)
++#define PyParser_SimpleParseFile(FP, S, B) \
++    PyParser_SimpleParseFileFlags(FP, S, B, 0)
++#endif
++PyAPI_FUNC(struct _node *) PyParser_SimpleParseStringFlags(const char *, int,
++                                                          int);
++PyAPI_FUNC(struct _node *) PyParser_SimpleParseFileFlags(FILE *, const char *,
++                                                        int, int);
++
++#ifndef Py_LIMITED_API
++PyAPI_FUNC(PyObject *) PyRun_StringFlags(const char *, int, PyObject *,
++                                         PyObject *, PyCompilerFlags *);
++
++PyAPI_FUNC(PyObject *) PyRun_FileExFlags(
++    FILE *fp,
++    const char *filename,       /* decoded from the filesystem encoding */
++    int start,
++    PyObject *globals,
++    PyObject *locals,
++    int closeit,
++    PyCompilerFlags *flags);
++#endif
++
++#ifdef Py_LIMITED_API
++PyAPI_FUNC(PyObject *) Py_CompileString(const char *, const char *, int);
++#else
++#define Py_CompileString(str, p, s) Py_CompileStringExFlags(str, p, s, NULL, -1)
++#define Py_CompileStringFlags(str, p, s, f) Py_CompileStringExFlags(str, p, s, f, -1)
++PyAPI_FUNC(PyObject *) Py_CompileStringExFlags(
++    const char *str,
++    const char *filename,       /* decoded from the filesystem encoding */
++    int start,
++    PyCompilerFlags *flags,
++    int optimize);
++#endif
++PyAPI_FUNC(struct symtable *) Py_SymtableString(
++    const char *str,
++    const char *filename,       /* decoded from the filesystem encoding */
++    int start);
++
++PyAPI_FUNC(void) PyErr_Print(void);
++PyAPI_FUNC(void) PyErr_PrintEx(int);
++PyAPI_FUNC(void) PyErr_Display(PyObject *, PyObject *, PyObject *);
++
++/* Py_PyAtExit is for the atexit module, Py_AtExit is for low-level
++ * exit functions.
++ */
++#ifndef Py_LIMITED_API
++PyAPI_FUNC(void) _Py_PyAtExit(void (*func)(void));
++#endif
++PyAPI_FUNC(int) Py_AtExit(void (*func)(void));
++
++PyAPI_FUNC(void) Py_Exit(int);
++
++/* Restore signals that the interpreter has called SIG_IGN on to SIG_DFL. */
++#ifndef Py_LIMITED_API
++PyAPI_FUNC(void) _Py_RestoreSignals(void);
++
++PyAPI_FUNC(int) Py_FdIsInteractive(FILE *, const char *);
++#endif
++
++/* Bootstrap */
++PyAPI_FUNC(int) Py_Main(int argc, wchar_t **argv);
++
++#ifndef Py_LIMITED_API
++/* Use macros for a bunch of old variants */
++#define PyRun_String(str, s, g, l) PyRun_StringFlags(str, s, g, l, NULL)
++#define PyRun_AnyFile(fp, name) PyRun_AnyFileExFlags(fp, name, 0, NULL)
++#define PyRun_AnyFileEx(fp, name, closeit) \
++    PyRun_AnyFileExFlags(fp, name, closeit, NULL)
++#define PyRun_AnyFileFlags(fp, name, flags) \
++    PyRun_AnyFileExFlags(fp, name, 0, flags)
++#define PyRun_SimpleString(s) PyRun_SimpleStringFlags(s, NULL)
++#define PyRun_SimpleFile(f, p) PyRun_SimpleFileExFlags(f, p, 0, NULL)
++#define PyRun_SimpleFileEx(f, p, c) PyRun_SimpleFileExFlags(f, p, c, NULL)
++#define PyRun_InteractiveOne(f, p) PyRun_InteractiveOneFlags(f, p, NULL)
++#define PyRun_InteractiveLoop(f, p) PyRun_InteractiveLoopFlags(f, p, NULL)
++#define PyRun_File(fp, p, s, g, l) \
++    PyRun_FileExFlags(fp, p, s, g, l, 0, NULL)
++#define PyRun_FileEx(fp, p, s, g, l, c) \
++    PyRun_FileExFlags(fp, p, s, g, l, c, NULL)
++#define PyRun_FileFlags(fp, p, s, g, l, flags) \
++    PyRun_FileExFlags(fp, p, s, g, l, 0, flags)
++#endif
++
++/* In getpath.c */
++PyAPI_FUNC(wchar_t *) Py_GetProgramFullPath(void);
++PyAPI_FUNC(wchar_t *) Py_GetPrefix(void);
++PyAPI_FUNC(wchar_t *) Py_GetExecPrefix(void);
++PyAPI_FUNC(wchar_t *) Py_GetPath(void);
++PyAPI_FUNC(void)      Py_SetPath(const wchar_t *);
++#ifdef MS_WINDOWS
++int _Py_CheckPython3();
++#endif
++
++/* In their own files */
++PyAPI_FUNC(const char *) Py_GetVersion(void);
++PyAPI_FUNC(const char *) Py_GetPlatform(void);
++PyAPI_FUNC(const char *) Py_GetCopyright(void);
++PyAPI_FUNC(const char *) Py_GetCompiler(void);
++PyAPI_FUNC(const char *) Py_GetBuildInfo(void);
++#ifndef Py_LIMITED_API
++PyAPI_FUNC(const char *) _Py_svnversion(void);
++PyAPI_FUNC(const char *) Py_SubversionRevision(void);
++PyAPI_FUNC(const char *) Py_SubversionShortBranch(void);
++#endif
++
++/* Internal -- various one-time initializations */
++#ifndef Py_LIMITED_API
++PyAPI_FUNC(PyObject *) _PyBuiltin_Init(void);
++PyAPI_FUNC(PyObject *) _PySys_Init(void);
++PyAPI_FUNC(void) _PyImport_Init(void);
++PyAPI_FUNC(void) _PyExc_Init(void);
++PyAPI_FUNC(void) _PyImportHooks_Init(void);
++PyAPI_FUNC(int) _PyFrame_Init(void);
++PyAPI_FUNC(void) _PyFloat_Init(void);
++PyAPI_FUNC(int) PyByteArray_Init(void);
++#endif
++
++/* Various internal finalizers */
++#ifndef Py_LIMITED_API
++PyAPI_FUNC(void) _PyExc_Fini(void);
++PyAPI_FUNC(void) _PyImport_Fini(void);
++PyAPI_FUNC(void) PyMethod_Fini(void);
++PyAPI_FUNC(void) PyFrame_Fini(void);
++PyAPI_FUNC(void) PyCFunction_Fini(void);
++PyAPI_FUNC(void) PyDict_Fini(void);
++PyAPI_FUNC(void) PyTuple_Fini(void);
++PyAPI_FUNC(void) PyList_Fini(void);
++PyAPI_FUNC(void) PySet_Fini(void);
++PyAPI_FUNC(void) PyBytes_Fini(void);
++PyAPI_FUNC(void) PyByteArray_Fini(void);
++PyAPI_FUNC(void) PyFloat_Fini(void);
++PyAPI_FUNC(void) PyOS_FiniInterrupts(void);
++PyAPI_FUNC(void) _PyGC_Fini(void);
++#endif
++
++/* Stuff with no proper home (yet) */
++#ifndef Py_LIMITED_API
++PyAPI_FUNC(char *) PyOS_Readline(FILE *, FILE *, char *);
++#endif
++PyAPI_DATA(int) (*PyOS_InputHook)(void);
++PyAPI_DATA(char) *(*PyOS_ReadlineFunctionPointer)(FILE *, FILE *, char *);
++#ifndef Py_LIMITED_API
++PyAPI_DATA(PyThreadState*) _PyOS_ReadlineTState;
++#endif
++
++/* Stack size, in "pointers" (so we get extra safety margins
++   on 64-bit platforms).  On a 32-bit platform, this translates
++   to a 8k margin. */
++#define PYOS_STACK_MARGIN 2048
++
++#if defined(WIN32) && !defined(MS_WIN64) && defined(_MSC_VER) && _MSC_VER >= 1300
++/* Enable stack checking under Microsoft C */
++#define USE_STACKCHECK
++#endif
++
++#ifdef USE_STACKCHECK
++/* Check that we aren't overflowing our stack */
++PyAPI_FUNC(int) PyOS_CheckStack(void);
++#endif
++
++/* Signals */
++typedef void (*PyOS_sighandler_t)(int);
++PyAPI_FUNC(PyOS_sighandler_t) PyOS_getsig(int);
++PyAPI_FUNC(PyOS_sighandler_t) PyOS_setsig(int, PyOS_sighandler_t);
++
++
++#ifdef __cplusplus
++}
++#endif
++#endif /* !Py_PYTHONRUN_H */
+diff -Nur Python-3.2.orig//Lib/distutils/command/install.py Python-3.2/Lib/distutils/command/install.py
+--- Python-3.2.orig//Lib/distutils/command/install.py	2010-11-25 03:46:44.000000000 +0000
++++ Python-3.2/Lib/distutils/command/install.py	2011-05-21 21:16:30.000000000 +0100
 @@ -27,6 +27,8 @@
      from site import USER_SITE
      HAS_USER_SITE = True
@@ -83,10 +339,10 @@ diff -Nur Python-2.5b2.orig/Include/pythonrun.h Python-2.5b2/Include/pythonrun.h
          'headers': '$base/include/python/$dist_name',
          'scripts': '$base/bin',
          'data'   : '$base',
-diff -Nur Python-2.5b2.orig/Lib/distutils/sysconfig.py Python-2.5b2/Lib/distutils/sysconfig.py
---- Python-2.5b2.orig/Lib/distutils/sysconfig.py	2006-06-27 11:08:25.000000000 +0100
-+++ Python-2.5b2/Lib/distutils/sysconfig.py	2006-07-12 17:42:51.000000000 +0100
-@@ -99,8 +99,12 @@
+diff -Nur Python-3.2.orig//Lib/distutils/sysconfig.py Python-3.2/Lib/distutils/sysconfig.py
+--- Python-3.2.orig//Lib/distutils/sysconfig.py	2010-11-24 19:43:47.000000000 +0000
++++ Python-3.2/Lib/distutils/sysconfig.py	2011-05-21 21:16:30.000000000 +0100
+@@ -124,8 +124,12 @@
          prefix = plat_specific and EXEC_PREFIX or PREFIX
  
      if os.name == "posix":
@@ -100,10 +356,597 @@ diff -Nur Python-2.5b2.orig/Lib/distutils/sysconfig.py Python-2.5b2/Lib/distutil
          if standard_lib:
              return libpython
          else:
-diff -Nur Python-2.5b2.orig/Lib/distutils/tests/test_install.py Python-2.5b2/Lib/distutils/tests/test_install.py
---- Python-2.5b2.orig/Lib/distutils/tests/test_install.py	2004-06-26 00:02:59.000000000 +0100
-+++ Python-2.5b2/Lib/distutils/tests/test_install.py	2006-07-12 17:42:51.000000000 +0100
-@@ -39,8 +39,9 @@
+diff -Nur Python-3.2.orig//Lib/distutils/sysconfig.py.orig Python-3.2/Lib/distutils/sysconfig.py.orig
+--- Python-3.2.orig//Lib/distutils/sysconfig.py.orig	1970-01-01 01:00:00.000000000 +0100
++++ Python-3.2/Lib/distutils/sysconfig.py.orig	2010-11-24 19:43:47.000000000 +0000
+@@ -0,0 +1,583 @@
++"""Provide access to Python's configuration information.  The specific
++configuration variables available depend heavily on the platform and
++configuration.  The values may be retrieved using
++get_config_var(name), and the list of variables is available via
++get_config_vars().keys().  Additional convenience functions are also
++available.
++
++Written by:   Fred L. Drake, Jr.
++Email:        <fdrake@acm.org>
++"""
++
++__revision__ = "$Id$"
++
++import os
++import re
++import sys
++
++from .errors import DistutilsPlatformError
++
++# These are needed in a couple of spots, so just compute them once.
++PREFIX = os.path.normpath(sys.prefix)
++EXEC_PREFIX = os.path.normpath(sys.exec_prefix)
++
++# Path to the base directory of the project. On Windows the binary may
++# live in project/PCBuild9.  If we're dealing with an x64 Windows build,
++# it'll live in project/PCbuild/amd64.
++project_base = os.path.dirname(os.path.abspath(sys.executable))
++if os.name == "nt" and "pcbuild" in project_base[-8:].lower():
++    project_base = os.path.abspath(os.path.join(project_base, os.path.pardir))
++# PC/VS7.1
++if os.name == "nt" and "\\pc\\v" in project_base[-10:].lower():
++    project_base = os.path.abspath(os.path.join(project_base, os.path.pardir,
++                                                os.path.pardir))
++# PC/AMD64
++if os.name == "nt" and "\\pcbuild\\amd64" in project_base[-14:].lower():
++    project_base = os.path.abspath(os.path.join(project_base, os.path.pardir,
++                                                os.path.pardir))
++
++# python_build: (Boolean) if true, we're either building Python or
++# building an extension with an un-installed Python, so we use
++# different (hard-wired) directories.
++# Setup.local is available for Makefile builds including VPATH builds,
++# Setup.dist is available on Windows
++def _python_build():
++    for fn in ("Setup.dist", "Setup.local"):
++        if os.path.isfile(os.path.join(project_base, "Modules", fn)):
++            return True
++    return False
++python_build = _python_build()
++
++# Calculate the build qualifier flags if they are defined.  Adding the flags
++# to the include and lib directories only makes sense for an installation, not
++# an in-source build.
++build_flags = ''
++try:
++    if not python_build:
++        build_flags = sys.abiflags
++except AttributeError:
++    # It's not a configure-based build, so the sys module doesn't have
++    # this attribute, which is fine.
++    pass
++
++def get_python_version():
++    """Return a string containing the major and minor Python version,
++    leaving off the patchlevel.  Sample return values could be '1.5'
++    or '2.2'.
++    """
++    return sys.version[:3]
++
++
++def get_python_inc(plat_specific=0, prefix=None):
++    """Return the directory containing installed Python header files.
++
++    If 'plat_specific' is false (the default), this is the path to the
++    non-platform-specific header files, i.e. Python.h and so on;
++    otherwise, this is the path to platform-specific header files
++    (namely pyconfig.h).
++
++    If 'prefix' is supplied, use it instead of sys.prefix or
++    sys.exec_prefix -- i.e., ignore 'plat_specific'.
++    """
++    if prefix is None:
++        prefix = plat_specific and EXEC_PREFIX or PREFIX
++    if os.name == "posix":
++        if python_build:
++            # Assume the executable is in the build directory.  The
++            # pyconfig.h file should be in the same directory.  Since
++            # the build directory may not be the source directory, we
++            # must use "srcdir" from the makefile to find the "Include"
++            # directory.
++            base = os.path.dirname(os.path.abspath(sys.executable))
++            if plat_specific:
++                return base
++            else:
++                incdir = os.path.join(get_config_var('srcdir'), 'Include')
++                return os.path.normpath(incdir)
++        python_dir = 'python' + get_python_version() + build_flags
++        return os.path.join(prefix, "include", python_dir)
++    elif os.name == "nt":
++        return os.path.join(prefix, "include")
++    elif os.name == "os2":
++        return os.path.join(prefix, "Include")
++    else:
++        raise DistutilsPlatformError(
++            "I don't know where Python installs its C header files "
++            "on platform '%s'" % os.name)
++
++
++def get_python_lib(plat_specific=0, standard_lib=0, prefix=None):
++    """Return the directory containing the Python library (standard or
++    site additions).
++
++    If 'plat_specific' is true, return the directory containing
++    platform-specific modules, i.e. any module from a non-pure-Python
++    module distribution; otherwise, return the platform-shared library
++    directory.  If 'standard_lib' is true, return the directory
++    containing standard Python library modules; otherwise, return the
++    directory for site-specific modules.
++
++    If 'prefix' is supplied, use it instead of sys.prefix or
++    sys.exec_prefix -- i.e., ignore 'plat_specific'.
++    """
++    if prefix is None:
++        prefix = plat_specific and EXEC_PREFIX or PREFIX
++
++    if os.name == "posix":
++        libpython = os.path.join(prefix,
++                                 "lib", "python" + get_python_version())
++        if standard_lib:
++            return libpython
++        else:
++            return os.path.join(libpython, "site-packages")
++    elif os.name == "nt":
++        if standard_lib:
++            return os.path.join(prefix, "Lib")
++        else:
++            if get_python_version() < "2.2":
++                return prefix
++            else:
++                return os.path.join(prefix, "Lib", "site-packages")
++    elif os.name == "os2":
++        if standard_lib:
++            return os.path.join(prefix, "Lib")
++        else:
++            return os.path.join(prefix, "Lib", "site-packages")
++    else:
++        raise DistutilsPlatformError(
++            "I don't know where Python installs its library "
++            "on platform '%s'" % os.name)
++
++
++def customize_compiler(compiler):
++    """Do any platform-specific customization of a CCompiler instance.
++
++    Mainly needed on Unix, so we can plug in the information that
++    varies across Unices and is stored in Python's Makefile.
++    """
++    if compiler.compiler_type == "unix":
++        (cc, cxx, opt, cflags, ccshared, ldshared, so_ext, ar, ar_flags) = \
++            get_config_vars('CC', 'CXX', 'OPT', 'CFLAGS',
++                            'CCSHARED', 'LDSHARED', 'SO', 'AR', 'ARFLAGS')
++
++        if 'CC' in os.environ:
++            cc = os.environ['CC']
++        if 'CXX' in os.environ:
++            cxx = os.environ['CXX']
++        if 'LDSHARED' in os.environ:
++            ldshared = os.environ['LDSHARED']
++        if 'CPP' in os.environ:
++            cpp = os.environ['CPP']
++        else:
++            cpp = cc + " -E"           # not always
++        if 'LDFLAGS' in os.environ:
++            ldshared = ldshared + ' ' + os.environ['LDFLAGS']
++        if 'CFLAGS' in os.environ:
++            cflags = opt + ' ' + os.environ['CFLAGS']
++            ldshared = ldshared + ' ' + os.environ['CFLAGS']
++        if 'CPPFLAGS' in os.environ:
++            cpp = cpp + ' ' + os.environ['CPPFLAGS']
++            cflags = cflags + ' ' + os.environ['CPPFLAGS']
++            ldshared = ldshared + ' ' + os.environ['CPPFLAGS']
++        if 'AR' in os.environ:
++            ar = os.environ['AR']
++        if 'ARFLAGS' in os.environ:
++            archiver = ar + ' ' + os.environ['ARFLAGS']
++        else:
++            archiver = ar + ' ' + ar_flags
++
++        cc_cmd = cc + ' ' + cflags
++        compiler.set_executables(
++            preprocessor=cpp,
++            compiler=cc_cmd,
++            compiler_so=cc_cmd + ' ' + ccshared,
++            compiler_cxx=cxx,
++            linker_so=ldshared,
++            linker_exe=cc,
++            archiver=archiver)
++
++        compiler.shared_lib_extension = so_ext
++
++
++def get_config_h_filename():
++    """Return full pathname of installed pyconfig.h file."""
++    if python_build:
++        if os.name == "nt":
++            inc_dir = os.path.join(project_base, "PC")
++        else:
++            inc_dir = project_base
++    else:
++        inc_dir = get_python_inc(plat_specific=1)
++    if get_python_version() < '2.2':
++        config_h = 'config.h'
++    else:
++        # The name of the config.h file changed in 2.2
++        config_h = 'pyconfig.h'
++    return os.path.join(inc_dir, config_h)
++
++
++def get_makefile_filename():
++    """Return full pathname of installed Makefile from the Python build."""
++    if python_build:
++        return os.path.join(os.path.dirname(sys.executable), "Makefile")
++    lib_dir = get_python_lib(plat_specific=1, standard_lib=1)
++    config_file = 'config-{}{}'.format(get_python_version(), build_flags)
++    return os.path.join(lib_dir, config_file, 'Makefile')
++
++
++def parse_config_h(fp, g=None):
++    """Parse a config.h-style file.
++
++    A dictionary containing name/value pairs is returned.  If an
++    optional dictionary is passed in as the second argument, it is
++    used instead of a new dictionary.
++    """
++    if g is None:
++        g = {}
++    define_rx = re.compile("#define ([A-Z][A-Za-z0-9_]+) (.*)\n")
++    undef_rx = re.compile("/[*] #undef ([A-Z][A-Za-z0-9_]+) [*]/\n")
++    #
++    while True:
++        line = fp.readline()
++        if not line:
++            break
++        m = define_rx.match(line)
++        if m:
++            n, v = m.group(1, 2)
++            try: v = int(v)
++            except ValueError: pass
++            g[n] = v
++        else:
++            m = undef_rx.match(line)
++            if m:
++                g[m.group(1)] = 0
++    return g
++
++
++# Regexes needed for parsing Makefile (and similar syntaxes,
++# like old-style Setup files).
++_variable_rx = re.compile("([a-zA-Z][a-zA-Z0-9_]+)\s*=\s*(.*)")
++_findvar1_rx = re.compile(r"\$\(([A-Za-z][A-Za-z0-9_]*)\)")
++_findvar2_rx = re.compile(r"\${([A-Za-z][A-Za-z0-9_]*)}")
++
++def parse_makefile(fn, g=None):
++    """Parse a Makefile-style file.
++
++    A dictionary containing name/value pairs is returned.  If an
++    optional dictionary is passed in as the second argument, it is
++    used instead of a new dictionary.
++    """
++    from distutils.text_file import TextFile
++    fp = TextFile(fn, strip_comments=1, skip_blanks=1, join_lines=1, errors="surrogateescape")
++
++    if g is None:
++        g = {}
++    done = {}
++    notdone = {}
++
++    while True:
++        line = fp.readline()
++        if line is None: # eof
++            break
++        m = _variable_rx.match(line)
++        if m:
++            n, v = m.group(1, 2)
++            v = v.strip()
++            # `$$' is a literal `$' in make
++            tmpv = v.replace('$$', '')
++
++            if "$" in tmpv:
++                notdone[n] = v
++            else:
++                try:
++                    v = int(v)
++                except ValueError:
++                    # insert literal `$'
++                    done[n] = v.replace('$$', '$')
++                else:
++                    done[n] = v
++
++    # Variables with a 'PY_' prefix in the makefile. These need to
++    # be made available without that prefix through sysconfig.
++    # Special care is needed to ensure that variable expansion works, even
++    # if the expansion uses the name without a prefix.
++    renamed_variables = ('CFLAGS', 'LDFLAGS', 'CPPFLAGS')
++
++    # do variable interpolation here
++    while notdone:
++        for name in list(notdone):
++            value = notdone[name]
++            m = _findvar1_rx.search(value) or _findvar2_rx.search(value)
++            if m:
++                n = m.group(1)
++                found = True
++                if n in done:
++                    item = str(done[n])
++                elif n in notdone:
++                    # get it on a subsequent round
++                    found = False
++                elif n in os.environ:
++                    # do it like make: fall back to environment
++                    item = os.environ[n]
++
++                elif n in renamed_variables:
++                    if name.startswith('PY_') and name[3:] in renamed_variables:
++                        item = ""
++
++                    elif 'PY_' + n in notdone:
++                        found = False
++
++                    else:
++                        item = str(done['PY_' + n])
++                else:
++                    done[n] = item = ""
++                if found:
++                    after = value[m.end():]
++                    value = value[:m.start()] + item + after
++                    if "$" in after:
++                        notdone[name] = value
++                    else:
++                        try: value = int(value)
++                        except ValueError:
++                            done[name] = value.strip()
++                        else:
++                            done[name] = value
++                        del notdone[name]
++
++                        if name.startswith('PY_') \
++                            and name[3:] in renamed_variables:
++
++                            name = name[3:]
++                            if name not in done:
++                                done[name] = value
++            else:
++                # bogus variable reference; just drop it since we can't deal
++                del notdone[name]
++
++    fp.close()
++
++    # strip spurious spaces
++    for k, v in done.items():
++        if isinstance(v, str):
++            done[k] = v.strip()
++
++    # save the results in the global dictionary
++    g.update(done)
++    return g
++
++
++def expand_makefile_vars(s, vars):
++    """Expand Makefile-style variables -- "${foo}" or "$(foo)" -- in
++    'string' according to 'vars' (a dictionary mapping variable names to
++    values).  Variables not present in 'vars' are silently expanded to the
++    empty string.  The variable values in 'vars' should not contain further
++    variable expansions; if 'vars' is the output of 'parse_makefile()',
++    you're fine.  Returns a variable-expanded version of 's'.
++    """
++
++    # This algorithm does multiple expansion, so if vars['foo'] contains
++    # "${bar}", it will expand ${foo} to ${bar}, and then expand
++    # ${bar}... and so forth.  This is fine as long as 'vars' comes from
++    # 'parse_makefile()', which takes care of such expansions eagerly,
++    # according to make's variable expansion semantics.
++
++    while True:
++        m = _findvar1_rx.search(s) or _findvar2_rx.search(s)
++        if m:
++            (beg, end) = m.span()
++            s = s[0:beg] + vars.get(m.group(1)) + s[end:]
++        else:
++            break
++    return s
++
++
++_config_vars = None
++
++def _init_posix():
++    """Initialize the module as appropriate for POSIX systems."""
++    g = {}
++    # load the installed Makefile:
++    try:
++        filename = get_makefile_filename()
++        parse_makefile(filename, g)
++    except IOError as msg:
++        my_msg = "invalid Python installation: unable to open %s" % filename
++        if hasattr(msg, "strerror"):
++            my_msg = my_msg + " (%s)" % msg.strerror
++
++        raise DistutilsPlatformError(my_msg)
++
++    # load the installed pyconfig.h:
++    try:
++        filename = get_config_h_filename()
++        with open(filename) as file:
++            parse_config_h(file, g)
++    except IOError as msg:
++        my_msg = "invalid Python installation: unable to open %s" % filename
++        if hasattr(msg, "strerror"):
++            my_msg = my_msg + " (%s)" % msg.strerror
++
++        raise DistutilsPlatformError(my_msg)
++
++    # On MacOSX we need to check the setting of the environment variable
++    # MACOSX_DEPLOYMENT_TARGET: configure bases some choices on it so
++    # it needs to be compatible.
++    # If it isn't set we set it to the configure-time value
++    if sys.platform == 'darwin' and 'MACOSX_DEPLOYMENT_TARGET' in g:
++        cfg_target = g['MACOSX_DEPLOYMENT_TARGET']
++        cur_target = os.getenv('MACOSX_DEPLOYMENT_TARGET', '')
++        if cur_target == '':
++            cur_target = cfg_target
++            os.putenv('MACOSX_DEPLOYMENT_TARGET', cfg_target)
++        elif [int(x) for x in cfg_target.split('.')] > [int(x) for x in cur_target.split('.')]:
++            my_msg = ('$MACOSX_DEPLOYMENT_TARGET mismatch: now "%s" but "%s" during configure'
++                % (cur_target, cfg_target))
++            raise DistutilsPlatformError(my_msg)
++
++    # On AIX, there are wrong paths to the linker scripts in the Makefile
++    # -- these paths are relative to the Python source, but when installed
++    # the scripts are in another directory.
++    if python_build:
++        g['LDSHARED'] = g['BLDSHARED']
++
++    elif get_python_version() < '2.1':
++        # The following two branches are for 1.5.2 compatibility.
++        if sys.platform == 'aix4':          # what about AIX 3.x ?
++            # Linker script is in the config directory, not in Modules as the
++            # Makefile says.
++            python_lib = get_python_lib(standard_lib=1)
++            ld_so_aix = os.path.join(python_lib, 'config', 'ld_so_aix')
++            python_exp = os.path.join(python_lib, 'config', 'python.exp')
++
++            g['LDSHARED'] = "%s %s -bI:%s" % (ld_so_aix, g['CC'], python_exp)
++
++    global _config_vars
++    _config_vars = g
++
++
++def _init_nt():
++    """Initialize the module as appropriate for NT"""
++    g = {}
++    # set basic install directories
++    g['LIBDEST'] = get_python_lib(plat_specific=0, standard_lib=1)
++    g['BINLIBDEST'] = get_python_lib(plat_specific=1, standard_lib=1)
++
++    # XXX hmmm.. a normal install puts include files here
++    g['INCLUDEPY'] = get_python_inc(plat_specific=0)
++
++    g['SO'] = '.pyd'
++    g['EXE'] = ".exe"
++    g['VERSION'] = get_python_version().replace(".", "")
++    g['BINDIR'] = os.path.dirname(os.path.abspath(sys.executable))
++
++    global _config_vars
++    _config_vars = g
++
++
++def _init_os2():
++    """Initialize the module as appropriate for OS/2"""
++    g = {}
++    # set basic install directories
++    g['LIBDEST'] = get_python_lib(plat_specific=0, standard_lib=1)
++    g['BINLIBDEST'] = get_python_lib(plat_specific=1, standard_lib=1)
++
++    # XXX hmmm.. a normal install puts include files here
++    g['INCLUDEPY'] = get_python_inc(plat_specific=0)
++
++    g['SO'] = '.pyd'
++    g['EXE'] = ".exe"
++
++    global _config_vars
++    _config_vars = g
++
++
++def get_config_vars(*args):
++    """With no arguments, return a dictionary of all configuration
++    variables relevant for the current platform.  Generally this includes
++    everything needed to build extensions and install both pure modules and
++    extensions.  On Unix, this means every variable defined in Python's
++    installed Makefile; on Windows and Mac OS it's a much smaller set.
++
++    With arguments, return a list of values that result from looking up
++    each argument in the configuration variable dictionary.
++    """
++    global _config_vars
++    if _config_vars is None:
++        func = globals().get("_init_" + os.name)
++        if func:
++            func()
++        else:
++            _config_vars = {}
++
++        # Normalized versions of prefix and exec_prefix are handy to have;
++        # in fact, these are the standard versions used most places in the
++        # Distutils.
++        _config_vars['prefix'] = PREFIX
++        _config_vars['exec_prefix'] = EXEC_PREFIX
++
++        # Convert srcdir into an absolute path if it appears necessary.
++        # Normally it is relative to the build directory.  However, during
++        # testing, for example, we might be running a non-installed python
++        # from a different directory.
++        if python_build and os.name == "posix":
++            base = os.path.dirname(os.path.abspath(sys.executable))
++            if (not os.path.isabs(_config_vars['srcdir']) and
++                base != os.getcwd()):
++                # srcdir is relative and we are not in the same directory
++                # as the executable. Assume executable is in the build
++                # directory and make srcdir absolute.
++                srcdir = os.path.join(base, _config_vars['srcdir'])
++                _config_vars['srcdir'] = os.path.normpath(srcdir)
++
++        if sys.platform == 'darwin':
++            kernel_version = os.uname()[2] # Kernel version (8.4.3)
++            major_version = int(kernel_version.split('.')[0])
++
++            if major_version < 8:
++                # On Mac OS X before 10.4, check if -arch and -isysroot
++                # are in CFLAGS or LDFLAGS and remove them if they are.
++                # This is needed when building extensions on a 10.3 system
++                # using a universal build of python.
++                for key in ('LDFLAGS', 'BASECFLAGS',
++                        # a number of derived variables. These need to be
++                        # patched up as well.
++                        'CFLAGS', 'PY_CFLAGS', 'BLDSHARED'):
++                    flags = _config_vars[key]
++                    flags = re.sub('-arch\s+\w+\s', ' ', flags, re.ASCII)
++                    flags = re.sub('-isysroot [^ \t]*', ' ', flags)
++                    _config_vars[key] = flags
++
++            else:
++
++                # Allow the user to override the architecture flags using
++                # an environment variable.
++                # NOTE: This name was introduced by Apple in OSX 10.5 and
++                # is used by several scripting languages distributed with
++                # that OS release.
++
++                if 'ARCHFLAGS' in os.environ:
++                    arch = os.environ['ARCHFLAGS']
++                    for key in ('LDFLAGS', 'BASECFLAGS',
++                        # a number of derived variables. These need to be
++                        # patched up as well.
++                        'CFLAGS', 'PY_CFLAGS', 'BLDSHARED'):
++
++                        flags = _config_vars[key]
++                        flags = re.sub('-arch\s+\w+\s', ' ', flags)
++                        flags = flags + ' ' + arch
++                        _config_vars[key] = flags
++
++    if args:
++        vals = []
++        for name in args:
++            vals.append(_config_vars.get(name))
++        return vals
++    else:
++        return _config_vars
++
++def get_config_var(name):
++    """Return the value of a single variable using the dictionary
++    returned by 'get_config_vars()'.  Equivalent to
++    get_config_vars().get(name)
++    """
++    return get_config_vars().get(name)
+diff -Nur Python-3.2.orig//Lib/distutils/tests/test_install.py Python-3.2/Lib/distutils/tests/test_install.py
+--- Python-3.2.orig//Lib/distutils/tests/test_install.py	2010-11-20 19:04:17.000000000 +0000
++++ Python-3.2/Lib/distutils/tests/test_install.py	2011-05-21 21:16:30.000000000 +0100
+@@ -49,8 +49,9 @@
              self.assertEqual(got, expected)
  
          libdir = os.path.join(destination, "lib", "python")
@@ -114,8 +957,219 @@ diff -Nur Python-2.5b2.orig/Lib/distutils/tests/test_install.py Python-2.5b2/Lib
          check_path(cmd.install_purelib, libdir)
          check_path(cmd.install_headers,
                     os.path.join(destination, "include", "python", "foopkg"))
---- Python-3.2/Lib/site.py.orig	2010-12-26 20:54:29.000000000 +0100
-+++ Python-3.2/Lib/site.py	2011-04-02 08:16:21.341737273 +0200
+diff -Nur Python-3.2.orig//Lib/distutils/tests/test_install.py.orig Python-3.2/Lib/distutils/tests/test_install.py.orig
+--- Python-3.2.orig//Lib/distutils/tests/test_install.py.orig	1970-01-01 01:00:00.000000000 +0100
++++ Python-3.2/Lib/distutils/tests/test_install.py.orig	2010-11-20 19:04:17.000000000 +0000
+@@ -0,0 +1,206 @@
++"""Tests for distutils.command.install."""
++
++import os
++import os.path
++import sys
++import unittest
++import site
++
++from test.support import captured_stdout, run_unittest
++
++from distutils.command.install import install
++from distutils.command import install as install_module
++from distutils.command.install import INSTALL_SCHEMES
++from distutils.core import Distribution
++from distutils.errors import DistutilsOptionError
++
++from distutils.tests import support
++
++class InstallTestCase(support.TempdirManager,
++                      support.EnvironGuard,
++                      support.LoggingSilencer,
++                      unittest.TestCase):
++
++    def test_home_installation_scheme(self):
++        # This ensure two things:
++        # - that --home generates the desired set of directory names
++        # - test --home is supported on all platforms
++        builddir = self.mkdtemp()
++        destination = os.path.join(builddir, "installation")
++
++        dist = Distribution({"name": "foopkg"})
++        # script_name need not exist, it just need to be initialized
++        dist.script_name = os.path.join(builddir, "setup.py")
++        dist.command_obj["build"] = support.DummyCommand(
++            build_base=builddir,
++            build_lib=os.path.join(builddir, "lib"),
++            )
++
++        cmd = install(dist)
++        cmd.home = destination
++        cmd.ensure_finalized()
++
++        self.assertEqual(cmd.install_base, destination)
++        self.assertEqual(cmd.install_platbase, destination)
++
++        def check_path(got, expected):
++            got = os.path.normpath(got)
++            expected = os.path.normpath(expected)
++            self.assertEqual(got, expected)
++
++        libdir = os.path.join(destination, "lib", "python")
++        check_path(cmd.install_lib, libdir)
++        check_path(cmd.install_platlib, libdir)
++        check_path(cmd.install_purelib, libdir)
++        check_path(cmd.install_headers,
++                   os.path.join(destination, "include", "python", "foopkg"))
++        check_path(cmd.install_scripts, os.path.join(destination, "bin"))
++        check_path(cmd.install_data, destination)
++
++    def test_user_site(self):
++        # site.USER_SITE was introduced in 2.6
++        if sys.version < '2.6':
++            return
++
++        # preparing the environement for the test
++        self.old_user_base = site.USER_BASE
++        self.old_user_site = site.USER_SITE
++        self.tmpdir = self.mkdtemp()
++        self.user_base = os.path.join(self.tmpdir, 'B')
++        self.user_site = os.path.join(self.tmpdir, 'S')
++        site.USER_BASE = self.user_base
++        site.USER_SITE = self.user_site
++        install_module.USER_BASE = self.user_base
++        install_module.USER_SITE = self.user_site
++
++        def _expanduser(path):
++            return self.tmpdir
++        self.old_expand = os.path.expanduser
++        os.path.expanduser = _expanduser
++
++        try:
++            # this is the actual test
++            self._test_user_site()
++        finally:
++            site.USER_BASE = self.old_user_base
++            site.USER_SITE = self.old_user_site
++            install_module.USER_BASE = self.old_user_base
++            install_module.USER_SITE = self.old_user_site
++            os.path.expanduser = self.old_expand
++
++    def _test_user_site(self):
++        for key in ('nt_user', 'unix_user', 'os2_home'):
++            self.assertTrue(key in INSTALL_SCHEMES)
++
++        dist = Distribution({'name': 'xx'})
++        cmd = install(dist)
++
++        # making sure the user option is there
++        options = [name for name, short, lable in
++                   cmd.user_options]
++        self.assertTrue('user' in options)
++
++        # setting a value
++        cmd.user = 1
++
++        # user base and site shouldn't be created yet
++        self.assertTrue(not os.path.exists(self.user_base))
++        self.assertTrue(not os.path.exists(self.user_site))
++
++        # let's run finalize
++        cmd.ensure_finalized()
++
++        # now they should
++        self.assertTrue(os.path.exists(self.user_base))
++        self.assertTrue(os.path.exists(self.user_site))
++
++        self.assertTrue('userbase' in cmd.config_vars)
++        self.assertTrue('usersite' in cmd.config_vars)
++
++    def test_handle_extra_path(self):
++        dist = Distribution({'name': 'xx', 'extra_path': 'path,dirs'})
++        cmd = install(dist)
++
++        # two elements
++        cmd.handle_extra_path()
++        self.assertEqual(cmd.extra_path, ['path', 'dirs'])
++        self.assertEqual(cmd.extra_dirs, 'dirs')
++        self.assertEqual(cmd.path_file, 'path')
++
++        # one element
++        cmd.extra_path = ['path']
++        cmd.handle_extra_path()
++        self.assertEqual(cmd.extra_path, ['path'])
++        self.assertEqual(cmd.extra_dirs, 'path')
++        self.assertEqual(cmd.path_file, 'path')
++
++        # none
++        dist.extra_path = cmd.extra_path = None
++        cmd.handle_extra_path()
++        self.assertEqual(cmd.extra_path, None)
++        self.assertEqual(cmd.extra_dirs, '')
++        self.assertEqual(cmd.path_file, None)
++
++        # three elements (no way !)
++        cmd.extra_path = 'path,dirs,again'
++        self.assertRaises(DistutilsOptionError, cmd.handle_extra_path)
++
++    def test_finalize_options(self):
++        dist = Distribution({'name': 'xx'})
++        cmd = install(dist)
++
++        # must supply either prefix/exec-prefix/home or
++        # install-base/install-platbase -- not both
++        cmd.prefix = 'prefix'
++        cmd.install_base = 'base'
++        self.assertRaises(DistutilsOptionError, cmd.finalize_options)
++
++        # must supply either home or prefix/exec-prefix -- not both
++        cmd.install_base = None
++        cmd.home = 'home'
++        self.assertRaises(DistutilsOptionError, cmd.finalize_options)
++
++        # can't combine user with with prefix/exec_prefix/home or
++        # install_(plat)base
++        cmd.prefix = None
++        cmd.user = 'user'
++        self.assertRaises(DistutilsOptionError, cmd.finalize_options)
++
++    def test_record(self):
++
++        install_dir = self.mkdtemp()
++        pkgdir, dist = self.create_dist()
++
++        dist = Distribution()
++        cmd = install(dist)
++        dist.command_obj['install'] = cmd
++        cmd.root = install_dir
++        cmd.record = os.path.join(pkgdir, 'RECORD')
++        cmd.ensure_finalized()
++
++        cmd.run()
++
++        # let's check the RECORD file was created with one
++        # line (the egg info file)
++        f = open(cmd.record)
++        try:
++            self.assertEqual(len(f.readlines()), 1)
++        finally:
++            f.close()
++
++    def test_debug_mode(self):
++        # this covers the code called when DEBUG is set
++        old_logs_len = len(self.logs)
++        install_module.DEBUG = True
++        try:
++            with captured_stdout() as stdout:
++                self.test_record()
++        finally:
++            install_module.DEBUG = False
++        self.assertTrue(len(self.logs) > old_logs_len)
++
++def test_suite():
++    return unittest.makeSuite(InstallTestCase)
++
++if __name__ == "__main__":
++    run_unittest(test_suite())
+diff -Nur Python-3.2.orig//Lib/site.py Python-3.2/Lib/site.py
+--- Python-3.2.orig//Lib/site.py	2010-12-26 19:54:29.000000000 +0000
++++ Python-3.2/Lib/site.py	2011-05-21 21:16:30.000000000 +0100
 @@ -285,13 +285,16 @@
          if sys.platform in ('os2emx', 'riscos'):
              sitepackages.append(os.path.join(prefix, "Lib", "site-packages"))
@@ -136,8 +1190,40 @@ diff -Nur Python-2.5b2.orig/Lib/distutils/tests/test_install.py Python-2.5b2/Lib
          if sys.platform == "darwin":
              # for framework builds *only* we add the standard Apple
              # locations.
---- Python-3.2/Makefile.pre.in.orig	2011-02-19 09:47:14.000000000 +0100
-+++ Python-3.2/Makefile.pre.in	2011-04-02 08:17:59.357737273 +0200
+diff -Nur Python-3.2.orig//Lib/sysconfig.py Python-3.2/Lib/sysconfig.py
+--- Python-3.2.orig//Lib/sysconfig.py	2010-11-25 01:34:47.000000000 +0000
++++ Python-3.2/Lib/sysconfig.py	2011-05-21 21:23:17.000000000 +0100
+@@ -21,10 +21,10 @@
+ 
+ _INSTALL_SCHEMES = {
+     'posix_prefix': {
+-        'stdlib': '{base}/lib/python{py_version_short}',
+-        'platstdlib': '{platbase}/lib/python{py_version_short}',
++        'stdlib': '{base}/' + sys.lib + '/python{py_version_short}',
++        'platstdlib': '{platbase}/' + sys.lib + '/python{py_version_short}',
+         'purelib': '{base}/lib/python{py_version_short}/site-packages',
+-        'platlib': '{platbase}/lib/python{py_version_short}/site-packages',
++        'platlib': '{platbase}/' + sys.lib + '/python{py_version_short}/site-packages',
+         'include':
+             '{base}/include/python{py_version_short}{abiflags}',
+         'platinclude':
+@@ -33,10 +33,10 @@
+         'data': '{base}',
+         },
+     'posix_home': {
+-        'stdlib': '{base}/lib/python',
+-        'platstdlib': '{base}/lib/python',
++        'stdlib': '{base}/' + sys.lib + '/python',
++        'platstdlib': '{base}/' + sys.lib + '/python',
+         'purelib': '{base}/lib/python',
+-        'platlib': '{base}/lib/python',
++        'platlib': '{base}/' + sys.lib + '/python',
+         'include': '{base}/include/python',
+         'platinclude': '{base}/include/python',
+         'scripts': '{base}/bin',
+diff -Nur Python-3.2.orig//Makefile.pre.in Python-3.2/Makefile.pre.in
+--- Python-3.2.orig//Makefile.pre.in	2011-02-19 08:47:14.000000000 +0000
++++ Python-3.2/Makefile.pre.in	2011-05-21 21:16:30.000000000 +0100
 @@ -86,6 +86,8 @@
  
  # Machine-dependent subdirectories
@@ -165,8 +1251,9 @@ diff -Nur Python-2.5b2.orig/Lib/distutils/tests/test_install.py Python-2.5b2/Lib
  
  Python/importdl.o: $(srcdir)/Python/importdl.c
  		$(CC) -c $(PY_CORE_CFLAGS) -I$(DLINCLDIR) -o $@ $(srcdir)/Python/importdl.c
---- Python-3.2/Modules/getpath.c.orig	2010-12-03 21:14:31.000000000 +0100
-+++ Python-3.2/Modules/getpath.c	2011-04-02 08:18:39.573738111 +0200
+diff -Nur Python-3.2.orig//Modules/getpath.c Python-3.2/Modules/getpath.c
+--- Python-3.2.orig//Modules/getpath.c	2010-12-03 20:14:31.000000000 +0000
++++ Python-3.2/Modules/getpath.c	2011-05-21 21:16:30.000000000 +0100
 @@ -121,9 +121,17 @@
  #define EXEC_PREFIX PREFIX
  #endif
@@ -196,9 +1283,9 @@ diff -Nur Python-2.5b2.orig/Lib/distutils/tests/test_install.py Python-2.5b2/Lib
  
  static void
  reduce(wchar_t *dir)
-diff -Nur Python-2.5b2.orig/Python/getplatform.c Python-2.5b2/Python/getplatform.c
---- Python-2.5b2.orig/Python/getplatform.c	2000-09-02 00:29:29.000000000 +0100
-+++ Python-2.5b2/Python/getplatform.c	2006-07-12 17:42:51.000000000 +0100
+diff -Nur Python-3.2.orig//Python/getplatform.c Python-3.2/Python/getplatform.c
+--- Python-3.2.orig//Python/getplatform.c	2000-09-02 00:29:29.000000000 +0100
++++ Python-3.2/Python/getplatform.c	2011-05-21 21:16:30.000000000 +0100
 @@ -10,3 +10,23 @@
  {
  	return PLATFORM;
@@ -223,8 +1310,9 @@ diff -Nur Python-2.5b2.orig/Python/getplatform.c Python-2.5b2/Python/getplatform
 +{
 +	return LIB;
 +}
---- Python-3.2/Python/sysmodule.c.orig	2011-01-05 21:08:25.000000000 +0100
-+++ Python-3.2/Python/sysmodule.c	2011-04-02 08:20:16.773734758 +0200
+diff -Nur Python-3.2.orig//Python/sysmodule.c Python-3.2/Python/sysmodule.c
+--- Python-3.2.orig//Python/sysmodule.c	2011-01-05 20:08:25.000000000 +0000
++++ Python-3.2/Python/sysmodule.c	2011-05-21 21:16:30.000000000 +0100
 @@ -1608,6 +1608,10 @@
                          PyUnicode_FromString(Py_GetCopyright()));
      SET_SYS_FROM_STRING("platform",
@@ -236,8 +1324,9 @@ diff -Nur Python-2.5b2.orig/Python/getplatform.c Python-2.5b2/Python/getplatform
      SET_SYS_FROM_STRING("executable",
                          PyUnicode_FromWideChar(
                                 Py_GetProgramFullPath(), -1));
---- Python-3.2/setup.py.orig	2010-12-28 10:51:43.000000000 +0100
-+++ Python-3.2/setup.py	2011-04-02 08:21:49.597738949 +0200
+diff -Nur Python-3.2.orig//setup.py Python-3.2/setup.py
+--- Python-3.2.orig//setup.py	2010-12-28 09:51:43.000000000 +0000
++++ Python-3.2/setup.py	2011-05-21 21:16:30.000000000 +0100
 @@ -422,12 +422,12 @@
              add_dir_to_list(self.compiler.include_dirs,
                              sysconfig.get_config_var("INCLUDEDIR"))
