@@ -1,0 +1,80 @@
+diff --git a/Lib/distutils/tests/test_build_py.py b/Lib/distutils/tests/test_build_py.py
+--- a/Lib/distutils/tests/test_build_py.py
++++ b/Lib/distutils/tests/test_build_py.py
+@@ -3,6 +3,7 @@
+ import os
+ import sys
+ import io
++import imp
+ import unittest
+ 
+ from distutils.command.build_py import build_py
+@@ -57,9 +58,11 @@ class BuildPyTestCase(support.TempdirMan
+         self.assertEqual(len(cmd.get_outputs()), 3)
+         pkgdest = os.path.join(destination, "pkg")
+         files = os.listdir(pkgdest)
+-        self.assertTrue("__init__.py" in files)
+-        self.assertTrue("__init__.pyc" in files)
+-        self.assertTrue("README.txt" in files)
++        byte_compiled_files = os.listdir(os.path.join(pkgdest, "__pycache__"))
++        self.assertIn("__init__.py", files)
++        self.assertIn("__init__.{}.pyc".format(imp.get_tag()),
++                      byte_compiled_files)
++        self.assertIn("README.txt", files)
+ 
+     def test_empty_package_dir (self):
+         # See SF 1668596/1720897.
+diff --git a/Lib/distutils/tests/test_install_lib.py b/Lib/distutils/tests/test_install_lib.py
+--- a/Lib/distutils/tests/test_install_lib.py
++++ b/Lib/distutils/tests/test_install_lib.py
+@@ -1,6 +1,7 @@
+ """Tests for distutils.command.install_data."""
+ import sys
+ import os
++import imp
+ import unittest
+ 
+ from distutils.command.install_lib import install_lib
+@@ -36,14 +37,19 @@ class InstallLibTestCase(support.Tempdir
+                          'byte-compile not supported')
+     def test_byte_compile(self):
+         pkg_dir, dist = self.create_dist()
++        cache_dir = os.path.join(pkg_dir, '__pycache__')
+         cmd = install_lib(dist)
+         cmd.compile = cmd.optimize = 1
+ 
+         f = os.path.join(pkg_dir, 'foo.py')
+         self.write_file(f, '# python file')
+         cmd.byte_compile([f])
+-        self.assertTrue(os.path.exists(os.path.join(pkg_dir, 'foo.pyc')))
+-        self.assertTrue(os.path.exists(os.path.join(pkg_dir, 'foo.pyo')))
++        compiled_file = os.path.join(cache_dir,
++                                     "foo.{}.pyc".format(imp.get_tag()))
++        optimized_file = os.path.join(cache_dir,
++                                      "foo.{}.pyo".format(imp.get_tag()))
++        self.assertTrue(os.path.exists(compiled_file))
++        self.assertTrue(os.path.exists(optimized_file))
+ 
+     def test_get_outputs(self):
+         pkg_dir, dist = self.create_dist()
+diff --git a/Lib/distutils/util.py b/Lib/distutils/util.py
+--- a/Lib/distutils/util.py
++++ b/Lib/distutils/util.py
+@@ -6,7 +6,7 @@ one of the other *util.py modules.
+ 
+ __revision__ = "$Id$"
+ 
+-import sys, os, string, re
++import sys, os, string, re, imp
+ from distutils.errors import DistutilsPlatformError
+ from distutils.dep_util import newer
+ from distutils.spawn import spawn
+@@ -533,7 +533,7 @@ byte_compile(files, optimize=%r, force=%
+             # Terminology from the py_compile module:
+             #   cfile - byte-compiled file
+             #   dfile - purported source filename (same as 'file' by default)
+-            cfile = file + (__debug__ and "c" or "o")
++            cfile = imp.cache_from_source(file, debug_override=not optimize)
+             dfile = file
+             if prefix:
+                 if file[:len(prefix)] != prefix:

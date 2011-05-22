@@ -34,7 +34,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}
-Release:	0.2
+Release:	0.3
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -44,6 +44,7 @@ Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-lib64.patch
 Patch3:		%{name}-noarch_to_datadir.patch
+Patch4:		%{name}-bug11254.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf
 BuildRequires:	bluez-libs-devel
@@ -442,6 +443,7 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 %{__autoconf}
