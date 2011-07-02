@@ -46,7 +46,7 @@ Patch2:		%{name}-lib64.patch
 Patch3:		%{name}-noarch_to_datadir.patch
 Patch4:		%{name}-bug11254.patch
 URL:		http://www.python.org/
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.65
 BuildRequires:	bluez-libs-devel
 BuildRequires:	bzip2-devel
 BuildRequires:	db-devel >= 4
@@ -63,6 +63,7 @@ BuildRequires:	readline-devel >= 5.0
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sed >= 4.0
 BuildRequires:	sqlite3-devel >= 3.3.5
+BuildRequires:	tar >= 1.22
 %{?with_info:BuildRequires:	tetex-makeindex}
 %{?with_tkinter:BuildRequires:	tix-devel >= 1:8.1.4-4}
 %{?with_tkinter:BuildRequires:	tk-devel >= 8.4.3}
