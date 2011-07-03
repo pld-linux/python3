@@ -63,7 +63,7 @@ BuildRequires:	readline-devel >= 5.0
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sed >= 4.0
 BuildRequires:	sqlite3-devel >= 3.3.5
-BuildRequires:	tar >= 1.22
+BuildRequires:	tar >= 1:1.22
 %{?with_info:BuildRequires:	tetex-makeindex}
 %{?with_tkinter:BuildRequires:	tix-devel >= 1:8.1.4-4}
 %{?with_tkinter:BuildRequires:	tk-devel >= 8.4.3}
