@@ -1,7 +1,7 @@
-diff -Nur Python-3.2.orig/configure.in Python-3.2/configure.in
---- Python-3.2.orig/configure.in	2011-02-19 08:58:23.000000000 +0000
-+++ Python-3.2/configure.in	2011-05-21 21:16:30.000000000 +0100
-@@ -580,6 +580,41 @@
+diff -Nur Python-3.2.1.orig//configure.in Python-3.2.1/configure.in
+--- Python-3.2.1.orig//configure.in	2011-07-09 07:58:56.000000000 +0100
++++ Python-3.2.1/configure.in	2011-07-12 22:20:12.000000000 +0100
+@@ -592,6 +592,41 @@
      esac;;
  esac
  
@@ -43,9 +43,9 @@ diff -Nur Python-3.2.orig/configure.in Python-3.2/configure.in
  
  AC_SUBST(LIBRARY)
  AC_MSG_CHECKING(LIBRARY)
-diff -Nur Python-3.2.orig/Include/pythonrun.h Python-3.2/Include/pythonrun.h
---- Python-3.2.orig/Include/pythonrun.h	2010-12-27 01:49:31.000000000 +0000
-+++ Python-3.2/Include/pythonrun.h	2011-05-21 21:16:30.000000000 +0100
+diff -Nur Python-3.2.1.orig//Include/pythonrun.h Python-3.2.1/Include/pythonrun.h
+--- Python-3.2.1.orig//Include/pythonrun.h	2011-07-09 07:58:46.000000000 +0100
++++ Python-3.2.1/Include/pythonrun.h	2011-07-12 22:20:12.000000000 +0100
 @@ -175,6 +175,8 @@
  /* In their own files */
  PyAPI_FUNC(const char *) Py_GetVersion(void);
@@ -55,9 +55,9 @@ diff -Nur Python-3.2.orig/Include/pythonrun.h Python-3.2/Include/pythonrun.h
  PyAPI_FUNC(const char *) Py_GetCopyright(void);
  PyAPI_FUNC(const char *) Py_GetCompiler(void);
  PyAPI_FUNC(const char *) Py_GetBuildInfo(void);
-diff -Nur Python-3.2.orig/Lib/distutils/command/install.py Python-3.2/Lib/distutils/command/install.py
---- Python-3.2.orig/Lib/distutils/command/install.py	2010-11-25 03:46:44.000000000 +0000
-+++ Python-3.2/Lib/distutils/command/install.py	2011-05-21 21:16:30.000000000 +0100
+diff -Nur Python-3.2.1.orig//Lib/distutils/command/install.py Python-3.2.1/Lib/distutils/command/install.py
+--- Python-3.2.1.orig//Lib/distutils/command/install.py	2011-07-09 07:58:46.000000000 +0100
++++ Python-3.2.1/Lib/distutils/command/install.py	2011-07-12 22:20:12.000000000 +0100
 @@ -27,6 +27,8 @@
      from site import USER_SITE
      HAS_USER_SITE = True
@@ -84,9 +84,9 @@ diff -Nur Python-3.2.orig/Lib/distutils/command/install.py Python-3.2/Lib/distut
          'headers': '$base/include/python/$dist_name',
          'scripts': '$base/bin',
          'data'   : '$base',
-diff -Nur Python-3.2.orig/Lib/distutils/sysconfig.py Python-3.2/Lib/distutils/sysconfig.py
---- Python-3.2.orig/Lib/distutils/sysconfig.py	2010-11-24 19:43:47.000000000 +0000
-+++ Python-3.2/Lib/distutils/sysconfig.py	2011-05-21 21:16:30.000000000 +0100
+diff -Nur Python-3.2.1.orig//Lib/distutils/sysconfig.py Python-3.2.1/Lib/distutils/sysconfig.py
+--- Python-3.2.1.orig//Lib/distutils/sysconfig.py	2011-07-09 07:58:47.000000000 +0100
++++ Python-3.2.1/Lib/distutils/sysconfig.py	2011-07-12 22:20:12.000000000 +0100
 @@ -124,8 +124,12 @@
          prefix = plat_specific and EXEC_PREFIX or PREFIX
  
@@ -101,9 +101,9 @@ diff -Nur Python-3.2.orig/Lib/distutils/sysconfig.py Python-3.2/Lib/distutils/sy
          if standard_lib:
              return libpython
          else:
-diff -Nur Python-3.2.orig/Lib/distutils/tests/test_install.py Python-3.2/Lib/distutils/tests/test_install.py
---- Python-3.2.orig/Lib/distutils/tests/test_install.py	2010-11-20 19:04:17.000000000 +0000
-+++ Python-3.2/Lib/distutils/tests/test_install.py	2011-05-21 21:16:30.000000000 +0100
+diff -Nur Python-3.2.1.orig//Lib/distutils/tests/test_install.py Python-3.2.1/Lib/distutils/tests/test_install.py
+--- Python-3.2.1.orig//Lib/distutils/tests/test_install.py	2011-07-09 07:58:47.000000000 +0100
++++ Python-3.2.1/Lib/distutils/tests/test_install.py	2011-07-12 22:20:12.000000000 +0100
 @@ -49,8 +49,9 @@
              self.assertEqual(got, expected)
  
@@ -115,9 +115,9 @@ diff -Nur Python-3.2.orig/Lib/distutils/tests/test_install.py Python-3.2/Lib/dis
          check_path(cmd.install_purelib, libdir)
          check_path(cmd.install_headers,
                     os.path.join(destination, "include", "python", "foopkg"))
-diff -Nur Python-3.2.orig/Lib/site.py Python-3.2/Lib/site.py
---- Python-3.2.orig/Lib/site.py	2010-12-26 19:54:29.000000000 +0000
-+++ Python-3.2/Lib/site.py	2011-05-21 21:16:30.000000000 +0100
+diff -Nur Python-3.2.1.orig//Lib/site.py Python-3.2.1/Lib/site.py
+--- Python-3.2.1.orig//Lib/site.py	2011-07-09 07:58:49.000000000 +0100
++++ Python-3.2.1/Lib/site.py	2011-07-12 22:20:12.000000000 +0100
 @@ -285,13 +285,16 @@
          if sys.platform in ('os2emx', 'riscos'):
              sitepackages.append(os.path.join(prefix, "Lib", "site-packages"))
@@ -138,9 +138,9 @@ diff -Nur Python-3.2.orig/Lib/site.py Python-3.2/Lib/site.py
          if sys.platform == "darwin":
              # for framework builds *only* we add the standard Apple
              # locations.
-diff -Nur Python-3.2.orig/Lib/sysconfig.py Python-3.2/Lib/sysconfig.py
---- Python-3.2.orig/Lib/sysconfig.py	2010-11-25 01:34:47.000000000 +0000
-+++ Python-3.2/Lib/sysconfig.py	2011-05-21 21:23:17.000000000 +0100
+diff -Nur Python-3.2.1.orig//Lib/sysconfig.py Python-3.2.1/Lib/sysconfig.py
+--- Python-3.2.1.orig//Lib/sysconfig.py	2011-07-09 07:58:49.000000000 +0100
++++ Python-3.2.1/Lib/sysconfig.py	2011-07-12 22:20:12.000000000 +0100
 @@ -21,10 +21,10 @@
  
  _INSTALL_SCHEMES = {
@@ -169,10 +169,10 @@ diff -Nur Python-3.2.orig/Lib/sysconfig.py Python-3.2/Lib/sysconfig.py
          'include': '{base}/include/python',
          'platinclude': '{base}/include/python',
          'scripts': '{base}/bin',
-diff -Nur Python-3.2.orig/Makefile.pre.in Python-3.2/Makefile.pre.in
---- Python-3.2.orig/Makefile.pre.in	2011-02-19 08:47:14.000000000 +0000
-+++ Python-3.2/Makefile.pre.in	2011-05-21 21:16:30.000000000 +0100
-@@ -86,6 +86,8 @@
+diff -Nur Python-3.2.1.orig//Makefile.pre.in Python-3.2.1/Makefile.pre.in
+--- Python-3.2.1.orig//Makefile.pre.in	2011-07-09 07:58:52.000000000 +0100
++++ Python-3.2.1/Makefile.pre.in	2011-07-12 22:20:12.000000000 +0100
+@@ -90,6 +90,8 @@
  
  # Machine-dependent subdirectories
  MACHDEP=	@MACHDEP@
@@ -181,7 +181,7 @@ diff -Nur Python-3.2.orig/Makefile.pre.in Python-3.2/Makefile.pre.in
  
  # Install prefix for architecture-independent files
  prefix=		@prefix@
-@@ -102,7 +104,7 @@
+@@ -106,7 +108,7 @@
  MANDIR=		@mandir@
  INCLUDEDIR=	@includedir@
  CONFINCLUDEDIR=	$(exec_prefix)/include
@@ -190,7 +190,7 @@ diff -Nur Python-3.2.orig/Makefile.pre.in Python-3.2/Makefile.pre.in
  ABIFLAGS=	@ABIFLAGS@
  
  # Detailed destination directories
-@@ -605,7 +607,7 @@
+@@ -611,7 +613,7 @@
  Python/compile.o Python/symtable.o Python/ast.o: $(GRAMMAR_H) $(AST_H)
  
  Python/getplatform.o: $(srcdir)/Python/getplatform.c
@@ -199,9 +199,9 @@ diff -Nur Python-3.2.orig/Makefile.pre.in Python-3.2/Makefile.pre.in
  
  Python/importdl.o: $(srcdir)/Python/importdl.c
  		$(CC) -c $(PY_CORE_CFLAGS) -I$(DLINCLDIR) -o $@ $(srcdir)/Python/importdl.c
-diff -Nur Python-3.2.orig/Modules/getpath.c Python-3.2/Modules/getpath.c
---- Python-3.2.orig/Modules/getpath.c	2010-12-03 20:14:31.000000000 +0000
-+++ Python-3.2/Modules/getpath.c	2011-05-21 21:16:30.000000000 +0100
+diff -Nur Python-3.2.1.orig//Modules/getpath.c Python-3.2.1/Modules/getpath.c
+--- Python-3.2.1.orig//Modules/getpath.c	2011-07-09 07:58:54.000000000 +0100
++++ Python-3.2.1/Modules/getpath.c	2011-07-12 22:21:48.000000000 +0100
 @@ -121,9 +121,17 @@
  #define EXEC_PREFIX PREFIX
  #endif
@@ -222,18 +222,18 @@ diff -Nur Python-3.2.orig/Modules/getpath.c Python-3.2/Modules/getpath.c
  #endif
  
  #ifndef LANDMARK
-@@ -134,7 +142,7 @@
- static wchar_t exec_prefix[MAXPATHLEN+1];
+@@ -135,7 +143,7 @@
  static wchar_t progpath[MAXPATHLEN+1];
  static wchar_t *module_search_path = NULL;
+ static int module_search_path_malloced = 0;
 -static wchar_t *lib_python = L"lib/python" VERSION;
-+static wchar_t *lib_python = LIB_PYTHON VERSION;
+++static wchar_t *lib_python = LIB_PYTHON VERSION;
  
  static void
  reduce(wchar_t *dir)
-diff -Nur Python-3.2.orig/Python/getplatform.c Python-3.2/Python/getplatform.c
---- Python-3.2.orig/Python/getplatform.c	2000-09-02 00:29:29.000000000 +0100
-+++ Python-3.2/Python/getplatform.c	2011-05-21 21:16:30.000000000 +0100
+diff -Nur Python-3.2.1.orig//Python/getplatform.c Python-3.2.1/Python/getplatform.c
+--- Python-3.2.1.orig//Python/getplatform.c	2011-07-09 07:58:56.000000000 +0100
++++ Python-3.2.1/Python/getplatform.c	2011-07-12 22:20:12.000000000 +0100
 @@ -10,3 +10,23 @@
  {
  	return PLATFORM;
@@ -258,10 +258,10 @@ diff -Nur Python-3.2.orig/Python/getplatform.c Python-3.2/Python/getplatform.c
 +{
 +	return LIB;
 +}
-diff -Nur Python-3.2.orig/Python/sysmodule.c Python-3.2/Python/sysmodule.c
---- Python-3.2.orig/Python/sysmodule.c	2011-01-05 20:08:25.000000000 +0000
-+++ Python-3.2/Python/sysmodule.c	2011-05-21 21:16:30.000000000 +0100
-@@ -1608,6 +1608,10 @@
+diff -Nur Python-3.2.1.orig//Python/sysmodule.c Python-3.2.1/Python/sysmodule.c
+--- Python-3.2.1.orig//Python/sysmodule.c	2011-07-09 07:58:56.000000000 +0100
++++ Python-3.2.1/Python/sysmodule.c	2011-07-12 22:20:12.000000000 +0100
+@@ -1560,6 +1560,10 @@
                          PyUnicode_FromString(Py_GetCopyright()));
      SET_SYS_FROM_STRING("platform",
                          PyUnicode_FromString(Py_GetPlatform()));
@@ -272,10 +272,10 @@ diff -Nur Python-3.2.orig/Python/sysmodule.c Python-3.2/Python/sysmodule.c
      SET_SYS_FROM_STRING("executable",
                          PyUnicode_FromWideChar(
                                 Py_GetProgramFullPath(), -1));
-diff -Nur Python-3.2.orig/setup.py Python-3.2/setup.py
---- Python-3.2.orig/setup.py	2010-12-28 09:51:43.000000000 +0000
-+++ Python-3.2/setup.py	2011-05-21 21:16:30.000000000 +0100
-@@ -422,12 +422,12 @@
+diff -Nur Python-3.2.1.orig//setup.py Python-3.2.1/setup.py
+--- Python-3.2.1.orig//setup.py	2011-07-09 07:58:56.000000000 +0100
++++ Python-3.2.1/setup.py	2011-07-12 22:20:12.000000000 +0100
+@@ -445,12 +445,12 @@
              add_dir_to_list(self.compiler.include_dirs,
                              sysconfig.get_config_var("INCLUDEDIR"))
  
@@ -290,7 +290,7 @@ diff -Nur Python-3.2.orig/setup.py Python-3.2/setup.py
              ]
          inc_dirs = self.compiler.include_dirs + ['/usr/include']
          exts = []
-@@ -620,11 +620,11 @@
+@@ -643,11 +643,11 @@
              elif curses_library:
                  readline_libs.append(curses_library)
              elif self.compiler.find_library_file(lib_dirs +
