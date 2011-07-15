@@ -1,0 +1,53 @@
+diff -dur -x '*~' Lib/test.orig//regrtest.py Lib/test//regrtest.py
+--- Lib/test.orig//regrtest.py	2011-07-09 08:58:49.000000000 +0200
++++ Lib/test//regrtest.py	2011-07-15 14:38:55.000000000 +0200
+@@ -216,7 +216,7 @@
+ 
+ from test import support
+ 
+-RESOURCE_NAMES = ('audio', 'curses', 'largefile', 'network',
++RESOURCE_NAMES = ('audio', 'curses', 'largefile', 'network', 'cmdline',
+                   'decimal', 'cpu', 'subprocess', 'urlfetch', 'gui')
+ 
+ TEMPDIR = os.path.abspath(tempfile.gettempdir())
+diff -dur -x '*~' Lib/test.orig//test_compileall.py Lib/test//test_compileall.py
+--- Lib/test.orig//test_compileall.py	2011-07-09 08:58:50.000000000 +0200
++++ Lib/test//test_compileall.py	2011-07-15 14:41:08.000000000 +0200
+@@ -130,7 +130,7 @@
+         finally:
+             sys.stdout = orig_stdout
+ 
+-
++@unittest.skipUnless(support.is_resource_enabled("cmdline"), "python cmdline tests disabled")
+ class CommandLineTests(unittest.TestCase):
+     """Test compileall's CLI."""
+ 
+diff -dur -x '*~' Lib/test.orig//test_warnings.py Lib/test//test_warnings.py
+--- Lib/test.orig//test_warnings.py	2011-07-09 08:58:51.000000000 +0200
++++ Lib/test//test_warnings.py	2011-07-15 14:44:11.000000000 +0200
+@@ -715,6 +715,7 @@
+     module = py_warnings
+ 
+ 
++@unittest.skipUnless(support.is_resource_enabled("cmdline"), "python cmdline tests disabled")
+ class EnvironmentVariableTests(BaseTest):
+ 
+     def test_single_warning(self):
+@@ -760,14 +761,17 @@
+                 "['ignore:DeprecaciónWarning']".encode('utf-8'))
+         self.assertEqual(p.wait(), 0)
+ 
++@unittest.skipUnless(support.is_resource_enabled("cmdline"), "python cmdline tests disabled")
+ class CEnvironmentVariableTests(EnvironmentVariableTests):
+     module = c_warnings
+ 
++@unittest.skipUnless(support.is_resource_enabled("cmdline"), "python cmdline tests disabled")
+ class PyEnvironmentVariableTests(EnvironmentVariableTests):
+     module = py_warnings
+ 
+ 
+ class BootstrapTest(unittest.TestCase):
++    @unittest.skipUnless(support.is_resource_enabled("cmdline"), "python cmdline tests disabled")
+     def test_issue_8766(self):
+         # "import encodings" emits a warning whereas the warnings is not loaded
+         # or not completely loaded (warnings imports indirectly encodings by
