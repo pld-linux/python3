@@ -545,7 +545,7 @@ sed 's/=/ /' \
 install Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 
 # just to cut the noise, as they are not packaged (now)
-# first tests
+# first tests (probably could be packaged)
 %{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/test
 %{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/ctypes/test
 %{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/distutils/tests
@@ -563,6 +563,13 @@ install Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 %{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/distutils/command/wininst*.exe
 %{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/idlelib/*.bat
 %{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/idlelib/*.pyw
+
+# currently provided by python-2to3, consider switching to this one
+%{__rm} $RPM_BUILD_ROOT%{_bindir}/2to3
+
+# that seems to be only an empty extension template
+%{__rm} $RPM_BUILD_ROOT%{py_dyndir}/xxlimited.*.so
+
 # already in %%doc
 %{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/LICENSE.txt
 
@@ -646,7 +653,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{py_scriptdir}/*.py
 
-%{py_dyndir}/Python-%{py_ver}-py*.egg-info
+%{py_dyndir}/Python-%{version}-py*.egg-info
 
 #
 # list .so modules to be sure that all of them are built
@@ -848,7 +855,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libpython3.so
 %dir %{py_incdir}
 %{py_incdir}/*.h
+%{_pkgconfigdir}/python3.pc
 %{_pkgconfigdir}/python-%{py_ver}.pc
+%{_pkgconfigdir}/python-%{py_ver}mu.pc
 
 %dir %{py_libdir}/config-%{py_abi}
 %attr(755,root,root) %{py_libdir}/config-%{py_abi}/makesetup
