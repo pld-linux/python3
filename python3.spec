@@ -1,7 +1,4 @@
 #
-# TODO:
-# - fix tests
-# - check unpackaged files
 
 # Conditional build:
 %bcond_with	info			# info pages (requires emacs)
@@ -37,7 +34,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.1
-Release:	1
+Release:	2
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -670,12 +667,6 @@ rm -rf $RPM_BUILD_ROOT
 # list .so modules to be sure that all of them are built
 #
 
-# modules below do not work on 64-bit architectures
-# see Python README file for explanation
-%ifnarch alpha ia64 ppc64 sparc64 %{x8664}
-%attr(755,root,root) %{py_dyndir}/audioop.cpython-*.so
-%endif
-
 %attr(755,root,root) %{py_dyndir}/_bisect.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_cn.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_hk.cpython-*.so
@@ -866,9 +857,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libpython3.so
 %dir %{py_incdir}
 %{py_incdir}/*.h
-%{_pkgconfigdir}/python3.pc
 %{_pkgconfigdir}/python-%{py_ver}.pc
-%{_pkgconfigdir}/python-%{py_ver}mu.pc
 
 %files devel-tools
 %defattr(644,root,root,755)
