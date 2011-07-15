@@ -1,6 +1,6 @@
-diff -dur -x '*~' Lib/test.orig//regrtest.py Lib/test//regrtest.py
---- Lib/test.orig//regrtest.py	2011-07-09 08:58:49.000000000 +0200
-+++ Lib/test//regrtest.py	2011-07-15 14:38:55.000000000 +0200
+diff -dur Python-3.2.1.orig/Lib/test/regrtest.py Python-3.2.1/Lib/test/regrtest.py
+--- Python-3.2.1.orig/Lib/test/regrtest.py	2011-07-09 08:58:49.000000000 +0200
++++ Python-3.2.1/Lib/test/regrtest.py	2011-07-15 15:21:06.000000000 +0200
 @@ -216,7 +216,7 @@
  
  from test import support
@@ -10,9 +10,9 @@ diff -dur -x '*~' Lib/test.orig//regrtest.py Lib/test//regrtest.py
                    'decimal', 'cpu', 'subprocess', 'urlfetch', 'gui')
  
  TEMPDIR = os.path.abspath(tempfile.gettempdir())
-diff -dur -x '*~' Lib/test.orig//test_compileall.py Lib/test//test_compileall.py
---- Lib/test.orig//test_compileall.py	2011-07-09 08:58:50.000000000 +0200
-+++ Lib/test//test_compileall.py	2011-07-15 14:41:08.000000000 +0200
+diff -dur Python-3.2.1.orig/Lib/test/test_compileall.py Python-3.2.1/Lib/test/test_compileall.py
+--- Python-3.2.1.orig/Lib/test/test_compileall.py	2011-07-09 08:58:50.000000000 +0200
++++ Python-3.2.1/Lib/test/test_compileall.py	2011-07-15 15:21:06.000000000 +0200
 @@ -130,7 +130,7 @@
          finally:
              sys.stdout = orig_stdout
@@ -22,9 +22,9 @@ diff -dur -x '*~' Lib/test.orig//test_compileall.py Lib/test//test_compileall.py
  class CommandLineTests(unittest.TestCase):
      """Test compileall's CLI."""
  
-diff -dur -x '*~' Lib/test.orig//test_warnings.py Lib/test//test_warnings.py
---- Lib/test.orig//test_warnings.py	2011-07-09 08:58:51.000000000 +0200
-+++ Lib/test//test_warnings.py	2011-07-15 14:44:11.000000000 +0200
+diff -dur Python-3.2.1.orig/Lib/test/test_warnings.py Python-3.2.1/Lib/test/test_warnings.py
+--- Python-3.2.1.orig/Lib/test/test_warnings.py	2011-07-09 08:58:51.000000000 +0200
++++ Python-3.2.1/Lib/test/test_warnings.py	2011-07-15 15:21:06.000000000 +0200
 @@ -715,6 +715,7 @@
      module = py_warnings
  
