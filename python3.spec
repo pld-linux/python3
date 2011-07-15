@@ -34,7 +34,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.1
-Release:	3
+Release:	4
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -493,9 +493,9 @@ binlibdir=`echo build/lib.*`
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir}} \
-	$RPM_BUILD_ROOT{%{py_sitedir},%{_mandir}/man1} \
+	$RPM_BUILD_ROOT{%{py_sitedir},%{py_sitescriptdir}}/__pycache__ \
 	$RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version} \
-	$RPM_BUILD_ROOT%{_infodir} \
+	$RPM_BUILD_ROOT{%{_infodir},%{_mandir}/man1} \
 	$RPM_BUILD_ROOT/etc/shrc.d
 
 %{__make} install \
@@ -597,8 +597,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_libdir}
 %dir %{py_dyndir}
 %dir %{py_sitedir}
+%dir %{py_sitedir}/__pycache__
 %dir %{py_scriptdir}
 %dir %{py_sitescriptdir}
+%dir %{py_sitescriptdir}/__pycache__
 %{py_scriptdir}/__pycache__
 
 # shared modules required by python library
