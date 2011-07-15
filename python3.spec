@@ -19,7 +19,7 @@
 #   test_gdb: fails, as the gdb uses old python version
 %define		broken_tests test_httpservers test_distutils test_cmd_line test_pydoc test_telnetlib test_zlib test_gdb test_site
 
-%define py_ver		3.2.1
+%define py_ver		3.2
 %define py_abi		%{py_ver}mu
 %define py_prefix	%{_prefix}
 %define py_libdir	%{py_prefix}/%{_lib}/python%{py_ver}
@@ -36,7 +36,7 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}
+Version:	%{py_ver}.1
 Release:	1
 Epoch:		1
 License:	PSF
