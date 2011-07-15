@@ -1,6 +1,6 @@
-diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Lib/distutils/command/install.py Python-3.2.1/Lib/distutils/command/install.py
---- Python-3.2.1.orig/Lib/distutils/command/install.py	2011-07-15 13:44:25.000000000 +0200
-+++ Python-3.2.1/Lib/distutils/command/install.py	2011-07-15 13:45:43.000000000 +0200
+diff -dur Python-3.2.1.orig/Lib/distutils/command/install.py Python-3.2.1/Lib/distutils/command/install.py
+--- Python-3.2.1.orig/Lib/distutils/command/install.py	2011-07-15 20:16:35.526223992 +0200
++++ Python-3.2.1/Lib/distutils/command/install.py	2011-07-15 20:17:09.131071575 +0200
 @@ -48,14 +48,14 @@
  
  INSTALL_SCHEMES = {
@@ -18,9 +18,9 @@ diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Lib/distutils/command
          'platlib': '$base/'+libname+'/python',
          'headers': '$base/include/python/$dist_name',
          'scripts': '$base/bin',
-diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Lib/distutils/sysconfig.py Python-3.2.1/Lib/distutils/sysconfig.py
---- Python-3.2.1.orig/Lib/distutils/sysconfig.py	2011-07-15 13:44:25.000000000 +0200
-+++ Python-3.2.1/Lib/distutils/sysconfig.py	2011-07-15 13:45:43.000000000 +0200
+diff -dur Python-3.2.1.orig/Lib/distutils/sysconfig.py Python-3.2.1/Lib/distutils/sysconfig.py
+--- Python-3.2.1.orig/Lib/distutils/sysconfig.py	2011-07-15 20:16:35.526223992 +0200
++++ Python-3.2.1/Lib/distutils/sysconfig.py	2011-07-15 20:17:09.131071575 +0200
 @@ -124,12 +124,12 @@
          prefix = plat_specific and EXEC_PREFIX or PREFIX
  
@@ -39,9 +39,9 @@ diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Lib/distutils/sysconf
          if standard_lib:
              return libpython
          else:
-diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Lib/distutils/tests/test_install.py Python-3.2.1/Lib/distutils/tests/test_install.py
---- Python-3.2.1.orig/Lib/distutils/tests/test_install.py	2011-07-15 13:44:25.000000000 +0200
-+++ Python-3.2.1/Lib/distutils/tests/test_install.py	2011-07-15 13:45:43.000000000 +0200
+diff -dur Python-3.2.1.orig/Lib/distutils/tests/test_install.py Python-3.2.1/Lib/distutils/tests/test_install.py
+--- Python-3.2.1.orig/Lib/distutils/tests/test_install.py	2011-07-15 20:16:35.529557475 +0200
++++ Python-3.2.1/Lib/distutils/tests/test_install.py	2011-07-15 20:17:09.131071575 +0200
 @@ -48,7 +48,7 @@
              expected = os.path.normpath(expected)
              self.assertEqual(got, expected)
@@ -51,9 +51,9 @@ diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Lib/distutils/tests/t
          platlibdir =  os.path.join(destination, sys.lib, "python")
          check_path(cmd.install_lib, libdir)
          check_path(cmd.install_platlib, platlibdir)
-diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Lib/site.py Python-3.2.1/Lib/site.py
---- Python-3.2.1.orig/Lib/site.py	2011-07-15 13:44:25.000000000 +0200
-+++ Python-3.2.1/Lib/site.py	2011-07-15 13:45:43.000000000 +0200
+diff -dur Python-3.2.1.orig/Lib/site.py Python-3.2.1/Lib/site.py
+--- Python-3.2.1.orig/Lib/site.py	2011-07-15 20:16:35.529557475 +0200
++++ Python-3.2.1/Lib/site.py	2011-07-15 20:17:09.134405059 +0200
 @@ -289,9 +289,8 @@
                                          "python" + sys.version[:3],
                                          "site-packages"))
@@ -66,9 +66,21 @@ diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Lib/site.py Python-3.
          else:
              sitepackages.append(prefix)
              sitepackages.append(os.path.join(prefix, sys.lib, "site-packages"))
-diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Makefile.pre.in Python-3.2.1/Makefile.pre.in
---- Python-3.2.1.orig/Makefile.pre.in	2011-07-15 13:44:25.000000000 +0200
-+++ Python-3.2.1/Makefile.pre.in	2011-07-15 13:45:43.000000000 +0200
+diff -dur Python-3.2.1.orig/Lib/sysconfig.py Python-3.2.1/Lib/sysconfig.py
+--- Python-3.2.1.orig/Lib/sysconfig.py	2011-07-15 20:16:35.532890958 +0200
++++ Python-3.2.1/Lib/sysconfig.py	2011-07-15 20:18:27.267925241 +0200
+@@ -23,7 +23,7 @@
+     'posix_prefix': {
+         'stdlib': '{base}/' + sys.lib + '/python{py_version_short}',
+         'platstdlib': '{platbase}/' + sys.lib + '/python{py_version_short}',
+-        'purelib': '{base}/lib/python{py_version_short}/site-packages',
++        'purelib': '{base}/share/python{py_version_short}/site-packages',
+         'platlib': '{platbase}/' + sys.lib + '/python{py_version_short}/site-packages',
+         'include':
+             '{base}/include/python{py_version_short}{abiflags}',
+diff -dur Python-3.2.1.orig/Makefile.pre.in Python-3.2.1/Makefile.pre.in
+--- Python-3.2.1.orig/Makefile.pre.in	2011-07-15 20:16:35.532890958 +0200
++++ Python-3.2.1/Makefile.pre.in	2011-07-15 20:17:09.134405059 +0200
 @@ -108,7 +108,7 @@
  MANDIR=		@mandir@
  INCLUDEDIR=	@includedir@
@@ -98,9 +110,9 @@ diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Makefile.pre.in Pytho
  			fi; \
  		else \
  			echo Skip install of $(LIBRARY) - use make frameworkinstall; \
-diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Modules/getpath.c Python-3.2.1/Modules/getpath.c
---- Python-3.2.1.orig/Modules/getpath.c	2011-07-15 13:44:25.000000000 +0200
-+++ Python-3.2.1/Modules/getpath.c	2011-07-15 13:47:22.000000000 +0200
+diff -dur Python-3.2.1.orig/Modules/getpath.c Python-3.2.1/Modules/getpath.c
+--- Python-3.2.1.orig/Modules/getpath.c	2011-07-15 20:16:35.536224442 +0200
++++ Python-3.2.1/Modules/getpath.c	2011-07-15 20:17:09.137738543 +0200
 @@ -131,7 +131,8 @@
  
  #ifndef PYTHONPATH
