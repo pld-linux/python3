@@ -628,6 +628,17 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/encodings/__pycache__
 %{py_scriptdir}/encodings/*.py
 
+%dir %{py_libdir}/config-%{py_abi}
+%attr(755,root,root) %{py_libdir}/config-%{py_abi}/makesetup
+%attr(755,root,root) %{py_libdir}/config-%{py_abi}/install-sh
+%{py_libdir}/config-%{py_abi}/Makefile
+%{py_libdir}/config-%{py_abi}/Setup
+%{py_libdir}/config-%{py_abi}/Setup.config
+%{py_libdir}/config-%{py_abi}/Setup.local
+%{py_libdir}/config-%{py_abi}/config.c
+%{py_libdir}/config-%{py_abi}/config.c.in
+%{py_libdir}/config-%{py_abi}/python.o
+
 %files modules
 %defattr(644,root,root,755)
 /etc/shrc.d/python*-modules*
@@ -858,17 +869,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgconfigdir}/python3.pc
 %{_pkgconfigdir}/python-%{py_ver}.pc
 %{_pkgconfigdir}/python-%{py_ver}mu.pc
-
-%dir %{py_libdir}/config-%{py_abi}
-%attr(755,root,root) %{py_libdir}/config-%{py_abi}/makesetup
-%attr(755,root,root) %{py_libdir}/config-%{py_abi}/install-sh
-%{py_libdir}/config-%{py_abi}/Makefile
-%{py_libdir}/config-%{py_abi}/Setup
-%{py_libdir}/config-%{py_abi}/Setup.config
-%{py_libdir}/config-%{py_abi}/Setup.local
-%{py_libdir}/config-%{py_abi}/config.c
-%{py_libdir}/config-%{py_abi}/config.c.in
-%{py_libdir}/config-%{py_abi}/python.o
 
 %files devel-tools
 %defattr(644,root,root,755)
