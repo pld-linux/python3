@@ -1,6 +1,6 @@
-diff --git a/Lib/distutils/tests/test_build_py.py b/Lib/distutils/tests/test_build_py.py
---- a/Lib/distutils/tests/test_build_py.py
-+++ b/Lib/distutils/tests/test_build_py.py
+diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Lib/distutils/tests/test_build_py.py Python-3.2.1/Lib/distutils/tests/test_build_py.py
+--- Python-3.2.1.orig/Lib/distutils/tests/test_build_py.py	2011-07-09 08:58:47.000000000 +0200
++++ Python-3.2.1/Lib/distutils/tests/test_build_py.py	2011-07-15 13:55:54.000000000 +0200
 @@ -3,6 +3,7 @@
  import os
  import sys
@@ -9,24 +9,27 @@ diff --git a/Lib/distutils/tests/test_build_py.py b/Lib/distutils/tests/test_bui
  import unittest
  
  from distutils.command.build_py import build_py
-@@ -57,9 +58,11 @@ class BuildPyTestCase(support.TempdirMan
+@@ -57,13 +58,15 @@
          self.assertEqual(len(cmd.get_outputs()), 3)
          pkgdest = os.path.join(destination, "pkg")
          files = os.listdir(pkgdest)
--        self.assertTrue("__init__.py" in files)
--        self.assertTrue("__init__.pyc" in files)
--        self.assertTrue("README.txt" in files)
 +        byte_compiled_files = os.listdir(os.path.join(pkgdest, "__pycache__"))
-+        self.assertIn("__init__.py", files)
-+        self.assertIn("__init__.{}.pyc".format(imp.get_tag()),
-+                      byte_compiled_files)
-+        self.assertIn("README.txt", files)
+         self.assertIn("__init__.py", files)
+         self.assertIn("README.txt", files)
++        init_pyc = "__init__.{}.pyc".format(imp.get_tag())
+         # XXX even with -O, distutils writes pyc, not pyo; bug?
+         if sys.dont_write_bytecode:
+-            self.assertNotIn("__init__.pyc", files)
++            self.assertNotIn(init_pyc, byte_compiled_files)
+         else:
+-            self.assertIn("__init__.pyc", files)
++            self.assertIn(init_pyc, byte_compiled_files)
  
-     def test_empty_package_dir (self):
+     def test_empty_package_dir(self):
          # See SF 1668596/1720897.
-diff --git a/Lib/distutils/tests/test_install_lib.py b/Lib/distutils/tests/test_install_lib.py
---- a/Lib/distutils/tests/test_install_lib.py
-+++ b/Lib/distutils/tests/test_install_lib.py
+diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Lib/distutils/tests/test_install_lib.py Python-3.2.1/Lib/distutils/tests/test_install_lib.py
+--- Python-3.2.1.orig/Lib/distutils/tests/test_install_lib.py	2011-07-09 08:58:47.000000000 +0200
++++ Python-3.2.1/Lib/distutils/tests/test_install_lib.py	2011-07-15 13:53:50.000000000 +0200
 @@ -1,6 +1,7 @@
  """Tests for distutils.command.install_data."""
  import sys
@@ -35,7 +38,7 @@ diff --git a/Lib/distutils/tests/test_install_lib.py b/Lib/distutils/tests/test_
  import unittest
  
  from distutils.command.install_lib import install_lib
-@@ -36,14 +37,19 @@ class InstallLibTestCase(support.Tempdir
+@@ -36,14 +37,19 @@
                           'byte-compile not supported')
      def test_byte_compile(self):
          pkg_dir, dist = self.create_dist()
@@ -57,10 +60,10 @@ diff --git a/Lib/distutils/tests/test_install_lib.py b/Lib/distutils/tests/test_
  
      def test_get_outputs(self):
          pkg_dir, dist = self.create_dist()
-diff --git a/Lib/distutils/util.py b/Lib/distutils/util.py
---- a/Lib/distutils/util.py
-+++ b/Lib/distutils/util.py
-@@ -6,7 +6,7 @@ one of the other *util.py modules.
+diff -dur -x '*~' -x '*.orig' -x '*.rej' Python-3.2.1.orig/Lib/distutils/util.py Python-3.2.1/Lib/distutils/util.py
+--- Python-3.2.1.orig/Lib/distutils/util.py	2011-07-09 08:58:47.000000000 +0200
++++ Python-3.2.1/Lib/distutils/util.py	2011-07-15 13:53:50.000000000 +0200
+@@ -6,7 +6,7 @@
  
  __revision__ = "$Id$"
  
@@ -69,7 +72,7 @@ diff --git a/Lib/distutils/util.py b/Lib/distutils/util.py
  from distutils.errors import DistutilsPlatformError
  from distutils.dep_util import newer
  from distutils.spawn import spawn
-@@ -533,7 +533,7 @@ byte_compile(files, optimize=%r, force=%
+@@ -531,7 +531,7 @@
              # Terminology from the py_compile module:
              #   cfile - byte-compiled file
              #   dfile - purported source filename (same as 'file' by default)

@@ -6,15 +6,18 @@
 # Conditional build:
 %bcond_with	info			# info pages (requires emacs)
 %bcond_without	tkinter			# disables tkinter module building
-%bcond_without	tests			# disables Python testing
+%bcond_with	tests			# disables Python testing
 %bcond_with	verbose_tests		# runs tests in verbose mode
 #
 # tests which will not work on 64-bit platforms
 %define		no64bit_tests	test_audioop test_rgbimg test_imageop
 # tests which may fail because of builder environment limitations (no /proc or /dev/pts)
 %define		nobuilder_tests test_resource test_openpty test_socket test_nis test_posix test_locale test_pty
+
 # tests which fail because of some unknown/unresolved reason (this list should be empty)
-%define		broken_tests test_httpservers test_distutils test_cmd_line test_pydoc test_telnetlib test_zlib
+#   test_site: fails because our site.py is patched to include both /usr/share/... and /usr/lib...
+#   test_gdb: fails, as the gdb uses old python version
+%define		broken_tests test_httpservers test_distutils test_cmd_line test_pydoc test_telnetlib test_zlib test_gdb test_site
 
 %define py_ver		3.2.1
 %define py_abi		%{py_ver}mu
@@ -45,6 +48,7 @@ Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-lib64.patch
 Patch3:		%{name}-noarch_to_datadir.patch
 Patch4:		%{name}-bug11254.patch
+Patch5:		%{name}-no_cmdline_tests.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	bluez-libs-devel
@@ -445,6 +449,7 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 %{__autoconf}
@@ -485,7 +490,7 @@ export LC_ALL
 binlibdir=`echo build/lib.*`
 %{__make} test \
 	TESTOPTS="%{test_flags} %{test_list}" \
-	TESTPYTHON="LD_LIBRARY_PATH=`pwd` PYTHONHOME=`pwd` PYTHONPATH=`pwd`/Lib:$binlibdir ./python -tt"
+	TESTPYTHON="LD_LIBRARY_PATH=`pwd` PYTHONHOME=`pwd` PYTHONPATH=`pwd`/Lib:`pwd`/$binlibdir ./python -tt"
 %endif
 
 %install
