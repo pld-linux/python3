@@ -564,8 +564,9 @@ install Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 # currently provided by python-2to3, consider switching to this one
 %{__rm} $RPM_BUILD_ROOT%{_bindir}/2to3
 
-# that seems to be only an empty extension template
-%{__rm} $RPM_BUILD_ROOT%{py_dyndir}/xxlimited.*.so
+# that seems to be only an empty extension template,
+# which seems to be built only {with tests}
+%{__rm} -f $RPM_BUILD_ROOT%{py_dyndir}/xxlimited.*.so
 
 # already in %%doc
 %{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/LICENSE.txt
