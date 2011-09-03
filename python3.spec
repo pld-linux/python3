@@ -34,7 +34,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.1
-Release:	5
+Release:	6
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -635,7 +635,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/site.py
 %{py_scriptdir}/sre_*.py
 %{py_scriptdir}/stat.py
-%{py_scriptdir}/sysconfig.ph
+%{py_scriptdir}/sysconfig.py
 %{py_scriptdir}/token.py
 %{py_scriptdir}/tokenize.py
 %{py_scriptdir}/traceback.py
