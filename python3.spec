@@ -34,7 +34,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.1
-Release:	4
+Release:	5
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -599,6 +599,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE
 %attr(755,root,root) %{_libdir}/libpython%{py_abi}.so.*.*
 
+%dir %{py_incdir}
+%{py_incdir}/pyconfig.h
+
 %dir %{py_libdir}
 %dir %{py_dyndir}
 %dir %{py_sitedir}
@@ -615,14 +618,28 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/_abcoll.py
 %{py_scriptdir}/_weakrefset.py
 %{py_scriptdir}/abc.py
+%{py_scriptdir}/bisect.py
 %{py_scriptdir}/codecs.py
+%{py_scriptdir}/collections.py
 %{py_scriptdir}/copyreg.py
+%{py_scriptdir}/functools.py
 %{py_scriptdir}/genericpath.py
+%{py_scriptdir}/heapq.py
+%{py_scriptdir}/keyword.py
+%{py_scriptdir}/linecache.py
 %{py_scriptdir}/locale.py
 %{py_scriptdir}/io.py
 %{py_scriptdir}/posixpath.py
+%{py_scriptdir}/re.py
+%{py_scriptdir}/reprlib.py
 %{py_scriptdir}/site.py
+%{py_scriptdir}/sre_*.py
 %{py_scriptdir}/stat.py
+%{py_scriptdir}/sysconfig.ph
+%{py_scriptdir}/token.py
+%{py_scriptdir}/tokenize.py
+%{py_scriptdir}/traceback.py
+%{py_scriptdir}/weakref.py
 %{py_scriptdir}/os.py
 # needed by the dynamic sys.lib patch
 %{py_scriptdir}/types.py
@@ -649,19 +666,33 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{py_scriptdir}/_abcoll.py
 %exclude %{py_scriptdir}/_weakrefset.py
 %exclude %{py_scriptdir}/abc.py
+%exclude %{py_scriptdir}/bisect.py
 %exclude %{py_scriptdir}/codecs.py
+%exclude %{py_scriptdir}/collections.py
 %exclude %{py_scriptdir}/copyreg.py
+%exclude %{py_scriptdir}/functools.py
 %exclude %{py_scriptdir}/genericpath.py
+%exclude %{py_scriptdir}/heapq.py
 %exclude %{py_scriptdir}/io.py
+%exclude %{py_scriptdir}/keyword.py
+%exclude %{py_scriptdir}/linecache.py
 %exclude %{py_scriptdir}/locale.py
 %exclude %{py_scriptdir}/posixpath.py
 %exclude %{py_scriptdir}/pdb.py
 %exclude %{py_scriptdir}/profile.py
 %exclude %{py_scriptdir}/pstats.py
 %exclude %{py_scriptdir}/pydoc.py
+%exclude %{py_scriptdir}/re.py
+%exclude %{py_scriptdir}/reprlib.py
 %exclude %{py_scriptdir}/site.py
+%exclude %{py_scriptdir}/sre_*.py
 %exclude %{py_scriptdir}/stat.py
+%exclude %{py_scriptdir}/sysconfig.py
 %exclude %{py_scriptdir}/timeit.py
+%exclude %{py_scriptdir}/token.py
+%exclude %{py_scriptdir}/tokenize.py
+%exclude %{py_scriptdir}/traceback.py
+%exclude %{py_scriptdir}/weakref.py
 %exclude %{py_scriptdir}/os.py
 %exclude %{py_scriptdir}/encodings/*.py
 %exclude %{py_scriptdir}/types.py
@@ -862,8 +893,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/python3-config
 %attr(755,root,root) %{_libdir}/libpython%{py_abi}.so
 %attr(755,root,root) %{_libdir}/libpython3.so
-%dir %{py_incdir}
 %{py_incdir}/*.h
+%exclude %{py_incdir}/pyconfig.h
 %{_pkgconfigdir}/python-%{py_ver}.pc
 
 %files devel-tools
