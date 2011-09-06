@@ -448,10 +448,6 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch4 -p1
 %patch5 -p1
 
-# remove if Lib/plat-linux3 exists
-[ -d Lib/plat-linux3 ] && rm -rf Lib/plat-linux3
-cp -a Lib/plat-linux2 Lib/plat-linux3
-
 %build
 %{__autoconf}
 CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags}"; export CPPFLAGS
