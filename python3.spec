@@ -34,7 +34,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.2
-Release:	1
+Release:	2
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -603,9 +603,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_sitedir}
 %dir %{py_sitedir}/__pycache__
 %dir %{py_scriptdir}
+%dir %{py_scriptdir}/__pycache__
 %dir %{py_sitescriptdir}
 %dir %{py_sitescriptdir}/__pycache__
-%{py_scriptdir}/__pycache__
 
 # shared modules required by python library
 %attr(755,root,root) %{py_dyndir}/_struct.cpython-*.so
@@ -639,6 +639,33 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/os.py
 # needed by the dynamic sys.lib patch
 %{py_scriptdir}/types.py
+%{py_scriptdir}/__pycache__/_abcoll.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/_weakrefset.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/abc.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/bisect.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/codecs.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/collections.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/copyreg.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/functools.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/genericpath.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/heapq.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/keyword.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/linecache.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/locale.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/io.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/posixpath.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/re.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/reprlib.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/site.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/sre_*.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/stat.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/sysconfig.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/token.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/tokenize.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/traceback.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/weakref.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/os.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/types.cpython-*.py[co]
 
 # encodings required by python library
 %dir %{py_scriptdir}/encodings
@@ -646,55 +673,248 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/encodings/*.py
 
 %dir %{py_libdir}/config-%{py_abi}
-%attr(755,root,root) %{py_libdir}/config-%{py_abi}/makesetup
-%attr(755,root,root) %{py_libdir}/config-%{py_abi}/install-sh
 %{py_libdir}/config-%{py_abi}/Makefile
 %{py_libdir}/config-%{py_abi}/Setup
 %{py_libdir}/config-%{py_abi}/Setup.config
 %{py_libdir}/config-%{py_abi}/Setup.local
-%{py_libdir}/config-%{py_abi}/config.c
-%{py_libdir}/config-%{py_abi}/config.c.in
-%{py_libdir}/config-%{py_abi}/python.o
 
 %files modules
 %defattr(644,root,root,755)
 /etc/shrc.d/python*-modules*
-%exclude %{py_scriptdir}/_abcoll.py
-%exclude %{py_scriptdir}/_weakrefset.py
-%exclude %{py_scriptdir}/abc.py
-%exclude %{py_scriptdir}/bisect.py
-%exclude %{py_scriptdir}/codecs.py
-%exclude %{py_scriptdir}/collections.py
-%exclude %{py_scriptdir}/copyreg.py
-%exclude %{py_scriptdir}/functools.py
-%exclude %{py_scriptdir}/genericpath.py
-%exclude %{py_scriptdir}/heapq.py
-%exclude %{py_scriptdir}/io.py
-%exclude %{py_scriptdir}/keyword.py
-%exclude %{py_scriptdir}/linecache.py
-%exclude %{py_scriptdir}/locale.py
-%exclude %{py_scriptdir}/posixpath.py
-%exclude %{py_scriptdir}/pdb.py
-%exclude %{py_scriptdir}/profile.py
-%exclude %{py_scriptdir}/pstats.py
-%exclude %{py_scriptdir}/pydoc.py
-%exclude %{py_scriptdir}/re.py
-%exclude %{py_scriptdir}/reprlib.py
-%exclude %{py_scriptdir}/site.py
-%exclude %{py_scriptdir}/sre_*.py
-%exclude %{py_scriptdir}/stat.py
-%exclude %{py_scriptdir}/sysconfig.py
-%exclude %{py_scriptdir}/timeit.py
-%exclude %{py_scriptdir}/token.py
-%exclude %{py_scriptdir}/tokenize.py
-%exclude %{py_scriptdir}/traceback.py
-%exclude %{py_scriptdir}/weakref.py
-%exclude %{py_scriptdir}/os.py
-%exclude %{py_scriptdir}/encodings/*.py
-%exclude %{py_scriptdir}/types.py
-
-%{py_scriptdir}/*.py
-
+%{py_scriptdir}/__future__.py
+%{py_scriptdir}/__phello__.foo.py
+%{py_scriptdir}/_compat_pickle.py
+%{py_scriptdir}/_dummy_thread.py
+%{py_scriptdir}/_markupbase.py
+%{py_scriptdir}/_pyio.py
+%{py_scriptdir}/_strptime.py
+%{py_scriptdir}/_threading_local.py
+%{py_scriptdir}/aifc.py
+%{py_scriptdir}/antigravity.py
+%{py_scriptdir}/argparse.py
+%{py_scriptdir}/ast.py
+%{py_scriptdir}/asynchat.py
+%{py_scriptdir}/asyncore.py
+%{py_scriptdir}/base64.py
+%{py_scriptdir}/bdb.py
+%{py_scriptdir}/binhex.py
+%{py_scriptdir}/cProfile.py
+%{py_scriptdir}/calendar.py
+%{py_scriptdir}/cgi.py
+%{py_scriptdir}/cgitb.py
+%{py_scriptdir}/chunk.py
+%{py_scriptdir}/cmd.py
+%{py_scriptdir}/code.py
+%{py_scriptdir}/codeop.py
+%{py_scriptdir}/colorsys.py
+%{py_scriptdir}/compileall.py
+%{py_scriptdir}/configparser.py
+%{py_scriptdir}/contextlib.py
+%{py_scriptdir}/copy.py
+%{py_scriptdir}/csv.py
+%{py_scriptdir}/datetime.py
+%{py_scriptdir}/decimal.py
+%{py_scriptdir}/difflib.py
+%{py_scriptdir}/dis.py
+%{py_scriptdir}/doctest.py
+%{py_scriptdir}/dummy_threading.py
+%{py_scriptdir}/filecmp.py
+%{py_scriptdir}/fileinput.py
+%{py_scriptdir}/fnmatch.py
+%{py_scriptdir}/formatter.py
+%{py_scriptdir}/fractions.py
+%{py_scriptdir}/ftplib.py
+%{py_scriptdir}/getopt.py
+%{py_scriptdir}/getpass.py
+%{py_scriptdir}/gettext.py
+%{py_scriptdir}/glob.py
+%{py_scriptdir}/gzip.py
+%{py_scriptdir}/hashlib.py
+%{py_scriptdir}/hmac.py
+%{py_scriptdir}/imaplib.py
+%{py_scriptdir}/imghdr.py
+%{py_scriptdir}/inspect.py
+%{py_scriptdir}/macpath.py
+%{py_scriptdir}/macurl2path.py
+%{py_scriptdir}/mailbox.py
+%{py_scriptdir}/mailcap.py
+%{py_scriptdir}/mimetypes.py
+%{py_scriptdir}/modulefinder.py
+%{py_scriptdir}/netrc.py
+%{py_scriptdir}/nntplib.py
+%{py_scriptdir}/ntpath.py
+%{py_scriptdir}/nturl2path.py
+%{py_scriptdir}/numbers.py
+%{py_scriptdir}/opcode.py
+%{py_scriptdir}/optparse.py
+%{py_scriptdir}/os2emxpath.py
+%{py_scriptdir}/pickle.py
+%{py_scriptdir}/pickletools.py
+%{py_scriptdir}/pipes.py
+%{py_scriptdir}/pkgutil.py
+%{py_scriptdir}/platform.py
+%{py_scriptdir}/plistlib.py
+%{py_scriptdir}/poplib.py
+%{py_scriptdir}/pprint.py
+%{py_scriptdir}/pty.py
+%{py_scriptdir}/py_compile.py
+%{py_scriptdir}/pyclbr.py
+%{py_scriptdir}/queue.py
+%{py_scriptdir}/quopri.py
+%{py_scriptdir}/random.py
+%{py_scriptdir}/rlcompleter.py
+%{py_scriptdir}/runpy.py
+%{py_scriptdir}/sched.py
+%{py_scriptdir}/shelve.py
+%{py_scriptdir}/shlex.py
+%{py_scriptdir}/shutil.py
+%{py_scriptdir}/smtpd.py
+%{py_scriptdir}/smtplib.py
+%{py_scriptdir}/sndhdr.py
+%{py_scriptdir}/socket.py
+%{py_scriptdir}/socketserver.py
+%{py_scriptdir}/ssl.py
+%{py_scriptdir}/string.py
+%{py_scriptdir}/stringprep.py
+%{py_scriptdir}/struct.py
+%{py_scriptdir}/subprocess.py
+%{py_scriptdir}/sunau.py
+%{py_scriptdir}/symbol.py
+%{py_scriptdir}/symtable.py
+%{py_scriptdir}/tabnanny.py
+%{py_scriptdir}/tarfile.py
+%{py_scriptdir}/telnetlib.py
+%{py_scriptdir}/tempfile.py
+%{py_scriptdir}/textwrap.py
+%{py_scriptdir}/this.py
+%{py_scriptdir}/threading.py
+%{py_scriptdir}/trace.py
+%{py_scriptdir}/tty.py
+%{py_scriptdir}/turtle.py
+%{py_scriptdir}/uu.py
+%{py_scriptdir}/uuid.py
+%{py_scriptdir}/warnings.py
+%{py_scriptdir}/wave.py
+%{py_scriptdir}/webbrowser.py
+%{py_scriptdir}/xdrlib.py
+%{py_scriptdir}/zipfile.py
+%{py_scriptdir}/__pycache__/__future__.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/__phello__.foo.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/_compat_pickle.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/_dummy_thread.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/_markupbase.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/_pyio.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/_strptime.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/_threading_local.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/aifc.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/antigravity.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/argparse.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/ast.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/asynchat.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/asyncore.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/base64.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/bdb.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/binhex.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/cProfile.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/calendar.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/cgi.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/cgitb.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/chunk.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/cmd.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/code.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/codeop.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/colorsys.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/compileall.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/configparser.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/contextlib.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/copy.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/csv.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/datetime.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/decimal.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/difflib.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/dis.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/doctest.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/dummy_threading.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/filecmp.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/fileinput.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/fnmatch.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/formatter.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/fractions.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/ftplib.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/getopt.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/getpass.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/gettext.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/glob.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/gzip.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/hashlib.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/hmac.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/imaplib.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/imghdr.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/inspect.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/macpath.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/macurl2path.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/mailbox.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/mailcap.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/mimetypes.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/modulefinder.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/netrc.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/nntplib.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/ntpath.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/nturl2path.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/numbers.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/opcode.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/optparse.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/os2emxpath.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/pickle.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/pickletools.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/pipes.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/pkgutil.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/platform.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/plistlib.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/poplib.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/pprint.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/pty.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/py_compile.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/pyclbr.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/queue.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/quopri.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/random.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/rlcompleter.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/runpy.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/sched.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/shelve.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/shlex.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/shutil.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/smtpd.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/smtplib.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/sndhdr.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/socket.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/socketserver.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/ssl.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/string.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/stringprep.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/struct.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/subprocess.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/sunau.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/symbol.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/symtable.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/tabnanny.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/tarfile.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/telnetlib.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/tempfile.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/textwrap.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/this.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/threading.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/trace.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/tty.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/turtle.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/uu.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/uuid.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/warnings.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/wave.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/webbrowser.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/xdrlib.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/zipfile.cpython-*.py[co]
 %{py_dyndir}/Python-%{version}-py*.egg-info
 
 #
@@ -863,6 +1083,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/pydoc3
 %attr(755,root,root) %{_bindir}/pydoc3.2
 %{py_scriptdir}/pydoc.py
+%{py_scriptdir}/__pycache__/pydoc.cpython-*.py[co]
 %dir %{py_scriptdir}/pydoc_data
 %{py_scriptdir}/pydoc_data/__pycache__
 %{py_scriptdir}/pydoc_data/*.py
@@ -891,18 +1112,25 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libpython3.so
 %{py_incdir}/*.h
 %exclude %{py_incdir}/pyconfig.h
+%attr(755,root,root) %{py_libdir}/config-%{py_abi}/makesetup
+%attr(755,root,root) %{py_libdir}/config-%{py_abi}/install-sh
+%{py_libdir}/config-%{py_abi}/config.c
+%{py_libdir}/config-%{py_abi}/config.c.in
+%{py_libdir}/config-%{py_abi}/python.o
 %{_pkgconfigdir}/python-%{py_ver}.pc
 
 %files devel-tools
 %defattr(644,root,root,755)
 /etc/shrc.d/python*-devel*
-
 %attr(755,root,root) %{_bindir}/pygettext%{py_ver}
-
 %{py_scriptdir}/pdb.py
 %{py_scriptdir}/profile.py
 %{py_scriptdir}/pstats.py
 %{py_scriptdir}/timeit.py
+%{py_scriptdir}/__pycache__/pdb.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/profile.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/pstats.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/timeit.cpython-*.py[co]
 
 %files 2to3
 %attr(755,root,root) %{_bindir}/2to3-%{py_ver}
