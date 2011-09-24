@@ -34,7 +34,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.2
-Release:	2
+Release:	3
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -508,6 +508,10 @@ install Doc/info/python*info* $RPM_BUILD_ROOT%{_infodir}
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 cp -a Tools $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+
+# make libpython3.so simply symlink to real lib
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libpython3.so
+ln -s libpython%{py_abi}.so $RPM_BUILD_ROOT%{_libdir}/libpython3.so
 
 #
 # create several useful aliases, such as timeit.py, profile.py, pdb.py, smtpd.py
