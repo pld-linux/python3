@@ -1120,6 +1120,8 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/config-%{py_abi}/config.c.in
 %{py_libdir}/config-%{py_abi}/python.o
 %{_pkgconfigdir}/python-%{py_ver}.pc
+%{_pkgconfigdir}/python-%{py_abi}.pc
+%{_pkgconfigdir}/python3.pc
 
 %files devel-tools
 %defattr(644,root,root,755)
