@@ -44,8 +44,7 @@ Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-lib64.patch
 Patch3:		%{name}-noarch_to_datadir.patch
-Patch4:		%{name}-bug11254.patch
-Patch5:		%{name}-no_cmdline_tests.patch
+Patch4:		%{name}-no_cmdline_tests.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	bluez-libs-devel
@@ -446,7 +445,6 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 
 %build
 %{__autoconf}
