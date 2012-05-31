@@ -1,0 +1,11 @@
+--- Python-3.2.3/Lib/distutils/sysconfig.py~	2012-05-31 10:30:41.000000000 +0200
++++ Python-3.2.3/Lib/distutils/sysconfig.py	2012-05-31 10:31:01.624339294 +0200
+@@ -253,7 +253,7 @@
+     """Return full pathname of installed Makefile from the Python build."""
+     if python_build:
+         return os.path.join(os.path.dirname(sys.executable), "Makefile")
+-    lib_dir = get_python_lib(plat_specific=0, standard_lib=1)
++    lib_dir = get_python_lib(plat_specific=1, standard_lib=1)
+     config_file = 'config-{}{}'.format(get_python_version(), build_flags)
+     return os.path.join(lib_dir, config_file, 'Makefile')
+ 
