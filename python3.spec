@@ -34,7 +34,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.3
-Release:	4
+Release:	5
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -447,6 +447,12 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+
+if ! grep -q "tmpfs" /proc/self/mounts; then
+	echo "You need to have /dev/shm mounted in order to build this package!" >&2
+	echo "(Or any other tmpfs mounted and accessible to the rpmbuild process)" >&2
+	exit 1
+fi
 
 %build
 %{__autoconf}
