@@ -458,6 +458,8 @@ fi
 %{__autoconf}
 CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags}"; export CPPFLAGS
 %configure \
+        ac_cv_posix_semaphores_enabled=yes \
+        ac_cv_broken_sem_getvalue=no \
 	--with-cxx-main="%{__cxx}" \
 	--enable-shared \
 	--enable-ipv6 \
