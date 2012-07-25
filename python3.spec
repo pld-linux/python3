@@ -449,7 +449,7 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch5 -p1
 
 %build
-if ! grep -q "tmpfs" /proc/self/mounts; then
+if false && ! grep -q "tmpfs" /proc/self/mounts; then
 	echo "You need to have /dev/shm mounted in order to build this package!" >&2
 	echo "(Or any other tmpfs mounted and accessible to the rpmbuild process)" >&2
 	exit 1
