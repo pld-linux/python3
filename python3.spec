@@ -59,7 +59,7 @@ BuildRequires:	gmp-devel >= 4.0
 BuildRequires:	libffi-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	ncurses-ext-devel >= 5.2
-BuildRequires:	openssl-devel >= 0.9.8
+BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	readline-devel >= 5.0
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sed >= 4.0
@@ -448,18 +448,18 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch4 -p1
 %patch5 -p1
 
+%build
 if ! grep -q "tmpfs" /proc/self/mounts; then
 	echo "You need to have /dev/shm mounted in order to build this package!" >&2
 	echo "(Or any other tmpfs mounted and accessible to the rpmbuild process)" >&2
 	exit 1
 fi
 
-%build
 %{__autoconf}
 CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags}"; export CPPFLAGS
 %configure \
-        ac_cv_posix_semaphores_enabled=yes \
-        ac_cv_broken_sem_getvalue=no \
+	ac_cv_posix_semaphores_enabled=yes \
+	ac_cv_broken_sem_getvalue=no \
 	--with-cxx-main="%{__cxx}" \
 	--enable-shared \
 	--enable-ipv6 \
@@ -511,7 +511,7 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir},%{_pkgconfigdir}} \
 
 %if %{with info}
 %{__make} -C Doc/info
-install Doc/info/python*info* $RPM_BUILD_ROOT%{_infodir}
+cp -p Doc/info/python*info* $RPM_BUILD_ROOT%{_infodir}
 %endif
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
@@ -527,10 +527,10 @@ ln -s libpython%{py_abi}.so $RPM_BUILD_ROOT%{_libdir}/libpython3.so
 
 # for python devel tools
 for script in timeit profile pdb pstats; do
-    echo alias ${script}%{py_ver}.py=\"python%{py_ver} -m ${script}\"
+	echo "alias ${script}%{py_ver}.py='python%{py_ver} -m ${script}'"
 done > $RPM_BUILD_ROOT/etc/shrc.d/python%{py_ver}-devel.sh
 
-echo alias pygettext%{py_ver}.py='"pygettext%{py_ver}"' \
+echo "alias pygettext%{py_ver}.py='pygettext%{py_ver}'" \
 	>> $RPM_BUILD_ROOT/etc/shrc.d/python%{py_ver}-devel.sh
 
 sed 's/=/ /' \
@@ -539,7 +539,7 @@ sed 's/=/ /' \
 
 # for python modules
 for script in smtpd webbrowser; do
-    echo alias ${script}%{py_ver}.py=\"python%{py_ver} -m ${script}\"
+	echo "alias ${script}%{py_ver}.py='python%{py_ver} -m ${script}'"
 done > $RPM_BUILD_ROOT/etc/shrc.d/python%{py_ver}-modules.sh
 
 sed 's/=/ /' \
@@ -551,7 +551,7 @@ sed 's/=/ /' \
 # we will have two commands: pygettext.py (an alias) and pygettext;
 # this way there are no import (which is impossible now) conflicts and
 # pygettext.py is provided for compatibility
-install Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
+install -p Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 
 # just to cut the noise, as they are not packaged (now)
 # first tests (probably could be packaged)
