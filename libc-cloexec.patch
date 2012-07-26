@@ -1,6 +1,9 @@
 see also
 http://serverfault.com/questions/388865/building-python3-on-a-redhat-5-machine
 
+upstream fix:
+http://hg.python.org/cpython/rev/fe1dfc066a38
+
 --- Python-3.2.3/Modules/_posixsubprocess.c~	2012-04-11 09:54:07.000000000 +0300
 +++ Python-3.2.3/Modules/_posixsubprocess.c	2012-07-26 10:58:29.616131665 +0300
 @@ -37,6 +37,9 @@
