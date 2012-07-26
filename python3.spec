@@ -46,6 +46,7 @@ Patch2:		%{name}-lib64.patch
 Patch3:		%{name}-noarch_to_datadir.patch
 Patch4:		%{name}-no_cmdline_tests.patch
 Patch5:		%{name}-makefile-location.patch
+Patch6:		libc-cloexec.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	bluez-libs-devel
@@ -447,6 +448,7 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 %build
 if ! grep -q "tmpfs" /proc/self/mounts; then
