@@ -964,6 +964,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_socket.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_ssl.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testcapi.cpython-*.so
+
+# for openssl < 0.9.8 package sha256 and sha512 modules
+%if 0%(pkg-config  openssl --atleast-version=0.9.8; echo $?)
+%attr(755,root,root) %{py_dyndir}/_sha256.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_sha512.cpython-*.so
+%endif
+
 %attr(755,root,root) %{py_dyndir}/array.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/atexit.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/audioop.cpython-*.so
