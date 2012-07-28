@@ -451,6 +451,7 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch6 -p1
 
 %{__rm} -r Modules/zlib
+%{__rm} -r Modules/expat
 
 for SUBDIR in darwin libffi libffi_arm_wince libffi_msvc libffi_osx; do
 	%{__rm} -r Modules/_ctypes/$SUBDIR
@@ -488,6 +489,7 @@ CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags}"; export CPPFLAGS
 	--with-threads \
 	--with-doc-strings \
 	--with-fpectl \
+	--with-system-expat \
 	--with-system-ffi \
 	--with-computed-gotos \
 	LINKCC='$(PURIFY) $(CXX)' \
