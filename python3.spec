@@ -450,6 +450,20 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch5 -p1
 %patch6 -p1
 
+%{__rm} -r Modules/zlib
+
+for SUBDIR in darwin libffi libffi_arm_wince libffi_msvc libffi_osx; do
+	%{__rm} -r Modules/_ctypes/$SUBDIR
+done
+
+files="md5module.c sha1module.c"
+%if !0%(pkg-config  openssl --atleast-version=0.9.8; echo $?)
+files="$files sha256module.c sha512module.c"
+%endif
+for f in $files; do
+	%{__rm} Modules/$f
+done
+
 %build
 if ! grep -q "tmpfs" /proc/self/mounts; then
 	echo "You need to have /dev/shm mounted in order to build this package!" >&2
