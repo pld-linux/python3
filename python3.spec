@@ -468,7 +468,9 @@ CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags}"; export CPPFLAGS
 	--with-dbmliborder=gdbm:bdb \
 	--with-wide-unicode \
 	--with-signal-module \
+%ifarch %{ix86} %{x8664} ppc ppc64
 	--with-tsc \
+%endif
 	--with-threads \
 	--with-doc-strings \
 	--with-fpectl \
