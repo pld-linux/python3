@@ -16,7 +16,7 @@
 #   test_gdb: fails, as the gdb uses old python version
 %define		broken_tests test_httpservers test_distutils test_cmd_line test_pydoc test_telnetlib test_zlib test_gdb test_site
 
-%define py_ver		3.2
+%define py_ver		3.3
 %define py_abi		%{py_ver}mu
 %define py_prefix	%{_prefix}
 %define py_libdir	%{py_prefix}/%{_lib}/python%{py_ver}
@@ -33,13 +33,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.3
-Release:	6
+Version:	%{py_ver}.0
+Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Applications
 Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	187564726f2c1473d301c586acc24847
+# Source0-md5:	2e7533b4009ac4adae62a7797a442e7a
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-lib64.patch
@@ -47,7 +47,7 @@ Patch3:		%{name}-noarch_to_datadir.patch
 Patch4:		%{name}-no_cmdline_tests.patch
 Patch5:		%{name}-makefile-location.patch
 Patch6:		libc-cloexec.patch
-Patch7:		bsddb-version.patch
+Patch7:		%{name}-build.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	bluez-libs-devel

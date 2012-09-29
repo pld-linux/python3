@@ -1,5 +1,5 @@
---- Python-3.2b1/configure.in.orig	2010-12-12 16:18:42.000000000 +0000
-+++ Python-3.2b1/configure.in	2010-12-12 16:20:34.000000000 +0000
+--- Python-3.2b1/configure.ac.orig	2010-12-12 16:18:42.000000000 +0000
++++ Python-3.2b1/configure.ac	2010-12-12 16:20:34.000000000 +0000
 @@ -879,13 +879,13 @@
  	    if test "$Py_DEBUG" = 'true' ; then
  		# Optimization messes up debuggers, so turn it off for
