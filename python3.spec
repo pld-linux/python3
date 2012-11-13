@@ -17,7 +17,7 @@
 %define		broken_tests test_httpservers test_distutils test_cmd_line test_pydoc test_telnetlib test_zlib test_gdb test_site
 
 %define py_ver		3.3
-%define py_abi		%{py_ver}mu
+%define py_abi		%{py_ver}m
 %define py_prefix	%{_prefix}
 %define py_libdir	%{py_prefix}/%{_lib}/python%{py_ver}
 %define py_incdir	%{_includedir}/python%{py_abi}
@@ -47,7 +47,6 @@ Patch3:		%{name}-noarch_to_datadir.patch
 Patch4:		%{name}-no_cmdline_tests.patch
 Patch5:		%{name}-makefile-location.patch
 Patch6:		libc-cloexec.patch
-Patch7:		%{name}-build.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	bluez-libs-devel
@@ -450,7 +449,6 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 
 %{__rm} -r Modules/zlib
 %{__rm} -r Modules/expat
@@ -475,10 +473,11 @@ if ! grep -q "tmpfs" /proc/self/mounts; then
 fi
 
 %{__autoconf}
-CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags}"; export CPPFLAGS
+CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags} -Wall %{!?debug:-DNDEBUG=1}"; export CPPFLAGS
 %configure \
 	ac_cv_posix_semaphores_enabled=yes \
 	ac_cv_broken_sem_getvalue=no \
+	%{?with_debug:--with-pydebug} \
 	--with-cxx-main="%{__cxx}" \
 	--enable-shared \
 	--enable-ipv6 \
@@ -500,7 +499,7 @@ CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags}"; export CPPFLAGS
 	LDFLAGS="%{rpmcflags} %{rpmldflags}"
 
 %{__make} \
-	OPT="%{rpmcflags} -fno-caller-saves" 2>&1 | awk '
+	OPT="%{rpmcflags} %{rpmcppflags} -fno-caller-saves" 2>&1 | awk '
 BEGIN { fail = 0; logmsg = ""; }
 {
         if ($0 ~ /\*\*\* WARNING:/) {
@@ -580,8 +579,6 @@ install -p Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 %{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/test
 %{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/ctypes/test
 %{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/distutils/tests
-%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/email/test
-%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/importlib/test
 %{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/lib2to3/tests
 %{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/sqlite3/test
 %{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/tkinter/test
@@ -645,12 +642,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_struct.cpython-*.so
 
 # modules required by python library
-%{py_scriptdir}/_abcoll.py
 %{py_scriptdir}/_weakrefset.py
 %{py_scriptdir}/abc.py
 %{py_scriptdir}/bisect.py
 %{py_scriptdir}/codecs.py
-%{py_scriptdir}/collections.py
 %{py_scriptdir}/copyreg.py
 %{py_scriptdir}/functools.py
 %{py_scriptdir}/genericpath.py
@@ -673,12 +668,10 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/os.py
 # needed by the dynamic sys.lib patch
 %{py_scriptdir}/types.py
-%{py_scriptdir}/__pycache__/_abcoll.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_weakrefset.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/abc.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/bisect.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/codecs.cpython-*.py[co]
-%{py_scriptdir}/__pycache__/collections.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/copyreg.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/functools.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/genericpath.cpython-*.py[co]
@@ -833,7 +826,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/xdrlib.py
 %{py_scriptdir}/zipfile.py
 %{py_scriptdir}/__pycache__/__future__.cpython-*.py[co]
-%{py_scriptdir}/__pycache__/__phello__.foo.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_compat_pickle.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_dummy_thread.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_markupbase.cpython-*.py[co]

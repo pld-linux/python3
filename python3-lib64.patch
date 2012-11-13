@@ -290,12 +290,12 @@ diff -Nur Python-3.2.1.orig//setup.py Python-3.2.1/setup.py
                  readline_libs.append(curses_library)
              elif self.compiler.find_library_file(lib_dirs +
 -                                                     ['/usr/lib/termcap'],
-+                                                     ['/usr/' + libname + '/termcap'],
++                                                     ['/usr/' + sys.lib + '/termcap'],
                                                       'termcap'):
                  readline_libs.append('termcap')
              exts.append( Extension('readline', ['readline.c'],
 -                                   library_dirs=['/usr/lib/termcap'],
-+                                   library_dirs=['/usr/' + libname + '/termcap'],
++                                   library_dirs=['/usr/' + sys.lib + '/termcap'],
                                     extra_link_args=readline_extra_link_args,
                                     libraries=readline_libs) )
          else:
