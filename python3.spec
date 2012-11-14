@@ -482,7 +482,6 @@ CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags} -Wall %{!?debug:-DNDEBUG=1}"; e
 	--enable-shared \
 	--enable-ipv6 \
 	--with-dbmliborder=gdbm:bdb \
-	--with-wide-unicode \
 	--with-signal-module \
 %ifarch %{ix86} %{x8664} ppc ppc64
 	--with-tsc \
