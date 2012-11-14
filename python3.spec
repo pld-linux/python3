@@ -34,7 +34,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.0
-Release:	0.1
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -642,6 +642,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_struct.cpython-*.so
 
 # modules required by python library
+%{py_scriptdir}/_sysconfigdata.py
 %{py_scriptdir}/_weakrefset.py
 %{py_scriptdir}/abc.py
 %{py_scriptdir}/bisect.py
@@ -668,6 +669,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/os.py
 # needed by the dynamic sys.lib patch
 %{py_scriptdir}/types.py
+%{py_scriptdir}/__pycache__/_sysconfigdata.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_weakrefset.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/abc.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/bisect.cpython-*.py[co]
@@ -694,6 +696,8 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/__pycache__/os.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/types.cpython-*.py[co]
 
+%{py_scriptdir}/collections
+
 # encodings required by python library
 %dir %{py_scriptdir}/encodings
 %{py_scriptdir}/encodings/__pycache__
@@ -708,11 +712,14 @@ rm -rf $RPM_BUILD_ROOT
 %files modules
 %defattr(644,root,root,755)
 /etc/shrc.d/python*-modules*
+%attr(755,root,root) %{_bindir}/pyvenv
+%attr(755,root,root) %{_bindir}/pyvenv-3.3
 %{py_scriptdir}/__future__.py
 %{py_scriptdir}/__phello__.foo.py
 %{py_scriptdir}/_compat_pickle.py
 %{py_scriptdir}/_dummy_thread.py
 %{py_scriptdir}/_markupbase.py
+%{py_scriptdir}/_osx_support.py
 %{py_scriptdir}/_pyio.py
 %{py_scriptdir}/_strptime.py
 %{py_scriptdir}/_threading_local.py
@@ -725,6 +732,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/base64.py
 %{py_scriptdir}/bdb.py
 %{py_scriptdir}/binhex.py
+%{py_scriptdir}/bz2.py
 %{py_scriptdir}/cProfile.py
 %{py_scriptdir}/calendar.py
 %{py_scriptdir}/cgi.py
@@ -738,6 +746,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/configparser.py
 %{py_scriptdir}/contextlib.py
 %{py_scriptdir}/copy.py
+%{py_scriptdir}/crypt.py
 %{py_scriptdir}/csv.py
 %{py_scriptdir}/datetime.py
 %{py_scriptdir}/decimal.py
@@ -760,7 +769,10 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/hmac.py
 %{py_scriptdir}/imaplib.py
 %{py_scriptdir}/imghdr.py
+%{py_scriptdir}/imp.py
 %{py_scriptdir}/inspect.py
+%{py_scriptdir}/ipaddress.py
+%{py_scriptdir}/lzma.py
 %{py_scriptdir}/macpath.py
 %{py_scriptdir}/macurl2path.py
 %{py_scriptdir}/mailbox.py
@@ -826,9 +838,11 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/xdrlib.py
 %{py_scriptdir}/zipfile.py
 %{py_scriptdir}/__pycache__/__future__.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/__phello__.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_compat_pickle.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_dummy_thread.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_markupbase.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/_osx_support.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_pyio.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_strptime.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_threading_local.cpython-*.py[co]
@@ -841,6 +855,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/__pycache__/base64.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/bdb.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/binhex.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/bz2.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/cProfile.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/calendar.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/cgi.cpython-*.py[co]
@@ -854,6 +869,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/__pycache__/configparser.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/contextlib.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/copy.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/crypt.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/csv.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/datetime.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/decimal.cpython-*.py[co]
@@ -876,7 +892,10 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/__pycache__/hmac.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/imaplib.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/imghdr.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/imp.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/inspect.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/ipaddress.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/lzma.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/macpath.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/macurl2path.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/mailbox.cpython-*.py[co]
@@ -941,19 +960,20 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/__pycache__/webbrowser.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/xdrlib.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/zipfile.cpython-*.py[co]
-%{py_dyndir}/Python-%{version}-py*.egg-info
 
 #
 # list .so modules to be sure that all of them are built
 #
 
 %attr(755,root,root) %{py_dyndir}/_bisect.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_bz2.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_cn.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_hk.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_iso2022.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_jp.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_kr.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_tw.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_crypt.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_csv.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_ctypes*.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_curses_panel.cpython-*.so
@@ -962,12 +982,14 @@ rm -rf $RPM_BUILD_ROOT
 %ifnarch sparc64
 %attr(755,root,root) %{py_dyndir}/_dbm.cpython-*.so
 %endif
+%attr(755,root,root) %{py_dyndir}/_decimal.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_elementtree.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_gdbm.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_hashlib.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_heapq.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_json.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_lsprof.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_lzma.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_multibytecodec.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_multiprocessing.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_pickle.cpython-*.so
@@ -975,6 +997,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_random.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_socket.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_ssl.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_testbuffer.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testcapi.cpython-*.so
 
 # for openssl < 0.9.8 package sha256 and sha512 modules
@@ -987,9 +1010,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/atexit.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/audioop.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/binascii.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/bz2.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/cmath.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/crypt.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/fcntl.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/grp.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/math.cpython-*.so
@@ -1081,10 +1102,17 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/urllib/__pycache__
 %{py_scriptdir}/urllib/*.py
 
+%dir %{py_scriptdir}/venv
+%{py_scriptdir}/venv/__pycache__
+%{py_scriptdir}/venv/*.py
+%dir %{py_scriptdir}/venv/scripts
+%dir %{py_scriptdir}/venv/scripts/posix
+%{py_scriptdir}/venv/scripts/posix/activate
+%{py_scriptdir}/venv/scripts/posix/pydoc
+
 %dir %{py_scriptdir}/wsgiref
 %{py_scriptdir}/wsgiref/__pycache__
 %{py_scriptdir}/wsgiref/*.py
-%{py_scriptdir}/wsgiref.egg-info
 
 %dir %{py_scriptdir}/xml
 %dir %{py_scriptdir}/xml/dom
@@ -1114,7 +1142,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n pydoc3
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/pydoc3
-%attr(755,root,root) %{_bindir}/pydoc3.2
+%attr(755,root,root) %{_bindir}/pydoc3.3
 %{py_scriptdir}/pydoc.py
 %{py_scriptdir}/__pycache__/pydoc.cpython-*.py[co]
 %dir %{py_scriptdir}/pydoc_data
@@ -1125,7 +1153,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n idle3
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/idle3
-%attr(755,root,root) %{_bindir}/idle3.2
+%attr(755,root,root) %{_bindir}/idle3.3
 %dir %{py_scriptdir}/idlelib
 %dir %{py_scriptdir}/idlelib/Icons
 %{py_scriptdir}/idlelib/__pycache__
