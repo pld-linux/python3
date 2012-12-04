@@ -1,5 +1,5 @@
+# TODO: --with-system-libmpdec when new version released [BR: mpdecimal-devel > 2.3]
 #
-
 # Conditional build:
 %bcond_with	info			# info pages (requires emacs)
 %bcond_without	tkinter			# disables tkinter module building
