@@ -1,7 +1,7 @@
-diff -dur Python-3.2.1.orig/Lib/test/regrtest.py Python-3.2.1/Lib/test/regrtest.py
---- Python-3.2.1.orig/Lib/test/regrtest.py	2011-07-09 08:58:49.000000000 +0200
-+++ Python-3.2.1/Lib/test/regrtest.py	2011-07-15 15:21:06.000000000 +0200
-@@ -216,7 +216,7 @@
+diff -Nur Python-3.3.1.orig/Lib/test/regrtest.py Python-3.3.1/Lib/test/regrtest.py
+--- Python-3.3.1.orig/Lib/test/regrtest.py	2013-04-06 08:41:41.000000000 +0100
++++ Python-3.3.1/Lib/test/regrtest.py	2013-04-07 19:39:23.432490962 +0100
+@@ -243,7 +243,7 @@
  
  from test import support
  
@@ -10,9 +10,9 @@ diff -dur Python-3.2.1.orig/Lib/test/regrtest.py Python-3.2.1/Lib/test/regrtest.
                    'decimal', 'cpu', 'subprocess', 'urlfetch', 'gui')
  
  TEMPDIR = os.path.abspath(tempfile.gettempdir())
-diff -dur Python-3.2.1.orig/Lib/test/test_compileall.py Python-3.2.1/Lib/test/test_compileall.py
---- Python-3.2.1.orig/Lib/test/test_compileall.py	2011-07-09 08:58:50.000000000 +0200
-+++ Python-3.2.1/Lib/test/test_compileall.py	2011-07-15 15:21:06.000000000 +0200
+diff -Nur Python-3.3.1.orig/Lib/test/test_compileall.py Python-3.3.1/Lib/test/test_compileall.py
+--- Python-3.3.1.orig/Lib/test/test_compileall.py	2013-04-06 08:41:41.000000000 +0100
++++ Python-3.3.1/Lib/test/test_compileall.py	2013-04-07 19:39:23.449157629 +0100
 @@ -130,7 +130,7 @@
          finally:
              sys.stdout = orig_stdout
@@ -22,10 +22,10 @@ diff -dur Python-3.2.1.orig/Lib/test/test_compileall.py Python-3.2.1/Lib/test/te
  class CommandLineTests(unittest.TestCase):
      """Test compileall's CLI."""
  
-diff -dur Python-3.2.1.orig/Lib/test/test_warnings.py Python-3.2.1/Lib/test/test_warnings.py
---- Python-3.2.1.orig/Lib/test/test_warnings.py	2011-07-09 08:58:51.000000000 +0200
-+++ Python-3.2.1/Lib/test/test_warnings.py	2011-07-15 15:21:06.000000000 +0200
-@@ -715,6 +715,7 @@
+diff -Nur Python-3.3.1.orig/Lib/test/test_warnings.py Python-3.3.1/Lib/test/test_warnings.py
+--- Python-3.3.1.orig/Lib/test/test_warnings.py	2013-04-06 08:41:46.000000000 +0100
++++ Python-3.3.1/Lib/test/test_warnings.py	2013-04-07 19:41:25.529164545 +0100
+@@ -717,6 +717,7 @@
      module = py_warnings
  
  
@@ -33,16 +33,16 @@ diff -dur Python-3.2.1.orig/Lib/test/test_warnings.py Python-3.2.1/Lib/test/test
  class EnvironmentVariableTests(BaseTest):
  
      def test_single_warning(self):
-@@ -760,14 +761,17 @@
+@@ -762,14 +763,17 @@
                  "['ignore:DeprecaciónWarning']".encode('utf-8'))
          self.assertEqual(p.wait(), 0)
  
 +@unittest.skipUnless(support.is_resource_enabled("cmdline"), "python cmdline tests disabled")
- class CEnvironmentVariableTests(EnvironmentVariableTests):
+ class CEnvironmentVariableTests(EnvironmentVariableTests, unittest.TestCase):
      module = c_warnings
  
 +@unittest.skipUnless(support.is_resource_enabled("cmdline"), "python cmdline tests disabled")
- class PyEnvironmentVariableTests(EnvironmentVariableTests):
+ class PyEnvironmentVariableTests(EnvironmentVariableTests, unittest.TestCase):
      module = py_warnings
  
  
