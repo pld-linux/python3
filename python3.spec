@@ -495,7 +495,7 @@ CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags} -Wall %{!?debug:-DNDEBUG=1}"; e
 	LINKCC='$(PURIFY) $(CXX)' \
 	LDSHARED='$(CC) $(CFLAGS) -shared' \
 	BLDSHARED='$(CC) $(CFLAGS) -shared' \
-	LDFLAGS="%{rpmcflags} %{rpmldflags}"
+	LDFLAGS="%{rpmcflags} %{rpmldflags} -L%{_lib} -L%{_libdir}"
 
 %{__make} \
 	OPT="%{rpmcflags} %{rpmcppflags} -fno-caller-saves" 2>&1 | awk '
