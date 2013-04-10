@@ -1,4 +1,8 @@
-# TODO: --with-system-libmpdec when new version released [BR: mpdecimal-devel > 2.3]
+# TODO:
+# - --with-system-libmpdec when new version released [BR: mpdecimal-devel > 2.3]
+# - fix lib64 and noarch/datadir patches as the 2nd one overrides some
+#   changes made by the first one; propose patches to python team as they
+#   seem to be duplicated by fedora as well
 #
 # Conditional build:
 %bcond_with	info			# info pages (requires emacs)
