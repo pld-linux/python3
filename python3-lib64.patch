@@ -281,7 +281,7 @@ diff -Nur Python-3.2.1.orig//setup.py Python-3.2.1/setup.py
              lib_dirs = self.compiler.library_dirs + [
 -                '/lib64', '/usr/lib64',
 -                '/lib', '/usr/lib',
-+                sys.lib, '/usr/' + sys.lib
++                '/' + sys.lib, '/usr/' + sys.lib
                  ]
              inc_dirs = self.compiler.include_dirs + ['/usr/include']
          exts = []
