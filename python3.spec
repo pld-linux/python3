@@ -1,8 +1,9 @@
 # TODO:
-# - --with-system-libmpdec when new version released [BR: mpdecimal-devel > 2.3]
+# - python3-lib64.patch: sys.lib is empty string
 # - fix lib64 and noarch/datadir patches as the 2nd one overrides some
 #   changes made by the first one; propose patches to python team as they
 #   seem to be duplicated by fedora as well
+# - --with-system-libmpdec when new version released [BR: mpdecimal-devel > 2.3]
 #
 # Conditional build:
 %bcond_with	info			# info pages (requires emacs)
