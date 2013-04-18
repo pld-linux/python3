@@ -624,6 +624,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/python%{py_abi}
 %attr(755,root,root) %{_bindir}/python3
 %{_mandir}/man1/python%{py_ver}.1*
+%{_mandir}/man1/python3.1*
 
 %files libs
 %defattr(644,root,root,755)
@@ -1069,6 +1070,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_scriptdir}/email/mime
 %{py_scriptdir}/email/__pycache__
 %{py_scriptdir}/email/mime/__pycache__
+%{py_scriptdir}/email/architecture.rst
 %{py_scriptdir}/email/*.py
 %{py_scriptdir}/email/mime/*.py
 
