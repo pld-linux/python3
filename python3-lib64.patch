@@ -1,9 +1,8 @@
-diff -Nur Python-3.2.1.orig//configure.ac Python-3.2.1/configure.ac
---- Python-3.2.1.orig//configure.ac	2011-07-09 07:58:56.000000000 +0100
-+++ Python-3.2.1/configure.ac	2011-07-12 22:20:12.000000000 +0100
-@@ -592,6 +592,41 @@
-     esac;;
- esac
+--- Python-3.3.1/configure.ac.orig	2013-04-18 16:31:07.244030129 +0200
++++ Python-3.3.1/configure.ac	2013-04-18 17:30:31.800622500 +0200
+@@ -769,6 +768,42 @@
+ MULTIARCH=$($CC --print-multiarch 2>/dev/null)
+ AC_SUBST(MULTIARCH)
  
 +AC_SUBST(ARCH)
 +AC_MSG_CHECKING(ARCH)
@@ -40,11 +39,11 @@ diff -Nur Python-3.2.1.orig//configure.ac Python-3.2.1/configure.ac
 +  ;;
 +esac
 +AC_MSG_RESULT($LIB)
++
  
  AC_SUBST(LIBRARY)
  AC_MSG_CHECKING(LIBRARY)
-diff -Nur Python-3.2.1.orig//Include/pythonrun.h Python-3.2.1/Include/pythonrun.h
---- Python-3.2.1.orig//Include/pythonrun.h	2011-07-09 07:58:46.000000000 +0100
+--- Python-3.2.1.orig/Include/pythonrun.h	2011-07-09 07:58:46.000000000 +0100
 +++ Python-3.2.1/Include/pythonrun.h	2011-07-12 22:20:12.000000000 +0100
 @@ -175,6 +175,8 @@
  /* In their own files */
@@ -55,8 +54,7 @@ diff -Nur Python-3.2.1.orig//Include/pythonrun.h Python-3.2.1/Include/pythonrun.
  PyAPI_FUNC(const char *) Py_GetCopyright(void);
  PyAPI_FUNC(const char *) Py_GetCompiler(void);
  PyAPI_FUNC(const char *) Py_GetBuildInfo(void);
-diff -Nur Python-3.2.1.orig//Lib/distutils/command/install.py Python-3.2.1/Lib/distutils/command/install.py
---- Python-3.2.1.orig//Lib/distutils/command/install.py	2011-07-09 07:58:46.000000000 +0100
+--- Python-3.2.1.orig/Lib/distutils/command/install.py	2011-07-09 07:58:46.000000000 +0100
 +++ Python-3.2.1/Lib/distutils/command/install.py	2011-07-12 22:20:12.000000000 +0100
 @@ -27,6 +27,8 @@
      from site import USER_SITE
@@ -84,8 +82,7 @@ diff -Nur Python-3.2.1.orig//Lib/distutils/command/install.py Python-3.2.1/Lib/d
          'headers': '$base/include/python/$dist_name',
          'scripts': '$base/bin',
          'data'   : '$base',
-diff -Nur Python-3.2.1.orig//Lib/distutils/sysconfig.py Python-3.2.1/Lib/distutils/sysconfig.py
---- Python-3.2.1.orig//Lib/distutils/sysconfig.py	2011-07-09 07:58:47.000000000 +0100
+--- Python-3.2.1.orig/Lib/distutils/sysconfig.py	2011-07-09 07:58:47.000000000 +0100
 +++ Python-3.2.1/Lib/distutils/sysconfig.py	2011-07-12 22:20:12.000000000 +0100
 @@ -124,8 +124,12 @@
          prefix = plat_specific and EXEC_PREFIX or PREFIX
@@ -101,8 +98,7 @@ diff -Nur Python-3.2.1.orig//Lib/distutils/sysconfig.py Python-3.2.1/Lib/distuti
          if standard_lib:
              return libpython
          else:
-diff -Nur Python-3.2.1.orig//Lib/distutils/tests/test_install.py Python-3.2.1/Lib/distutils/tests/test_install.py
---- Python-3.2.1.orig//Lib/distutils/tests/test_install.py	2011-07-09 07:58:47.000000000 +0100
+--- Python-3.2.1.orig/Lib/distutils/tests/test_install.py	2011-07-09 07:58:47.000000000 +0100
 +++ Python-3.2.1/Lib/distutils/tests/test_install.py	2011-07-12 22:20:12.000000000 +0100
 @@ -49,8 +49,9 @@
              self.assertEqual(got, expected)
@@ -115,8 +111,7 @@ diff -Nur Python-3.2.1.orig//Lib/distutils/tests/test_install.py Python-3.2.1/Li
          check_path(cmd.install_purelib, libdir)
          check_path(cmd.install_headers,
                     os.path.join(destination, "include", "python", "foopkg"))
-diff -Nur Python-3.2.1.orig//Lib/site.py Python-3.2.1/Lib/site.py
---- Python-3.2.1.orig//Lib/site.py	2011-07-09 07:58:49.000000000 +0100
+--- Python-3.2.1.orig/Lib/site.py	2011-07-09 07:58:49.000000000 +0100
 +++ Python-3.2.1/Lib/site.py	2011-07-12 22:20:12.000000000 +0100
 @@ -285,13 +285,16 @@
          if sys.platform in ('os2emx', 'riscos'):
@@ -138,8 +133,7 @@ diff -Nur Python-3.2.1.orig//Lib/site.py Python-3.2.1/Lib/site.py
          if sys.platform == "darwin":
              # for framework builds *only* we add the standard Apple
              # locations.
-diff -Nur Python-3.2.1.orig//Lib/sysconfig.py Python-3.2.1/Lib/sysconfig.py
---- Python-3.2.1.orig//Lib/sysconfig.py	2011-07-09 07:58:49.000000000 +0100
+--- Python-3.2.1.orig/Lib/sysconfig.py	2011-07-09 07:58:49.000000000 +0100
 +++ Python-3.2.1/Lib/sysconfig.py	2011-07-12 22:20:12.000000000 +0100
 @@ -21,10 +21,10 @@
  
@@ -169,8 +163,7 @@ diff -Nur Python-3.2.1.orig//Lib/sysconfig.py Python-3.2.1/Lib/sysconfig.py
          'include': '{installed_base}/include/python',
          'platinclude': '{installed_base}/include/python',
          'scripts': '{base}/bin',
-diff -Nur Python-3.2.1.orig//Makefile.pre.in Python-3.2.1/Makefile.pre.in
---- Python-3.2.1.orig//Makefile.pre.in	2011-07-09 07:58:52.000000000 +0100
+--- Python-3.2.1.orig/Makefile.pre.in	2011-07-09 07:58:52.000000000 +0100
 +++ Python-3.2.1/Makefile.pre.in	2011-07-12 22:20:12.000000000 +0100
 @@ -90,6 +90,8 @@
  
@@ -199,8 +192,7 @@ diff -Nur Python-3.2.1.orig//Makefile.pre.in Python-3.2.1/Makefile.pre.in
  
  Python/importdl.o: $(srcdir)/Python/importdl.c
  		$(CC) -c $(PY_CORE_CFLAGS) -I$(DLINCLDIR) -o $@ $(srcdir)/Python/importdl.c
-diff -Nur Python-3.2.1.orig//Modules/getpath.c Python-3.2.1/Modules/getpath.c
---- Python-3.2.1.orig//Modules/getpath.c	2011-07-09 07:58:54.000000000 +0100
+--- Python-3.2.1.orig/Modules/getpath.c	2011-07-09 07:58:54.000000000 +0100
 +++ Python-3.2.1/Modules/getpath.c	2011-07-12 22:21:48.000000000 +0100
 @@ -121,9 +121,17 @@
  #define EXEC_PREFIX PREFIX
@@ -231,8 +223,7 @@ diff -Nur Python-3.2.1.orig//Modules/getpath.c Python-3.2.1/Modules/getpath.c
  
  static void
  reduce(wchar_t *dir)
-diff -Nur Python-3.2.1.orig//Python/getplatform.c Python-3.2.1/Python/getplatform.c
---- Python-3.2.1.orig//Python/getplatform.c	2011-07-09 07:58:56.000000000 +0100
+--- Python-3.2.1.orig/Python/getplatform.c	2011-07-09 07:58:56.000000000 +0100
 +++ Python-3.2.1/Python/getplatform.c	2011-07-12 22:20:12.000000000 +0100
 @@ -10,3 +10,23 @@
  {
@@ -258,8 +249,7 @@ diff -Nur Python-3.2.1.orig//Python/getplatform.c Python-3.2.1/Python/getplatfor
 +{
 +	return LIB;
 +}
-diff -Nur Python-3.2.1.orig//Python/sysmodule.c Python-3.2.1/Python/sysmodule.c
---- Python-3.2.1.orig//Python/sysmodule.c	2011-07-09 07:58:56.000000000 +0100
+--- Python-3.2.1.orig/Python/sysmodule.c	2011-07-09 07:58:56.000000000 +0100
 +++ Python-3.2.1/Python/sysmodule.c	2011-07-12 22:20:12.000000000 +0100
 @@ -1560,6 +1560,10 @@
                          PyUnicode_FromString(Py_GetCopyright()));
@@ -272,8 +262,7 @@ diff -Nur Python-3.2.1.orig//Python/sysmodule.c Python-3.2.1/Python/sysmodule.c
      SET_SYS_FROM_STRING("executable",
                          PyUnicode_FromWideChar(
                                 Py_GetProgramFullPath(), -1));
-diff -Nur Python-3.2.1.orig//setup.py Python-3.2.1/setup.py
---- Python-3.2.1.orig//setup.py	2011-07-09 07:58:56.000000000 +0100
+--- Python-3.2.1.orig/setup.py	2011-07-09 07:58:56.000000000 +0100
 +++ Python-3.2.1/setup.py	2011-07-12 22:20:12.000000000 +0100
 @@ -516,8 +516,7 @@
          # be assumed that no additional -I,-L directives are needed.
