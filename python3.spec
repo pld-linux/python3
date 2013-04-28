@@ -51,6 +51,7 @@ Patch3:		%{name}-noarch_to_datadir.patch
 Patch4:		%{name}-no_cmdline_tests.patch
 Patch5:		%{name}-makefile-location.patch
 Patch6:		libc-cloexec.patch
+Patch7:		%{name}-sysloghandler.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	bluez-libs-devel
@@ -453,6 +454,7 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 %{__rm} -r Modules/zlib
 %{__rm} -r Modules/expat
