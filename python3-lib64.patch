@@ -156,7 +156,7 @@
 -        'stdlib': '{installed_base}/lib/python',
 -        'platstdlib': '{base}/lib/python',
 +        'stdlib': '{installed_base}/' + sys.lib + '/python',
-+        'platstdlib': '{base}/' + sys.lib + ' /python',
++        'platstdlib': '{base}/' + sys.lib + '/python',
          'purelib': '{base}/lib/python',
 -        'platlib': '{base}/lib/python',
 +        'platlib': '{base}/' + sys.lib + '/python',
