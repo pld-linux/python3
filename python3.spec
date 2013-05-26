@@ -37,13 +37,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.1
-Release:	3
+Version:	%{py_ver}.2
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Applications
 Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	993232d9f4d9b4863cc1ec69a792e9cd
+# Source0-md5:	c94b78ea3b68a9bbc9906af4d5b4fdc7
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-lib64.patch
@@ -51,8 +51,7 @@ Patch3:		%{name}-noarch_to_datadir.patch
 Patch4:		%{name}-no_cmdline_tests.patch
 Patch5:		%{name}-makefile-location.patch
 Patch6:		libc-cloexec.patch
-Patch7:		%{name}-sysloghandler.patch
-Patch8:		python-distro.patch
+Patch7:		python-distro.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	bluez-libs-devel
@@ -456,7 +455,6 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 
 %{__rm} -r Modules/zlib
 %{__rm} -r Modules/expat
