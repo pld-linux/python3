@@ -37,13 +37,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.2
-Release:	2
+Version:	%{py_ver}.3
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Applications
 Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	c94b78ea3b68a9bbc9906af4d5b4fdc7
+# Source0-md5:	4ca001c5586eb0744e3174bc75c6fba8
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-lib64.patch
@@ -52,7 +52,6 @@ Patch4:		%{name}-no_cmdline_tests.patch
 Patch5:		%{name}-makefile-location.patch
 Patch6:		libc-cloexec.patch
 Patch7:		python-distro.patch
-Patch8:		%{name}-CVE-2013-4238.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	bluez-libs-devel
@@ -456,7 +455,6 @@ Przykłady te są dla Pythona 2.3.4, nie %{version}.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 
 %{__rm} -r Modules/zlib
 %{__rm} -r Modules/expat
@@ -1117,7 +1115,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_scriptdir}/venv/scripts
 %dir %{py_scriptdir}/venv/scripts/posix
 %{py_scriptdir}/venv/scripts/posix/activate
-%{py_scriptdir}/venv/scripts/posix/pydoc
 
 %dir %{py_scriptdir}/wsgiref
 %{py_scriptdir}/wsgiref/__pycache__

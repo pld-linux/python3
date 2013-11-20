@@ -151,10 +151,10 @@ diff -dur Python-3.2.1.orig/Modules/getpath.c Python-3.2.1/Modules/getpath.c
          joinpath(prefix, LANDMARK);
          if (ismodule(prefix))
              return 1;
-@@ -320,7 +322,7 @@
- 
+@@ -379,7 +379,7 @@
      /* Look at configure's PREFIX */
      wcsncpy(prefix, _prefix, MAXPATHLEN);
+     prefix[MAXPATHLEN] = L'\0';
 -    joinpath(prefix, lib_python);
 +    joinpath(prefix, share_python);
      joinpath(prefix, LANDMARK);
