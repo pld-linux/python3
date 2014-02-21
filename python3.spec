@@ -446,6 +446,17 @@ Przykładowe programy w Pythonie.
 
 Przykłady te są dla Pythona 2.3.4, nie %{version}.
 
+%package test
+Summary:	Test modules for Python
+Summary(pl.UTF-8):	Moduły testowe dla Pythona
+Group:		Development/Languages/Python
+
+%description test
+Test modules for Python.
+
+%description test -l pl.UTF-8
+Moduły testowe dla Pythona.
+
 %prep
 %setup -q -n Python-%{version}
 %patch0 -p1
@@ -582,16 +593,6 @@ sed 's/=/ /' \
 install -p Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 
 # just to cut the noise, as they are not packaged (now)
-# first tests (probably could be packaged)
-%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/test
-%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/ctypes/test
-%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/distutils/tests
-%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/lib2to3/tests
-%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/sqlite3/test
-%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/tkinter/test
-%{__rm} -r $RPM_BUILD_ROOT%{py_scriptdir}/unittest/test
-
-# other files
 %{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/plat-*/regen
 %{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/ctypes/macholib/fetch_macholib*
 %{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/site-packages/README
@@ -1085,6 +1086,8 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/http/__pycache__
 %{py_scriptdir}/http/*.py
 
+%dir %{py_scriptdir}/idlelib
+
 %dir %{py_scriptdir}/importlib
 %{py_scriptdir}/importlib/__pycache__
 %{py_scriptdir}/importlib/*.py
@@ -1105,7 +1108,10 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/multiprocessing/dummy/*.py
 
 %{py_scriptdir}/turtledemo
-%{py_scriptdir}/unittest
+
+%dir %{py_scriptdir}/unittest
+%{py_scriptdir}/unittest/__pycache__
+%{py_scriptdir}/unittest/*.py
 
 %dir %{py_scriptdir}/urllib
 %{py_scriptdir}/urllib/__pycache__
@@ -1162,7 +1168,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/idle3
 %attr(755,root,root) %{_bindir}/idle3.3
-%dir %{py_scriptdir}/idlelib
 %dir %{py_scriptdir}/idlelib/Icons
 %{py_scriptdir}/idlelib/__pycache__
 %{py_scriptdir}/idlelib/*.py
@@ -1224,6 +1229,16 @@ rm -rf $RPM_BUILD_ROOT
 %files examples
 %defattr(644,root,root,755)
 %{_examplesdir}/%{name}-%{version}
+
+%files test
+%{py_scriptdir}/idlelib/idle_test
+%{py_scriptdir}/test
+%{py_scriptdir}/ctypes/test
+%{py_scriptdir}/distutils/tests
+%{py_scriptdir}/lib2to3/tests
+%{py_scriptdir}/sqlite3/test
+%{py_scriptdir}/tkinter/test
+%{py_scriptdir}/unittest/test
 
 %if %{with info}
 %files doc-info
