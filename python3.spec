@@ -38,7 +38,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.4
-Release:	1
+Release:	2
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -492,8 +492,10 @@ if ! grep -q "tmpfs" /proc/self/mounts; then
 fi
 
 %{__autoconf}
-CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags} -Wall %{!?debug:-DNDEBUG=1}"; export CPPFLAGS
 %configure \
+	OPT="%{rpmcflags} -fno-caller-saves" \
+	CPPFLAGS="%{rpmcppflags}" \
+	LDFLAGS="%{rpmldflags}" \
 	ac_cv_posix_semaphores_enabled=yes \
 	ac_cv_broken_sem_getvalue=no \
 	%{?with_debug:--with-pydebug} \
@@ -511,13 +513,8 @@ CPPFLAGS="-I/usr/include/ncursesw %{rpmcppflags} -Wall %{!?debug:-DNDEBUG=1}"; e
 	--with-system-expat \
 	--with-system-ffi \
 	--with-computed-gotos \
-	LINKCC='$(PURIFY) $(CXX)' \
-	LDSHARED='$(CC) $(CFLAGS) -shared' \
-	BLDSHARED='$(CC) $(CFLAGS) -shared' \
-	LDFLAGS="%{rpmcflags} %{rpmldflags}"
 
-%{__make} \
-	OPT="%{rpmcflags} %{rpmcppflags} -fno-caller-saves" 2>&1 | awk '
+%{__make} 2>&1 | awk '
 BEGIN { fail = 0; logmsg = ""; }
 {
         if ($0 ~ /\*\*\* WARNING:/) {
