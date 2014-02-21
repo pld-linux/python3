@@ -83,9 +83,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		specflags_ppc64	-D__ppc64__=1
 
 %if %{with verbose_tests}
-%define test_flags -v -l -x
+%define test_flags -v -x
 %else
-%define test_flags -w -l -x
+%define test_flags -w -x
 %endif
 
 %ifarch alpha ia64 ppc64 sparc64 ppc64 %{x8664}
@@ -529,6 +529,7 @@ LC_ALL=C
 export LC_ALL
 %if %{with tests}
 binlibdir=`echo build/lib.*`
+# -l and -j don't go together! and -j is brought up by Tools/scripts/run_tests.py
 %{__make} test \
 	TESTOPTS="%{test_flags} %{test_list}" \
 	TESTPYTHON="LD_LIBRARY_PATH=`pwd` PYTHONHOME=`pwd` PYTHONPATH=`pwd`/Lib:`pwd`/$binlibdir ./python -tt"
