@@ -58,14 +58,3 @@
                        '/usr/bin/env python', line)
          print(filename, ':', repr(line))
          f = open(filename, "w")
---- Python-3.0.1/Doc/README.txt.wiget	2009-02-13 00:46:00.000000000 +0100
-+++ Python-3.0.1/Doc/README.txt	2009-03-14 18:12:32.000000000 +0100
-@@ -37,7 +37,7 @@ the top-level index `build/html/index.ht
- To use a Python interpreter that's not called ``python``, use the standard
- way to set Makefile variables, using e.g. ::
- 
--   make html PYTHON=/usr/bin/python2.5
-+   make html PYTHON=/usr/bin/python3
- 
- Available make targets are:
- 

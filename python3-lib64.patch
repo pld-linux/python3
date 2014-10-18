@@ -56,15 +56,15 @@
  PyAPI_FUNC(const char *) Py_GetBuildInfo(void);
 --- Python-3.2.1.orig/Lib/distutils/command/install.py	2011-07-09 07:58:46.000000000 +0100
 +++ Python-3.2.1/Lib/distutils/command/install.py	2011-07-12 22:20:12.000000000 +0100
-@@ -27,6 +27,8 @@
-     from site import USER_SITE
-     HAS_USER_SITE = True
+@@ -19,6 +19,8 @@ from site import USER_BASE
+ from site import USER_SITE
+ HAS_USER_SITE = True
  
 +libname = sys.lib
 +
- if sys.version < "2.2":
-     WINDOWS_SCHEME = {
-         'purelib': '$base',
+ WINDOWS_SCHEME = {
+     'purelib': '$base/Lib/site-packages',
+     'platlib': '$base/Lib/site-packages',
 @@ -47,14 +49,14 @@
  INSTALL_SCHEMES = {
      'unix_prefix': {
@@ -113,10 +113,10 @@
                     os.path.join(destination, "include", "python", "foopkg"))
 --- Python-3.2.1.orig/Lib/site.py	2011-07-09 07:58:49.000000000 +0100
 +++ Python-3.2.1/Lib/site.py	2011-07-12 22:20:12.000000000 +0100
-@@ -285,13 +285,16 @@
-         if sys.platform in ('os2emx', 'riscos'):
-             sitepackages.append(os.path.join(prefix, "Lib", "site-packages"))
-         elif os.sep == '/':
+@@ -304,13 +304,16 @@ def getsitepackages(prefixes=None):
+         seen.add(prefix)
+ 
+         if os.sep == '/':
 -            sitepackages.append(os.path.join(prefix, "lib",
 +            sitepackages.append(os.path.join(prefix, sys.lib,
                                          "python" + sys.version[:3],
@@ -200,9 +200,9 @@
  
 +#ifndef LIB_PYTHON
 +#if defined(__x86_64__) || (defined(__sparc__) && defined(__arch64__)) || defined(__powerpc64__) || defined(__s390x__)
-+#define LIB_PYTHON L"lib64/python"
++#define LIB_PYTHON "lib64/python"
 +#else
-+#define LIB_PYTHON L"lib/python"
++#define LIB_PYTHON "lib/python"
 +#endif
 +#endif
 +
@@ -214,15 +214,15 @@
  #endif
  
  #ifndef LANDMARK
-@@ -135,7 +143,7 @@
- static wchar_t progpath[MAXPATHLEN+1];
- static wchar_t *module_search_path = NULL;
- static int module_search_path_malloced = 0;
--static wchar_t *lib_python = L"lib/python" VERSION;
-++static wchar_t *lib_python = LIB_PYTHON VERSION;
+@@ -502,7 +502,7 @@ calculate_path(void)
+     _pythonpath = _Py_char2wchar(PYTHONPATH, NULL);
+     _prefix = _Py_char2wchar(PREFIX, NULL);
+     _exec_prefix = _Py_char2wchar(EXEC_PREFIX, NULL);
+-    lib_python = _Py_char2wchar("lib/python" VERSION, NULL);
++    lib_python = _Py_char2wchar(LIB_PYTHON VERSION, NULL);
  
- static void
- reduce(wchar_t *dir)
+     if (!_pythonpath || !_prefix || !_exec_prefix || !lib_python) {
+         Py_FatalError(
 --- Python-3.2.1.orig/Python/getplatform.c	2011-07-09 07:58:56.000000000 +0100
 +++ Python-3.2.1/Python/getplatform.c	2011-07-12 22:20:12.000000000 +0100
 @@ -10,3 +10,23 @@

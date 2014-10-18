@@ -123,58 +123,28 @@ diff -dur Python-3.2.1.orig/Modules/getpath.c Python-3.2.1/Modules/getpath.c
  #endif
  
  #ifndef LANDMARK
-@@ -143,7 +144,8 @@
- static wchar_t progpath[MAXPATHLEN+1];
- static wchar_t *module_search_path = NULL;
- static int module_search_path_malloced = 0;
--+static wchar_t *lib_python = LIB_PYTHON VERSION;
-+static wchar_t *lib_python = LIB_PYTHON VERSION;
-+static wchar_t share_python[] = L"share/python" VERSION;
- 
- static void
- reduce(wchar_t *dir)
-@@ -284,7 +286,7 @@
-         delim = wcschr(prefix, DELIM);
-         if (delim)
-             *delim = L'\0';
--        joinpath(prefix, lib_python);
-+        joinpath(prefix, share_python);
-         joinpath(prefix, LANDMARK);
-         return 1;
+@@ -673,13 +673,13 @@ calculate_path(void)
+         }
      }
-@@ -310,7 +312,7 @@
-     copy_absolute(prefix, argv0_path, MAXPATHLEN+1);
-     do {
-         n = wcslen(prefix);
--        joinpath(prefix, lib_python);
-+        joinpath(prefix, share_python);
-         joinpath(prefix, LANDMARK);
-         if (ismodule(prefix))
-             return 1;
-@@ -379,7 +379,7 @@
-     /* Look at configure's PREFIX */
-     wcsncpy(prefix, _prefix, MAXPATHLEN);
-     prefix[MAXPATHLEN] = L'\0';
--    joinpath(prefix, lib_python);
-+    joinpath(prefix, share_python);
-     joinpath(prefix, LANDMARK);
-     if (ismodule(prefix))
-         return 1;
-@@ -578,7 +580,7 @@
+ 
+-    pfound = search_for_prefix(argv0_path, home, _prefix, lib_python);
++    pfound = search_for_prefix(argv0_path, home, _prefix, L"share/python");
+     if (!pfound) {
+         if (!Py_FrozenFlag)
              fprintf(stderr,
                  "Could not find platform independent libraries <prefix>\n");
          wcsncpy(prefix, _prefix, MAXPATHLEN);
 -        joinpath(prefix, lib_python);
-+        joinpath(prefix, share_python);
++        joinpath(prefix, L"share/python");
      }
      else
          reduce(prefix);
-@@ -591,7 +593,7 @@
+@@ -691,7 +693,7 @@
      }
      else
          wcsncpy(zip_path, _prefix, MAXPATHLEN);
 -    joinpath(zip_path, L"lib/python00.zip");
-+    joinpath(zip_path, LIB_PYTHON "00.zip");
++    joinpath(zip_path, L"" LIB_PYTHON "00.zip");
      bufsz = wcslen(zip_path);   /* Replace "00" with version */
      zip_path[bufsz - 6] = VERSION[0];
      zip_path[bufsz - 5] = VERSION[2];
