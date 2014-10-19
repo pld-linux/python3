@@ -128,7 +128,7 @@ diff -dur Python-3.2.1.orig/Modules/getpath.c Python-3.2.1/Modules/getpath.c
      }
  
 -    pfound = search_for_prefix(argv0_path, home, _prefix, lib_python);
-+    pfound = search_for_prefix(argv0_path, home, _prefix, L"share/python");
++    pfound = search_for_prefix(argv0_path, home, _prefix, L"share/python" VERSION);
      if (!pfound) {
          if (!Py_FrozenFlag)
              fprintf(stderr,
