@@ -50,7 +50,7 @@ Patch2:		%{name}-lib64.patch
 Patch3:		%{name}-noarch_to_datadir.patch
 Patch4:		%{name}-no_cmdline_tests.patch
 Patch5:		%{name}-makefile-location.patch
-Patch6:		libc-cloexec.patch
+
 Patch7:		python-distro.patch
 Patch8:		%{name}-db.patch
 URL:		http://www.python.org/
@@ -465,7 +465,7 @@ Moduły testowe dla Pythona.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
+
 %patch7 -p1
 %patch8 -p1
 
