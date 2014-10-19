@@ -649,6 +649,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_struct.cpython-*.so
 
 # modules required by python library
+%{py_scriptdir}/_collections_abc.py
+%{py_scriptdir}/_sitebuiltins.py
 %{py_scriptdir}/_sysconfigdata.py
 %{py_scriptdir}/_weakrefset.py
 %{py_scriptdir}/abc.py
@@ -676,11 +678,13 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/os.py
 # needed by the dynamic sys.lib patch
 %{py_scriptdir}/types.py
+%{py_scriptdir}/__pycache__/_sitebuiltins.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_sysconfigdata.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_weakrefset.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/abc.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/bisect.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/codecs.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/_collections_abc.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/copyreg.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/functools.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/genericpath.cpython-*.py[co]
@@ -724,13 +728,11 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/__future__.py
 %{py_scriptdir}/__phello__.foo.py
 %{py_scriptdir}/_bootlocale.py
-%{py_scriptdir}/_collections_abc.py
 %{py_scriptdir}/_compat_pickle.py
 %{py_scriptdir}/_dummy_thread.py
 %{py_scriptdir}/_markupbase.py
 %{py_scriptdir}/_osx_support.py
 %{py_scriptdir}/_pyio.py
-%{py_scriptdir}/_sitebuiltins.py
 %{py_scriptdir}/_strptime.py
 %{py_scriptdir}/_threading_local.py
 %{py_scriptdir}/aifc.py
@@ -855,13 +857,11 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/__pycache__/__future__.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/__phello__.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_bootlocale.cpython-*.py[co]
-%{py_scriptdir}/__pycache__/_collections_abc.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_compat_pickle.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_dummy_thread.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_markupbase.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_osx_support.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_pyio.cpython-*.py[co]
-%{py_scriptdir}/__pycache__/_sitebuiltins.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_strptime.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_threading_local.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/aifc.cpython-*.py[co]
