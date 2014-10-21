@@ -2,10 +2,10 @@
 # - fix lib64 and noarch/datadir patches as the 2nd one overrides some
 #   changes made by the first one; propose patches to python team as they
 #   seem to be duplicated by fedora as well
-# - --with-system-libmpdec when new version released [BR: mpdecimal-devel > 2.3]
 #
 # Conditional build:
 %bcond_with	info			# info pages (requires emacs)
+%bcond_without	system_mpdecimal	# system libmpdec library
 %bcond_without	tkinter			# disables tkinter module building
 %bcond_with	tests			# disables Python testing
 %bcond_with	verbose_tests		# runs tests in verbose mode
@@ -65,6 +65,7 @@ BuildRequires:	gdbm-devel >= 1.8.3
 BuildRequires:	gmp-devel >= 4.0
 BuildRequires:	libffi-devel
 BuildRequires:	libstdc++-devel
+%{?with_system_mpdecimal:BuildRequires:	mpdecimal-devel >= 2.4.1}
 BuildRequires:	ncurses-ext-devel >= 5.2
 BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	readline-devel >= 5.0
@@ -217,6 +218,7 @@ Summary:	Python modules
 Summary(pl.UTF-8):	Moduły języka Python
 Group:		Libraries/Python
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+%{?with_system_mpdecimal:Requires:	mpdecimal >= 2.4.1}
 Obsoletes:	python3-modules-sqlite
 
 %description modules
@@ -498,21 +500,22 @@ fi
 	LDFLAGS="%{rpmldflags}" \
 	ac_cv_posix_semaphores_enabled=yes \
 	ac_cv_broken_sem_getvalue=no \
-	%{?with_debug:--with-pydebug} \
-	--with-cxx-main="%{__cxx}" \
-	--enable-shared \
 	--enable-ipv6 \
+	--enable-shared \
+	--with-computed-gotos \
+	--with-cxx-main="%{__cxx}" \
 	--with-dbmliborder=gdbm:bdb \
-	--with-signal-module \
-%ifarch %{ix86} %{x8664} ppc ppc64
-	--with-tsc \
-%endif
-	--with-threads \
 	--with-doc-strings \
 	--with-fpectl \
+	%{?with_debug:--with-pydebug} \
+	--with-signal-module \
 	--with-system-expat \
 	--with-system-ffi \
-	--with-computed-gotos \
+	%{?with_system_mpdecimal:--with-system-libmpdec} \
+	--with-threads \
+%ifarch %{ix86} %{x8664} ppc ppc64
+	--with-tsc
+%endif
 
 %{__make} 2>&1 | awk '
 BEGIN { fail = 0; logmsg = ""; }
@@ -600,6 +603,16 @@ install -p Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 
 # currently provided by python-2to3, consider switching to this one
 %{__rm} $RPM_BUILD_ROOT%{_bindir}/2to3
+
+# packaged separately (python-setuptools.spec)
+%{__rm} $RPM_BUILD_ROOT%{_bindir}/easy_install-3.4 \
+	$RPM_BUILD_ROOT%{py_sitescriptdir}/{easy_install.py,pkg_resources.py} \
+	$RPM_BUILD_ROOT%{py_sitescriptdir}/__pycache__/{easy_install,pkg_resources}.*.pyc
+%{__rm} -r $RPM_BUILD_ROOT%{py_sitescriptdir}/{_markerlib,setuptools,setuptools-2.1.dist-info}
+
+# packaged separately (python-pip.spec)
+%{__rm} $RPM_BUILD_ROOT%{_bindir}/{pip3,pip3.4}
+%{__rm} -r $RPM_BUILD_ROOT%{py_sitescriptdir}/{pip,pip-1.5.6.dist-info}
 
 # that seems to be only an empty extension template,
 # which seems to be built only {with tests}
