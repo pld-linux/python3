@@ -486,6 +486,8 @@ for f in $files; do
 done
 %endif
 
+find . -name '*.py' | xargs -r grep -El '^#! */usr/bin/env python3?' | xargs %{__sed} -i -e '1s,^#! */usr/bin/env python3\?,#!/usr/bin/python3,'
+
 %build
 if ! grep -q "tmpfs" /proc/self/mounts; then
 	echo "You need to have /dev/shm mounted in order to build this package!" >&2
