@@ -38,7 +38,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.2
-Release:	1
+Release:	2
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -594,6 +594,9 @@ sed 's/=/ /' \
 # this way there are no import (which is impossible now) conflicts and
 # pygettext.py is provided for compatibility
 install -p Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
+
+# reindent python code
+install -p Tools/scripts/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py_ver}
 
 # just to cut the noise, as they are not packaged (now)
 %{__rm} $RPM_BUILD_ROOT%{py_scriptdir}/plat-*/regen
@@ -1241,6 +1244,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 /etc/shrc.d/python*-devel*
 %attr(755,root,root) %{_bindir}/pygettext%{py_ver}
+%attr(755,root,root) %{_bindir}/pyreindent%{py_ver}
 %{py_scriptdir}/pdb.py
 %{py_scriptdir}/profile.py
 %{py_scriptdir}/pstats.py
