@@ -508,6 +508,7 @@ fi
 	--with-cxx-main="%{__cxx}" \
 	--with-dbmliborder=gdbm:bdb \
 	--with-doc-strings \
+	--without-ensurepip \
 	--with-fpectl \
 	%{?with_debug:--with-pydebug} \
 	--with-signal-module \
@@ -608,16 +609,6 @@ install -p Tools/scripts/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py_ve
 
 # currently provided by python-2to3, consider switching to this one
 %{__rm} $RPM_BUILD_ROOT%{_bindir}/2to3
-
-# packaged separately (python-setuptools.spec)
-%{__rm} $RPM_BUILD_ROOT%{_bindir}/easy_install-3.4 \
-	$RPM_BUILD_ROOT%{py_sitescriptdir}/{easy_install.py,pkg_resources.py} \
-	$RPM_BUILD_ROOT%{py_sitescriptdir}/__pycache__/{easy_install,pkg_resources}.*.pyc
-%{__rm} -r $RPM_BUILD_ROOT%{py_sitescriptdir}/{_markerlib,setuptools,setuptools-2.1.dist-info}
-
-# packaged separately (python-pip.spec)
-%{__rm} $RPM_BUILD_ROOT%{_bindir}/{pip3,pip3.4}
-%{__rm} -r $RPM_BUILD_ROOT%{py_sitescriptdir}/{pip,pip-1.5.6.dist-info}
 
 # that seems to be only an empty extension template,
 # which seems to be built only {with tests}
