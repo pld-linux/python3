@@ -38,7 +38,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.2
-Release:	3
+Release:	4
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -220,6 +220,8 @@ Group:		Libraries/Python
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 %{?with_system_mpdecimal:Requires:	mpdecimal >= 2.4.1}
 Obsoletes:	python3-modules-sqlite
+Obsoletes:	python3-enum
+Provides:	python3-enum
 
 %description modules
 Python officially distributed modules.
