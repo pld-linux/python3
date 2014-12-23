@@ -1,6 +1,6 @@
 --- Python-3.3.1/configure.ac.orig	2013-04-18 16:31:07.244030129 +0200
 +++ Python-3.3.1/configure.ac	2013-04-18 17:30:31.800622500 +0200
-@@ -769,6 +768,42 @@
+@@ -769,6 +768,45 @@
  MULTIARCH=$($CC --print-multiarch 2>/dev/null)
  AC_SUBST(MULTIARCH)
  
@@ -33,6 +33,9 @@
 +case $ARCH:$python_cv_cc_64bit_output in
 +powerpc64:yes | s390x:yes | sparc64:yes | x86_64:yes)
 +  LIB="lib64"
++  ;;
++x86_64:no)
++  LIB="libx32"
 +  ;;
 +*:*)
 +  LIB="lib"
@@ -194,13 +197,17 @@
  		$(CC) -c $(PY_CORE_CFLAGS) -I$(DLINCLDIR) -o $@ $(srcdir)/Python/importdl.c
 --- Python-3.2.1.orig/Modules/getpath.c	2011-07-09 07:58:54.000000000 +0100
 +++ Python-3.2.1/Modules/getpath.c	2011-07-12 22:21:48.000000000 +0100
-@@ -121,9 +121,17 @@
+@@ -121,9 +121,21 @@
  #define EXEC_PREFIX PREFIX
  #endif
  
 +#ifndef LIB_PYTHON
 +#if defined(__x86_64__) || (defined(__sparc__) && defined(__arch64__)) || defined(__powerpc64__) || defined(__s390x__)
++#if defined(__ILP32__)
++#define LIB_PYTHON "libx32/python"
++#else
 +#define LIB_PYTHON "lib64/python"
++#endif
 +#else
 +#define LIB_PYTHON "lib/python"
 +#endif
