@@ -37,13 +37,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.2
-Release:	6
+Version:	%{py_ver}.3
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Applications
 Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	36fc7327c02c6f12fa24fc9ba78039e3
+# Source0-md5:	7d092d1bba6e17f0d9bd21b49e441dd5
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-lib64.patch
@@ -478,7 +478,7 @@ Moduły testowe dla Pythona.
 %{__rm} -r Modules/expat
 
 for SUBDIR in darwin libffi libffi_arm_wince libffi_msvc libffi_osx; do
-	%{__rm} -r Modules/_ctypes/$SUBDIR
+	%{__rm} -r Modules/_ctypes/$SUBDIR/*
 done
 
 %if "%{pld_release}" == "ac"
@@ -868,7 +868,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/xdrlib.py
 %{py_scriptdir}/zipfile.py
 %{py_scriptdir}/__pycache__/__future__.cpython-*.py[co]
-%{py_scriptdir}/__pycache__/__phello__.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/__phello__.foo.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_bootlocale.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_compat_pickle.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_dummy_thread.cpython-*.py[co]
