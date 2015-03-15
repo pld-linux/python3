@@ -55,6 +55,7 @@ Patch7:		python-distro.patch
 Patch8:		%{name}-db.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf >= 2.65
+BuildRequires:	automake
 BuildRequires:	bluez-libs-devel
 BuildRequires:	bzip2-devel
 BuildRequires:	db-devel >= 4
@@ -68,6 +69,7 @@ BuildRequires:	libstdc++-devel
 %{?with_system_mpdecimal:BuildRequires:	mpdecimal-devel >= 2.4.1}
 BuildRequires:	ncurses-ext-devel >= 5.2
 BuildRequires:	openssl-devel >= 0.9.7
+BuildRequires:	pkgconfig
 BuildRequires:	readline-devel >= 5.0
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sed >= 4.0
@@ -498,6 +500,7 @@ if ! grep -q "tmpfs" /proc/self/mounts; then
 	exit 1
 fi
 
+%{__aclocal}
 %{__autoconf}
 %configure \
 	CC="%{__cc}" \
