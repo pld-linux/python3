@@ -20,7 +20,7 @@
 #   test_gdb: fails, as the gdb uses old python version
 %define		broken_tests test_httpservers test_distutils test_cmd_line test_pydoc test_telnetlib test_zlib test_gdb test_site
 
-%define py_ver		3.4
+%define py_ver		3.5
 %define py_abi		%{py_ver}m
 %define py_prefix	%{_prefix}
 %define py_libdir	%{py_prefix}/%{_lib}/python%{py_ver}
@@ -37,13 +37,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.3
-Release:	2
+Version:	%{py_ver}.0
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Applications
 Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	7d092d1bba6e17f0d9bd21b49e441dd5
+# Source0-md5:	d149d2812f10cbe04c042232e7964171
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-lib64.patch
@@ -740,14 +740,16 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 /etc/shrc.d/python*-modules*
 %attr(755,root,root) %{_bindir}/pyvenv
-%attr(755,root,root) %{_bindir}/pyvenv-3.4
+%attr(755,root,root) %{_bindir}/pyvenv-3.5
 %{py_scriptdir}/__future__.py
 %{py_scriptdir}/__phello__.foo.py
 %{py_scriptdir}/_bootlocale.py
 %{py_scriptdir}/_compat_pickle.py
+%{py_scriptdir}/_compression.py
 %{py_scriptdir}/_dummy_thread.py
 %{py_scriptdir}/_markupbase.py
 %{py_scriptdir}/_osx_support.py
+%{py_scriptdir}/_pydecimal.py
 %{py_scriptdir}/_pyio.py
 %{py_scriptdir}/_strptime.py
 %{py_scriptdir}/_threading_local.py
@@ -833,6 +835,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/random.py
 %{py_scriptdir}/rlcompleter.py
 %{py_scriptdir}/runpy.py
+%{py_scriptdir}/signal.py
 %{py_scriptdir}/sched.py
 %{py_scriptdir}/selectors.py
 %{py_scriptdir}/shelve.py
@@ -863,20 +866,24 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/tracemalloc.py
 %{py_scriptdir}/tty.py
 %{py_scriptdir}/turtle.py
+%{py_scriptdir}/typing.py
 %{py_scriptdir}/uu.py
 %{py_scriptdir}/uuid.py
 %{py_scriptdir}/warnings.py
 %{py_scriptdir}/wave.py
 %{py_scriptdir}/webbrowser.py
 %{py_scriptdir}/xdrlib.py
+%{py_scriptdir}/zipapp.py
 %{py_scriptdir}/zipfile.py
 %{py_scriptdir}/__pycache__/__future__.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/__phello__.foo.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_bootlocale.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_compat_pickle.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/_compression.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_dummy_thread.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_markupbase.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_osx_support.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/_pydecimal.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_pyio.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_strptime.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/_threading_local.cpython-*.py[co]
@@ -967,6 +974,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/__pycache__/shelve.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/shlex.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/shutil.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/signal.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/smtpd.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/smtplib.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/sndhdr.cpython-*.py[co]
@@ -992,12 +1000,14 @@ rm -rf $RPM_BUILD_ROOT
 %{py_scriptdir}/__pycache__/tracemalloc.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/tty.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/turtle.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/typing.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/uu.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/uuid.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/warnings.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/wave.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/webbrowser.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/xdrlib.cpython-*.py[co]
+%{py_scriptdir}/__pycache__/zipapp.cpython-*.py[co]
 %{py_scriptdir}/__pycache__/zipfile.cpython-*.py[co]
 
 #
@@ -1042,6 +1052,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_testbuffer.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testcapi.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testimportmultiple.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_testmultiphase.cpython-*.so
 
 # for openssl < 0.9.8 package sha256 and sha512 modules
 %if "%{pld_release}" != "ac"
@@ -1066,7 +1077,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/select.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/syslog.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/termios.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/time.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/spwd.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/unicodedata.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/zlib.cpython-*.so
@@ -1165,6 +1175,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_scriptdir}/venv/scripts
 %dir %{py_scriptdir}/venv/scripts/posix
 %{py_scriptdir}/venv/scripts/posix/activate
+%{py_scriptdir}/venv/scripts/posix/activate.csh
+%{py_scriptdir}/venv/scripts/posix/activate.fish
 
 %dir %{py_scriptdir}/wsgiref
 %{py_scriptdir}/wsgiref/__pycache__
@@ -1198,7 +1210,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n pydoc3
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/pydoc3
-%attr(755,root,root) %{_bindir}/pydoc3.4
+%attr(755,root,root) %{_bindir}/pydoc3.5
 %{py_scriptdir}/pydoc.py
 %{py_scriptdir}/__pycache__/pydoc.cpython-*.py[co]
 %dir %{py_scriptdir}/pydoc_data
@@ -1209,7 +1221,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n idle3
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/idle3
-%attr(755,root,root) %{_bindir}/idle3.4
+%attr(755,root,root) %{_bindir}/idle3.5
 %dir %{py_scriptdir}/idlelib/Icons
 %{py_scriptdir}/idlelib/__pycache__
 %{py_scriptdir}/idlelib/*.py

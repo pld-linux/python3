@@ -22,9 +22,9 @@ diff -Nur Python-3.3.1.orig/Lib/test/test_compileall.py Python-3.3.1/Lib/test/te
  class CommandLineTests(unittest.TestCase):
      """Test compileall's CLI."""
  
-diff -Nur Python-3.3.1.orig/Lib/test/test_warnings.py Python-3.3.1/Lib/test/test_warnings.py
---- Python-3.3.1.orig/Lib/test/test_warnings.py	2013-04-06 08:41:46.000000000 +0100
-+++ Python-3.3.1/Lib/test/test_warnings.py	2013-04-07 19:41:25.529164545 +0100
+diff -Nur Python-3.3.1.orig/Lib/test/test_warnings/__init__.py Python-3.3.1/Lib/test/test_warnings/__init__.py
+--- Python-3.3.1.orig/Lib/test/test_warnings/__init__.py	2013-04-06 08:41:46.000000000 +0100
++++ Python-3.3.1/Lib/test/test_warnings/__init__.py	2013-04-07 19:41:25.529164545 +0100
 @@ -717,6 +717,7 @@
      module = py_warnings
  

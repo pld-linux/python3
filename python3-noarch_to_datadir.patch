@@ -54,15 +54,13 @@ diff -dur Python-3.2.1.orig/Lib/distutils/tests/test_install.py Python-3.2.1/Lib
 diff -dur Python-3.2.1.orig/Lib/site.py Python-3.2.1/Lib/site.py
 --- Python-3.2.1.orig/Lib/site.py	2011-07-15 20:16:35.529557475 +0200
 +++ Python-3.2.1/Lib/site.py	2011-07-15 20:17:09.134405059 +0200
-@@ -289,9 +289,8 @@
+@@ -289,8 +289,7 @@
                                          "python" + sys.version[:3],
                                          "site-packages"))
              sitepackages.append(os.path.join(prefix, sys.lib, "site-python"))
 -            if sys.lib != 'lib':
 -                sitepackages.append(os.path.join(prefix, "lib", "python" + sys.version[:3], "site-packages"))
--                sitepackages.append(os.path.join(prefix, "lib", "site-python"))
 +            sitepackages.append(os.path.join(prefix, "share", "python" + sys.version[:3], "site-packages"))
-+            sitepackages.append(os.path.join(prefix, "share", "site-python"))
          else:
              sitepackages.append(prefix)
              sitepackages.append(os.path.join(prefix, sys.lib, "site-packages"))
@@ -78,6 +76,17 @@ diff -dur Python-3.2.1.orig/Lib/sysconfig.py Python-3.2.1/Lib/sysconfig.py
          'platlib': '{platbase}/' + sys.lib + '/python{py_version_short}/site-packages',
          'include':
              '{base}/include/python{py_version_short}{abiflags}',
+--- Python-3.5.0/configure.ac~	2015-09-13 20:18:04.000000000 +0200
++++ Python-3.5.0/configure.ac	2015-09-13 20:21:35.887422670 +0200
+@@ -4370,7 +4370,7 @@ AC_MSG_RESULT($LDVERSION)
+ 
+ dnl define LIBPL after ABIFLAGS and LDVERSION is defined.
+ AC_SUBST(PY_ENABLE_SHARED)
+-LIBPL='$(prefix)'"/lib/python${VERSION}/config-${LDVERSION}"
++LIBPL='$(LIBDIR)/python'"${VERSION}/config-${LDVERSION}"
+ AC_SUBST(LIBPL)
+ 
+ # Check whether right shifting a negative integer extends the sign bit
 diff -dur Python-3.2.1.orig/Makefile.pre.in Python-3.2.1/Makefile.pre.in
 --- Python-3.2.1.orig/Makefile.pre.in	2011-07-15 20:16:35.532890958 +0200
 +++ Python-3.2.1/Makefile.pre.in	2011-07-15 20:17:09.134405059 +0200
@@ -90,15 +99,6 @@ diff -dur Python-3.2.1.orig/Makefile.pre.in Python-3.2.1/Makefile.pre.in
  ABIFLAGS=	@ABIFLAGS@
  
  # Detailed destination directories
-@@ -1046,7 +1046,7 @@
- 
- # Install the library and miscellaneous stuff needed for extending/embedding
- # This goes into $(exec_prefix)
--LIBPL=		$(LIBDEST)/config-$(LDVERSION)
-+LIBPL=		$(BINLIBDEST)/config-$(LDVERSION)
- 
- # pkgconfig directory
- LIBPC=		$(LIBDIR)/pkgconfig
 @@ -1065,8 +1065,8 @@
  			if test "$(SO)" = .dll; then \
  				$(INSTALL_DATA) $(LDLIBRARY) $(DESTDIR)$(LIBPL) ; \
@@ -123,7 +123,7 @@ diff -dur Python-3.2.1.orig/Modules/getpath.c Python-3.2.1/Modules/getpath.c
  #endif
  
  #ifndef LANDMARK
-@@ -673,13 +673,13 @@ calculate_path(void)
+@@ -673,13 +674,13 @@ calculate_path(void)
          }
      }
  
@@ -139,7 +139,7 @@ diff -dur Python-3.2.1.orig/Modules/getpath.c Python-3.2.1/Modules/getpath.c
      }
      else
          reduce(prefix);
-@@ -691,7 +693,7 @@
+@@ -691,7 +692,7 @@
      }
      else
          wcsncpy(zip_path, _prefix, MAXPATHLEN);
