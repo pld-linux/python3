@@ -740,7 +740,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 /etc/shrc.d/python*-modules*
 %attr(755,root,root) %{_bindir}/pyvenv
-%attr(755,root,root) %{_bindir}/pyvenv-3.5
+%attr(755,root,root) %{_bindir}/pyvenv-%{py_ver}
 %{py_scriptdir}/__future__.py
 %{py_scriptdir}/__phello__.foo.py
 %{py_scriptdir}/_bootlocale.py
