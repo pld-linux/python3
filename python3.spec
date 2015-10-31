@@ -38,7 +38,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.0
-Release:	2
+Release:	3
 Epoch:		1
 License:	PSF
 Group:		Applications
@@ -512,7 +512,6 @@ fi
 	--enable-ipv6 \
 	--enable-shared \
 	--with-computed-gotos \
-	--with-cxx-main="%{__cxx}" \
 	--with-dbmliborder=gdbm:bdb \
 	--with-doc-strings \
 	--without-ensurepip \
