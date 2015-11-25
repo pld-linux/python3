@@ -1,0 +1,48 @@
+diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/distutils/command/install.py Python-3.5.0/Lib/distutils/command/install.py
+--- Python-3.5.0.orig/Lib/distutils/command/install.py	2015-11-25 17:54:32.000000000 +0100
++++ Python-3.5.0/Lib/distutils/command/install.py	2015-11-25 18:06:33.876268151 +0100
+@@ -9,6 +9,7 @@
+ from distutils.core import Command
+ from distutils.debug import DEBUG
+ from distutils.sysconfig import get_config_vars
++from distutils.sysconfig import PREFIX, EXEC_PREFIX
+ from distutils.errors import DistutilsPlatformError
+ from distutils.file_util import write_file
+ from distutils.util import convert_path, subst_vars, change_root
+@@ -418,8 +419,8 @@
+                     raise DistutilsOptionError(
+                           "must not supply exec-prefix without prefix")
+ 
+-                self.prefix = os.path.normpath(sys.prefix)
+-                self.exec_prefix = os.path.normpath(sys.exec_prefix)
++                self.prefix = PREFIX
++                self.exec_prefix = EXEC_PREFIX
+ 
+             else:
+                 if self.exec_prefix is None:
+diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/distutils/sysconfig.py Python-3.5.0/Lib/distutils/sysconfig.py
+--- Python-3.5.0.orig/Lib/distutils/sysconfig.py	2015-11-25 17:54:32.000000000 +0100
++++ Python-3.5.0/Lib/distutils/sysconfig.py	2015-11-25 18:03:39.338573134 +0100
+@@ -17,8 +17,8 @@
+ from .errors import DistutilsPlatformError
+ 
+ # These are needed in a couple of spots, so just compute them once.
+-PREFIX = os.path.normpath(sys.prefix)
+-EXEC_PREFIX = os.path.normpath(sys.exec_prefix)
++PREFIX = "/usr/local"
++EXEC_PREFIX = PREFIX
+ BASE_PREFIX = os.path.normpath(sys.base_prefix)
+ BASE_EXEC_PREFIX = os.path.normpath(sys.base_exec_prefix)
+ 
+diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/site.py Python-3.5.0/Lib/site.py
+--- Python-3.5.0.orig/Lib/site.py	2015-11-25 17:54:32.000000000 +0100
++++ Python-3.5.0/Lib/site.py	2015-11-25 17:56:39.979513073 +0100
+@@ -74,7 +74,7 @@
+ import _sitebuiltins
+ 
+ # Prefixes for site-packages; add additional prefixes like /usr/local here
+-PREFIXES = [sys.prefix, sys.exec_prefix]
++PREFIXES = ["/usr/local", sys.prefix, sys.exec_prefix]
+ # Enable per user site-packages directory
+ # set it to False to disable the feature or True to force the feature
+ ENABLE_USER_SITE = None
