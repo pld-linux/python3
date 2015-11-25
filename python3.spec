@@ -82,6 +82,7 @@ BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz-devel
 BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Suggests:	python3-pip
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		specflags_ppc	-D__ppc__=1
