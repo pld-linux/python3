@@ -23,14 +23,16 @@ diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/distutils/command/install.py
 diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/distutils/sysconfig.py Python-3.5.0/Lib/distutils/sysconfig.py
 --- Python-3.5.0.orig/Lib/distutils/sysconfig.py	2015-11-25 17:54:32.000000000 +0100
 +++ Python-3.5.0/Lib/distutils/sysconfig.py	2015-11-25 18:03:39.338573134 +0100
-@@ -17,8 +17,8 @@
+@@ -17,8 +17,12 @@
  from .errors import DistutilsPlatformError
  
  # These are needed in a couple of spots, so just compute them once.
--PREFIX = os.path.normpath(sys.prefix)
--EXEC_PREFIX = os.path.normpath(sys.exec_prefix)
-+PREFIX = "/usr/local"
-+EXEC_PREFIX = PREFIX
+ PREFIX = os.path.normpath(sys.prefix)
+ EXEC_PREFIX = os.path.normpath(sys.exec_prefix)
++if PREFIX == "/usr":
++    PREFIX = "/usr/local"
++if EXEC_PREFIX == "/usr":
++    EXEC_PREFIX = "/usr/local"
  BASE_PREFIX = os.path.normpath(sys.base_prefix)
  BASE_EXEC_PREFIX = os.path.normpath(sys.base_exec_prefix)
  
