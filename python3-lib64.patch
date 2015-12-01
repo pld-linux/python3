@@ -293,3 +293,16 @@
                                     extra_link_args=readline_extra_link_args,
                                     libraries=readline_libs) )
          else:
+diff -dur Python-3.2.1.orig/Modules/getpath.c Python-3.2.1/Modules/getpath.c
+--- Python-3.2.1.orig/Modules/getpath.c	2011-07-15 20:16:35.536224442 +0200
++++ Python-3.2.1/Modules/getpath.c	2011-07-15 20:17:09.137738543 +0200
+@@ -691,7 +692,7 @@
+     }
+     else
+         wcsncpy(zip_path, _prefix, MAXPATHLEN);
+-    joinpath(zip_path, L"lib/python00.zip");
++    joinpath(zip_path, L"" LIB_PYTHON "00.zip");
+     bufsz = wcslen(zip_path);   /* Replace "00" with version */
+     zip_path[bufsz - 6] = VERSION[0];
+     zip_path[bufsz - 5] = VERSION[2];
+

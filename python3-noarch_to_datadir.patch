@@ -18,48 +18,15 @@ diff -dur Python-3.2.1.orig/Lib/distutils/command/install.py Python-3.2.1/Lib/di
          'platlib': '$base/'+libname+'/python',
          'headers': '$base/include/python/$dist_name',
          'scripts': '$base/bin',
-diff -dur Python-3.2.1.orig/Lib/distutils/sysconfig.py Python-3.2.1/Lib/distutils/sysconfig.py
---- Python-3.2.1.orig/Lib/distutils/sysconfig.py	2011-07-15 20:16:35.526223992 +0200
-+++ Python-3.2.1/Lib/distutils/sysconfig.py	2011-07-15 20:17:09.131071575 +0200
-@@ -124,12 +124,12 @@
-         prefix = plat_specific and EXEC_PREFIX or PREFIX
- 
-     if os.name == "posix":
--        if plat_specific:
--            lib = sys.lib
-+        if plat_specific: 
-+            libpython = os.path.join(prefix,
-+                                 sys.lib, "python" + get_python_version())
-         else:
--            lib = 'lib'
--        libpython = os.path.join(prefix,
--                                 lib, "python" + get_python_version())
-+            libpython = os.path.join(prefix,
-+                                 "share", "python" + get_python_version())
-         if standard_lib:
-             return libpython
-         else:
-diff -dur Python-3.2.1.orig/Lib/distutils/tests/test_install.py Python-3.2.1/Lib/distutils/tests/test_install.py
---- Python-3.2.1.orig/Lib/distutils/tests/test_install.py	2011-07-15 20:16:35.529557475 +0200
-+++ Python-3.2.1/Lib/distutils/tests/test_install.py	2011-07-15 20:17:09.131071575 +0200
-@@ -48,7 +48,7 @@
-             expected = os.path.normpath(expected)
-             self.assertEqual(got, expected)
- 
--        libdir = os.path.join(destination, "lib", "python")
-+        libdir = os.path.join(destination, "share", "python")
-         platlibdir =  os.path.join(destination, sys.lib, "python")
-         check_path(cmd.install_lib, libdir)
-         check_path(cmd.install_platlib, platlibdir)
 diff -dur Python-3.2.1.orig/Lib/site.py Python-3.2.1/Lib/site.py
 --- Python-3.2.1.orig/Lib/site.py	2011-07-15 20:16:35.529557475 +0200
 +++ Python-3.2.1/Lib/site.py	2011-07-15 20:17:09.134405059 +0200
-@@ -289,8 +289,7 @@
+@@ -289,8 +289,9 @@
                                          "python" + sys.version[:3],
                                          "site-packages"))
              sitepackages.append(os.path.join(prefix, sys.lib, "site-python"))
--            if sys.lib != 'lib':
--                sitepackages.append(os.path.join(prefix, "lib", "python" + sys.version[:3], "site-packages"))
+             if sys.lib != 'lib':
+                 sitepackages.append(os.path.join(prefix, "lib", "python" + sys.version[:3], "site-packages"))
 +            sitepackages.append(os.path.join(prefix, "share", "python" + sys.version[:3], "site-packages"))
          else:
              sitepackages.append(prefix)
@@ -90,15 +57,6 @@ diff -dur Python-3.2.1.orig/Lib/sysconfig.py Python-3.2.1/Lib/sysconfig.py
 diff -dur Python-3.2.1.orig/Makefile.pre.in Python-3.2.1/Makefile.pre.in
 --- Python-3.2.1.orig/Makefile.pre.in	2011-07-15 20:16:35.532890958 +0200
 +++ Python-3.2.1/Makefile.pre.in	2011-07-15 20:17:09.134405059 +0200
-@@ -108,7 +108,7 @@
- MANDIR=		@mandir@
- INCLUDEDIR=	@includedir@
- CONFINCLUDEDIR=	$(exec_prefix)/include
--SCRIPTDIR=	$(prefix)/$(LIB)
-+SCRIPTDIR=	$(prefix)/share
- ABIFLAGS=	@ABIFLAGS@
- 
- # Detailed destination directories
 @@ -1065,8 +1065,8 @@
  			if test "$(SO)" = .dll; then \
  				$(INSTALL_DATA) $(LDLIBRARY) $(DESTDIR)$(LIBPL) ; \
@@ -110,41 +68,4 @@ diff -dur Python-3.2.1.orig/Makefile.pre.in Python-3.2.1/Makefile.pre.in
  			fi; \
  		else \
  			echo Skip install of $(LIBRARY) - use make frameworkinstall; \
-diff -dur Python-3.2.1.orig/Modules/getpath.c Python-3.2.1/Modules/getpath.c
---- Python-3.2.1.orig/Modules/getpath.c	2011-07-15 20:16:35.536224442 +0200
-+++ Python-3.2.1/Modules/getpath.c	2011-07-15 20:17:09.137738543 +0200
-@@ -131,7 +131,8 @@
- 
- #ifndef PYTHONPATH
- #define PYTHONPATH PREFIX "/" LIB_PYTHON VERSION ":" \
--              EXEC_PREFIX "/" LIB_PYTHON VERSION "/lib-dynload:"
-+              EXEC_PREFIX "/" LIB_PYTHON VERSION "/lib-dynload:" \
-+              PREFIX "/share/python" VERSION
- #endif
- 
- #ifndef LANDMARK
-@@ -673,13 +674,13 @@ calculate_path(void)
-         }
-     }
- 
--    pfound = search_for_prefix(argv0_path, home, _prefix, lib_python);
-+    pfound = search_for_prefix(argv0_path, home, _prefix, L"share/python" VERSION);
-     if (!pfound) {
-         if (!Py_FrozenFlag)
-             fprintf(stderr,
-                 "Could not find platform independent libraries <prefix>\n");
-         wcsncpy(prefix, _prefix, MAXPATHLEN);
--        joinpath(prefix, lib_python);
-+        joinpath(prefix, L"share/python");
-     }
-     else
-         reduce(prefix);
-@@ -691,7 +692,7 @@
-     }
-     else
-         wcsncpy(zip_path, _prefix, MAXPATHLEN);
--    joinpath(zip_path, L"lib/python00.zip");
-+    joinpath(zip_path, L"" LIB_PYTHON "00.zip");
-     bufsz = wcslen(zip_path);   /* Replace "00" with version */
-     zip_path[bufsz - 6] = VERSION[0];
-     zip_path[bufsz - 5] = VERSION[2];
+
