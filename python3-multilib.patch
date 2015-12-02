@@ -1,6 +1,6 @@
-diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Include/pylifecycle.h Python-3.5.0/Include/pylifecycle.h
+diff -durN -x '*~' -x '*.orig' Python-3.5.0.orig/Include/pylifecycle.h Python-3.5.0/Include/pylifecycle.h
 --- Python-3.5.0.orig/Include/pylifecycle.h	2015-09-13 13:41:20.000000000 +0200
-+++ Python-3.5.0/Include/pylifecycle.h	2015-12-02 20:26:50.853793088 +0100
++++ Python-3.5.0/Include/pylifecycle.h	2015-12-02 20:55:26.865642310 +0100
 @@ -65,6 +65,8 @@
  /* In their own files */
  PyAPI_FUNC(const char *) Py_GetVersion(void);
@@ -10,9 +10,9 @@ diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Include/pylifecycle.h Python-3.5
  PyAPI_FUNC(const char *) Py_GetCopyright(void);
  PyAPI_FUNC(const char *) Py_GetCompiler(void);
  PyAPI_FUNC(const char *) Py_GetBuildInfo(void);
-diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/distutils/command/install.py Python-3.5.0/Lib/distutils/command/install.py
+diff -durN -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/distutils/command/install.py Python-3.5.0/Lib/distutils/command/install.py
 --- Python-3.5.0.orig/Lib/distutils/command/install.py	2015-09-13 13:41:20.000000000 +0200
-+++ Python-3.5.0/Lib/distutils/command/install.py	2015-12-02 20:27:40.150761675 +0100
++++ Python-3.5.0/Lib/distutils/command/install.py	2015-12-02 20:55:26.865642310 +0100
 @@ -19,6 +19,8 @@
  from site import USER_SITE
  HAS_USER_SITE = True
@@ -42,9 +42,9 @@ diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/distutils/command/install.py
          'headers': '$base/include/python/$dist_name',
          'scripts': '$base/bin',
          'data'   : '$base',
-diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/distutils/sysconfig.py Python-3.5.0/Lib/distutils/sysconfig.py
+diff -durN -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/distutils/sysconfig.py Python-3.5.0/Lib/distutils/sysconfig.py
 --- Python-3.5.0.orig/Lib/distutils/sysconfig.py	2015-09-13 13:41:21.000000000 +0200
-+++ Python-3.5.0/Lib/distutils/sysconfig.py	2015-12-02 20:26:50.853793088 +0100
++++ Python-3.5.0/Lib/distutils/sysconfig.py	2015-12-02 20:55:26.868975666 +0100
 @@ -132,8 +132,12 @@
              prefix = plat_specific and EXEC_PREFIX or PREFIX
  
@@ -59,9 +59,9 @@ diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/distutils/sysconfig.py Pytho
          if standard_lib:
              return libpython
          else:
-diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/distutils/tests/test_install.py Python-3.5.0/Lib/distutils/tests/test_install.py
+diff -durN -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/distutils/tests/test_install.py Python-3.5.0/Lib/distutils/tests/test_install.py
 --- Python-3.5.0.orig/Lib/distutils/tests/test_install.py	2015-09-13 13:41:21.000000000 +0200
-+++ Python-3.5.0/Lib/distutils/tests/test_install.py	2015-12-02 20:26:50.853793088 +0100
++++ Python-3.5.0/Lib/distutils/tests/test_install.py	2015-12-02 20:55:26.868975666 +0100
 @@ -55,7 +55,7 @@
              expected = os.path.normpath(expected)
              self.assertEqual(got, expected)
@@ -71,9 +71,9 @@ diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/distutils/tests/test_install
          check_path(cmd.install_lib, libdir)
          check_path(cmd.install_platlib, libdir)
          check_path(cmd.install_purelib, libdir)
-diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/site.py Python-3.5.0/Lib/site.py
+diff -durN -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/site.py Python-3.5.0/Lib/site.py
 --- Python-3.5.0.orig/Lib/site.py	2015-09-13 13:41:21.000000000 +0200
-+++ Python-3.5.0/Lib/site.py	2015-12-02 20:28:51.431199018 +0100
++++ Python-3.5.0/Lib/site.py	2015-12-02 20:55:26.868975666 +0100
 @@ -303,12 +303,16 @@
          seen.add(prefix)
  
@@ -93,9 +93,9 @@ diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/site.py Python-3.5.0/Lib/sit
          if sys.platform == "darwin":
              # for framework builds *only* we add the standard Apple
              # locations.
-diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/sysconfig.py Python-3.5.0/Lib/sysconfig.py
+diff -durN -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/sysconfig.py Python-3.5.0/Lib/sysconfig.py
 --- Python-3.5.0.orig/Lib/sysconfig.py	2015-09-13 13:41:21.000000000 +0200
-+++ Python-3.5.0/Lib/sysconfig.py	2015-12-02 20:26:50.853793088 +0100
++++ Python-3.5.0/Lib/sysconfig.py	2015-12-02 20:56:37.266116742 +0100
 @@ -20,10 +20,10 @@
  
  _INSTALL_SCHEMES = {
@@ -126,9 +126,22 @@ diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Lib/sysconfig.py Python-3.5.0/Li
          'include': '{installed_base}/include/python',
          'platinclude': '{installed_base}/include/python',
          'scripts': '{base}/bin',
-diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Makefile.pre.in Python-3.5.0/Makefile.pre.in
+@@ -459,7 +459,11 @@
+         else:
+             inc_dir = _sys_home or _PROJECT_BASE
+     else:
+-        inc_dir = get_path('platinclude')
++        if hasattr(sys, 'abiflags'):
++            config_dir_name = 'config-%s%s' % (_PY_VERSION_SHORT, sys.abiflags)
++        else:
++            config_dir_name = 'config'
++        inc_dir = os.path.join(get_path('stdlib'), config_dir_name)
+     return os.path.join(inc_dir, 'pyconfig.h')
+ 
+ 
+diff -durN -x '*~' -x '*.orig' Python-3.5.0.orig/Makefile.pre.in Python-3.5.0/Makefile.pre.in
 --- Python-3.5.0.orig/Makefile.pre.in	2015-09-13 13:41:23.000000000 +0200
-+++ Python-3.5.0/Makefile.pre.in	2015-12-02 20:28:51.434532372 +0100
++++ Python-3.5.0/Makefile.pre.in	2015-12-02 20:55:26.868975666 +0100
 @@ -101,6 +101,8 @@
  
  # Machine-dependent subdirectories
@@ -167,9 +180,9 @@ diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Makefile.pre.in Python-3.5.0/Mak
  			fi; \
  		else \
  			echo Skip install of $(LIBRARY) - use make frameworkinstall; \
-diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Modules/getpath.c Python-3.5.0/Modules/getpath.c
+diff -durN -x '*~' -x '*.orig' Python-3.5.0.orig/Modules/getpath.c Python-3.5.0/Modules/getpath.c
 --- Python-3.5.0.orig/Modules/getpath.c	2015-09-13 13:41:24.000000000 +0200
-+++ Python-3.5.0/Modules/getpath.c	2015-12-02 20:26:50.857126441 +0100
++++ Python-3.5.0/Modules/getpath.c	2015-12-02 20:55:26.868975666 +0100
 @@ -117,9 +117,21 @@
  #define EXEC_PREFIX PREFIX
  #endif
@@ -212,9 +225,9 @@ diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Modules/getpath.c Python-3.5.0/M
      bufsz = wcslen(zip_path);   /* Replace "00" with version */
      zip_path[bufsz - 6] = VERSION[0];
      zip_path[bufsz - 5] = VERSION[2];
-diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Python/getplatform.c Python-3.5.0/Python/getplatform.c
+diff -durN -x '*~' -x '*.orig' Python-3.5.0.orig/Python/getplatform.c Python-3.5.0/Python/getplatform.c
 --- Python-3.5.0.orig/Python/getplatform.c	2015-09-13 13:41:26.000000000 +0200
-+++ Python-3.5.0/Python/getplatform.c	2015-12-02 20:26:50.857126441 +0100
++++ Python-3.5.0/Python/getplatform.c	2015-12-02 20:55:26.868975666 +0100
 @@ -10,3 +10,23 @@
  {
  	return PLATFORM;
@@ -239,9 +252,9 @@ diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Python/getplatform.c Python-3.5.
 +{
 +	return LIB;
 +}
-diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Python/sysmodule.c Python-3.5.0/Python/sysmodule.c
+diff -durN -x '*~' -x '*.orig' Python-3.5.0.orig/Python/sysmodule.c Python-3.5.0/Python/sysmodule.c
 --- Python-3.5.0.orig/Python/sysmodule.c	2015-09-13 13:41:26.000000000 +0200
-+++ Python-3.5.0/Python/sysmodule.c	2015-12-02 20:26:50.857126441 +0100
++++ Python-3.5.0/Python/sysmodule.c	2015-12-02 20:55:26.868975666 +0100
 @@ -1767,6 +1767,10 @@
                          PyUnicode_FromString(Py_GetCopyright()));
      SET_SYS_FROM_STRING("platform",
@@ -253,9 +266,9 @@ diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/Python/sysmodule.c Python-3.5.0/
      SET_SYS_FROM_STRING("executable",
                          PyUnicode_FromWideChar(
                                 Py_GetProgramFullPath(), -1));
-diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/configure.ac Python-3.5.0/configure.ac
---- Python-3.5.0.orig/configure.ac	2015-12-02 20:26:33.157018154 +0100
-+++ Python-3.5.0/configure.ac	2015-12-02 20:28:51.431199018 +0100
+diff -durN -x '*~' -x '*.orig' Python-3.5.0.orig/configure.ac Python-3.5.0/configure.ac
+--- Python-3.5.0.orig/configure.ac	2015-12-02 20:54:45.102025846 +0100
++++ Python-3.5.0/configure.ac	2015-12-02 20:55:26.868975666 +0100
 @@ -722,6 +722,45 @@
    ])
  fi
@@ -311,9 +324,9 @@ diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/configure.ac Python-3.5.0/config
  AC_SUBST(LIBPL)
  
  # Check whether right shifting a negative integer extends the sign bit
-diff -dur -x '*~' -x '*.orig' Python-3.5.0.orig/setup.py Python-3.5.0/setup.py
+diff -durN -x '*~' -x '*.orig' Python-3.5.0.orig/setup.py Python-3.5.0/setup.py
 --- Python-3.5.0.orig/setup.py	2015-09-13 13:41:26.000000000 +0200
-+++ Python-3.5.0/setup.py	2015-12-02 20:26:50.857126441 +0100
++++ Python-3.5.0/setup.py	2015-12-02 20:55:26.872309022 +0100
 @@ -526,8 +526,7 @@
          # be assumed that no additional -I,-L directives are needed.
          if not cross_compiling:

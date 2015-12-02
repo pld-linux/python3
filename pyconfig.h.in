@@ -1,0 +1,11 @@
+#ifndef Py_PYCONFIG_H
+#if defined(__x86_64__) || (defined(__sparc__) && defined(__arch64__)) || defined(__powerpc64__) || defined(__s390x__)
+#if defined(__ILP32__)
+#include "@PREFIX@/libx32/python@PY_VER@/config-@PY_ABI@/pyconfig.h"
+#else
+#include "@PREFIX@/lib64/python@PY_VER@/config-@PY_ABI@/pyconfig.h"
+#endif
+#else
+#include "@PREFIX@/lib/python@PY_VER@/config-@PY_ABI@/pyconfig.h"
+#endif
+#endif

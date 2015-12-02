@@ -34,12 +34,13 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.0
-Release:	6.1
+Release:	6.2
 Epoch:		1
 License:	PSF
 Group:		Applications
 Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
 # Source0-md5:	d149d2812f10cbe04c042232e7964171
+Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-multilib.patch
@@ -620,6 +621,9 @@ install -p Tools/scripts/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py_ve
 # already in %%doc
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/LICENSE.txt
 
+mv $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h $RPM_BUILD_ROOT%{py_libdir}/config-%{py_abi}/pyconfig.h
+sed -e's#@PREFIX@#%{_prefix}#g;s#@PY_VER@#%{py_ver}#g;s#@PY_ABI@#%{py_abi}#g' %{SOURCE1} > $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -731,6 +735,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/config-%{py_abi}/Setup
 %{py_libdir}/config-%{py_abi}/Setup.config
 %{py_libdir}/config-%{py_abi}/Setup.local
+%{py_libdir}/config-%{py_abi}/pyconfig.h
 
 %files modules
 %defattr(644,root,root,755)
