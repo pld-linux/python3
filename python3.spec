@@ -1247,6 +1247,8 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/config-%{py_abi}/config.c.in
 %{py_libdir}/config-%{py_abi}/python.o
 %{py_libdir}/config-%{py_abi}/python-config.py
+%dir %{py_libdir}/config-%{py_abi}/__pycache__
+%{py_libdir}/config-%{py_abi}/__pycache__/python-config.*
 %{_pkgconfigdir}/python-%{py_ver}.pc
 %{_pkgconfigdir}/python-%{py_abi}.pc
 %{_pkgconfigdir}/python3.pc
