@@ -544,7 +544,7 @@ export LC_ALL
 %if %{with tests}
 binlibdir=`echo build/lib.*`
 # -l and -j don't go together! and -j is brought up by Tools/scripts/run_tests.py
-%{__make} test \
+WITHIN_PYTHON_RPM_BUILD=1 %{__make} test \
 	TESTOPTS="%{test_flags} %{test_list}" \
 	TESTPYTHON="LD_LIBRARY_PATH=`pwd` PYTHONHOME=`pwd` PYTHONPATH=`pwd`/Lib:`pwd`/$binlibdir ./python -tt"
 %endif
