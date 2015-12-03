@@ -51,6 +51,7 @@ Patch6:		python-distro.patch
 Patch7:		%{name}-db.patch
 Patch8:		%{name}-install_prefix.patch
 Patch9:		%{name}-tests_with_pythonpath.patch
+Patch10:	%{name}-bdist_rpm.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake
@@ -475,6 +476,7 @@ Moduły testowe dla Pythona.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
 
 %{__rm} -r Modules/zlib
 %{__rm} -r Modules/expat
