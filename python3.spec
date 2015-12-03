@@ -46,7 +46,7 @@ Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-multilib.patch
 Patch3:		%{name}-no_cmdline_tests.patch
 Patch4:		%{name}-makefile-location.patch
-Patch5:		python3-atomic.patch
+Patch5:		%{name}-atomic.patch
 Patch6:		python-distro.patch
 Patch7:		%{name}-db.patch
 Patch8:		%{name}-install_prefix.patch
@@ -207,7 +207,7 @@ Group:		Libraries/Python
 Provides:	python(abi) = %{py_ver}
 # for compatibility with existing Ac packages
 Provides:	python(bytecode) = %{py_ver}
-%{!?with_info:Obsoletes:	python3-doc-info}
+%{!?with_info:Obsoletes: python3-doc-info}
 
 %description libs
 Python shared library and very essental modules for Python binary.
@@ -222,9 +222,9 @@ Summary(pl.UTF-8):	Moduły języka Python
 Group:		Libraries/Python
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 %{?with_system_mpdecimal:Requires:	mpdecimal >= 2.4.1}
-Obsoletes:	python3-modules-sqlite
-Obsoletes:	python3-enum
 Provides:	python3-enum
+Obsoletes:	python3-enum
+Obsoletes:	python3-modules-sqlite
 
 %description modules
 Python officially distributed modules.
@@ -348,7 +348,7 @@ debugger.
 %package 2to3
 Summary:	Automated Python 2 to 3 code translation
 Summary(pl.UTF-8):	Automatyczne tłumaczenie kodu Pythona 2 do 3
-Group:		Development/Languages/Pythona
+Group:		Development/Languages/Python
 
 %description 2to3
 2to3 is a Python program that reads Python 2.x source code and applies
@@ -531,11 +531,11 @@ fi
 %{__make} 2>&1 | awk '
 BEGIN { fail = 0; logmsg = ""; }
 {
-        if ($0 ~ /\*\*\* WARNING:/) {
-                fail = 1;
-                logmsg = logmsg $0;
-        }
-        print $0;
+		if ($0 ~ /\*\*\* WARNING:/) {
+				fail = 1;
+				logmsg = logmsg $0;
+		}
+		print $0;
 }
 END { if (fail) { print "\nPROBLEMS FOUND:"; print logmsg; exit(1); } }'
 
@@ -1272,6 +1272,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/timeit.cpython-*.py[co]
 
 %files 2to3
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/2to3-%{py_ver}
 %dir %{py_libdir}/lib2to3
 %{py_libdir}/lib2to3/__pycache__
@@ -1294,6 +1295,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_examplesdir}/%{name}-%{version}
 
 %files test
+%defattr(644,root,root,755)
 %{py_libdir}/idlelib/idle_test
 %{py_libdir}/test
 %{py_libdir}/ctypes/test
