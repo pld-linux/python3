@@ -1,6 +1,6 @@
 diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_asyncio/test_tasks.py Python-3.5.0/Lib/test/test_asyncio/test_tasks.py
 --- Python-3.5.0.orig/Lib/test/test_asyncio/test_tasks.py	2015-09-13 13:41:23.000000000 +0200
-+++ Python-3.5.0/Lib/test/test_asyncio/test_tasks.py	2015-12-03 17:43:19.313492409 +0100
++++ Python-3.5.0/Lib/test/test_asyncio/test_tasks.py	2015-12-03 18:35:52.223668265 +0100
 @@ -1870,6 +1870,7 @@
          cb.assert_called_once_with(fut)
          self.assertEqual(fut.result(), [3, 1, exc, exc2])
@@ -9,9 +9,28 @@ diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_asyncio/test_tasks.py Python-3
      def test_env_var_debug(self):
          aio_path = os.path.dirname(os.path.dirname(asyncio.__file__))
  
+diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_cmd_line.py Python-3.5.0/Lib/test/test_cmd_line.py
+--- Python-3.5.0.orig/Lib/test/test_cmd_line.py	2015-09-13 13:41:23.000000000 +0200
++++ Python-3.5.0/Lib/test/test_cmd_line.py	2015-12-03 18:35:52.227001621 +0100
+@@ -237,6 +237,7 @@
+         self.assertEqual(rc, 0)
+         self.assertTrue(data.startswith(b'x'), data)
+ 
++    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
+     def test_large_PYTHONPATH(self):
+         path1 = "ABCDE" * 100
+         path2 = "FGHIJ" * 100
+@@ -252,6 +253,7 @@
+         self.assertIn(path1.encode('ascii'), out)
+         self.assertIn(path2.encode('ascii'), out)
+ 
++    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
+     def test_empty_PYTHONPATH_issue16309(self):
+         # On Posix, it is documented that setting PATH to the
+         # empty string is equivalent to not setting PATH at all,
 diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_compileall.py Python-3.5.0/Lib/test/test_compileall.py
---- Python-3.5.0.orig/Lib/test/test_compileall.py	2015-12-03 17:34:50.856171946 +0100
-+++ Python-3.5.0/Lib/test/test_compileall.py	2015-12-03 17:42:47.669939423 +0100
+--- Python-3.5.0.orig/Lib/test/test_compileall.py	2015-12-03 18:35:31.483520885 +0100
++++ Python-3.5.0/Lib/test/test_compileall.py	2015-12-03 18:35:52.227001621 +0100
 @@ -206,6 +206,7 @@
      def _cleanup(self):
          support.rmtree(self.directory)
@@ -36,9 +55,31 @@ diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_compileall.py Python-3.5.0/Lib
      def test_no_args_respects_quiet_flag(self):
          script_helper.make_script(self.directory, 'baz', '')
          noisy = self.assertRunOK(PYTHONPATH=self.directory)
+diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_pydoc.py Python-3.5.0/Lib/test/test_pydoc.py
+--- Python-3.5.0.orig/Lib/test/test_pydoc.py	2015-09-13 13:41:23.000000000 +0200
++++ Python-3.5.0/Lib/test/test_pydoc.py	2015-12-03 18:35:52.227001621 +0100
+@@ -631,6 +631,7 @@
+         self.addCleanup(rmtree, TESTFN)
+         importlib.invalidate_caches()
+ 
++    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
+     def test_badimport(self):
+         # This tests the fix for issue 5230, where if pydoc found the module
+         # but the module had an internal import error pydoc would report no doc
+diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_site.py Python-3.5.0/Lib/test/test_site.py
+--- Python-3.5.0.orig/Lib/test/test_site.py	2015-09-13 13:41:23.000000000 +0200
++++ Python-3.5.0/Lib/test/test_site.py	2015-12-03 18:37:57.484550877 +0100
+@@ -320,6 +320,7 @@
+         """Restore sys.path"""
+         sys.path[:] = self.sys_path
+ 
++    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
+     def test_abs_paths(self):
+         # Make sure all imported modules have their __file__ and __cached__
+         # attributes as absolute paths.  Arranging to put the Lib directory on
 diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_venv.py Python-3.5.0/Lib/test/test_venv.py
 --- Python-3.5.0.orig/Lib/test/test_venv.py	2015-09-13 13:41:23.000000000 +0200
-+++ Python-3.5.0/Lib/test/test_venv.py	2015-12-03 17:47:16.138342748 +0100
++++ Python-3.5.0/Lib/test/test_venv.py	2015-12-03 18:35:52.227001621 +0100
 @@ -111,6 +111,7 @@
          self.assertTrue(os.path.exists(fn), 'File %r should exist.' % fn)
  
@@ -64,8 +105,8 @@ diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_venv.py Python-3.5.0/Lib/test/
      """Test venv module installation of pip."""
      def assert_pip_not_installed(self):
 diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_warnings/__init__.py Python-3.5.0/Lib/test/test_warnings/__init__.py
---- Python-3.5.0.orig/Lib/test/test_warnings/__init__.py	2015-12-03 17:34:50.856171946 +0100
-+++ Python-3.5.0/Lib/test/test_warnings/__init__.py	2015-12-03 17:47:52.121893369 +0100
+--- Python-3.5.0.orig/Lib/test/test_warnings/__init__.py	2015-12-03 18:35:31.483520885 +0100
++++ Python-3.5.0/Lib/test/test_warnings/__init__.py	2015-12-03 18:35:52.227001621 +0100
 @@ -918,6 +918,7 @@
  
  class BootstrapTest(unittest.TestCase):
