@@ -1,0 +1,76 @@
+diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_asyncio/test_tasks.py Python-3.5.0/Lib/test/test_asyncio/test_tasks.py
+--- Python-3.5.0.orig/Lib/test/test_asyncio/test_tasks.py	2015-09-13 13:41:23.000000000 +0200
++++ Python-3.5.0/Lib/test/test_asyncio/test_tasks.py	2015-12-03 17:43:19.313492409 +0100
+@@ -1870,6 +1870,7 @@
+         cb.assert_called_once_with(fut)
+         self.assertEqual(fut.result(), [3, 1, exc, exc2])
+ 
++    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
+     def test_env_var_debug(self):
+         aio_path = os.path.dirname(os.path.dirname(asyncio.__file__))
+ 
+diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_compileall.py Python-3.5.0/Lib/test/test_compileall.py
+--- Python-3.5.0.orig/Lib/test/test_compileall.py	2015-12-03 17:34:50.856171946 +0100
++++ Python-3.5.0/Lib/test/test_compileall.py	2015-12-03 17:42:47.669939423 +0100
+@@ -206,6 +206,7 @@
+     def _cleanup(self):
+         support.rmtree(self.directory)
+ 
++    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
+     def test_no_args_compiles_path(self):
+         # Note that -l is implied for the no args case.
+         bazfn = script_helper.make_script(self.directory, 'baz', '')
+@@ -214,6 +215,7 @@
+         self.assertNotCompiled(self.initfn)
+         self.assertNotCompiled(self.barfn)
+ 
++    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
+     def test_no_args_respects_force_flag(self):
+         bazfn = script_helper.make_script(self.directory, 'baz', '')
+         self.assertRunOK(PYTHONPATH=self.directory)
+@@ -230,6 +232,7 @@
+         mtime2 = os.stat(pycpath).st_mtime
+         self.assertNotEqual(mtime, mtime2)
+ 
++    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
+     def test_no_args_respects_quiet_flag(self):
+         script_helper.make_script(self.directory, 'baz', '')
+         noisy = self.assertRunOK(PYTHONPATH=self.directory)
+diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_venv.py Python-3.5.0/Lib/test/test_venv.py
+--- Python-3.5.0.orig/Lib/test/test_venv.py	2015-09-13 13:41:23.000000000 +0200
++++ Python-3.5.0/Lib/test/test_venv.py	2015-12-03 17:47:16.138342748 +0100
+@@ -111,6 +111,7 @@
+         self.assertTrue(os.path.exists(fn), 'File %r should exist.' % fn)
+ 
+     @skipInVenv
++    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
+     def test_prefixes(self):
+         """
+         Test that the prefix values are as expected.
+@@ -249,6 +250,7 @@
+     # point to the venv being used to run the test, and we lose the link
+     # to the source build - so Python can't initialise properly.
+     @skipInVenv
++    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
+     def test_executable(self):
+         """
+         Test that the sys.executable value is as expected.
+@@ -279,6 +281,7 @@
+ 
+ 
+ @skipInVenv
++@unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
+ class EnsurePipTest(BaseTest):
+     """Test venv module installation of pip."""
+     def assert_pip_not_installed(self):
+diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_warnings/__init__.py Python-3.5.0/Lib/test/test_warnings/__init__.py
+--- Python-3.5.0.orig/Lib/test/test_warnings/__init__.py	2015-12-03 17:34:50.856171946 +0100
++++ Python-3.5.0/Lib/test/test_warnings/__init__.py	2015-12-03 17:47:52.121893369 +0100
+@@ -918,6 +918,7 @@
+ 
+ class BootstrapTest(unittest.TestCase):
+     @unittest.skipUnless(support.is_resource_enabled("cmdline"), "python cmdline tests disabled")
++    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
+     def test_issue_8766(self):
+         # "import encodings" emits a warning whereas the warnings is not loaded
+         # or not completely loaded (warnings imports indirectly encodings by
