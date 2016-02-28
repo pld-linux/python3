@@ -1,0 +1,29 @@
+--- Python-3.5.0/Makefile.pre.in.orig	2016-02-28 20:07:09.864711963 +0100
++++ Python-3.5.0/Makefile.pre.in	2016-02-28 20:10:18.334704006 +0100
+@@ -1029,7 +1029,7 @@
+ 
+ commoninstall:  @FRAMEWORKALTINSTALLFIRST@ \
+ 		altbininstall libinstall inclinstall libainstall \
+-		sharedinstall oldsharedinstall altmaninstall \
++		sharedinstall oldsharedinstall altmaninstall installcompile \
+ 		@FRAMEWORKALTINSTALLLAST@
+ 
+ # Install shared libraries enabled by Setup
+@@ -1262,6 +1262,8 @@
+ 		$(INSTALL_DATA) $(srcdir)/Modules/xxmodule.c \
+ 			$(DESTDIR)$(LIBDEST)/distutils/tests ; \
+ 	fi
++
++installcompile: libainstall libinstall
+ 	-PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
+ 		$(PYTHON_FOR_BUILD) -Wi $(DESTDIR)$(LIBDEST)/compileall.py \
+ 		-d $(LIBDEST) -f \
+@@ -1654,7 +1656,7 @@
+ .PHONY: frameworkinstall frameworkinstallframework frameworkinstallstructure
+ .PHONY: frameworkinstallmaclib frameworkinstallapps frameworkinstallunixtools
+ .PHONY: frameworkaltinstallunixtools recheck autoconf clean clobber distclean
+-.PHONY: smelly funny patchcheck touch altmaninstall commoninstall
++.PHONY: smelly funny patchcheck touch altmaninstall installcompile commoninstall
+ .PHONY: gdbhooks
+ 
+ # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

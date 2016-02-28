@@ -52,6 +52,7 @@ Patch7:		%{name}-db.patch
 Patch8:		%{name}-install_prefix.patch
 Patch9:		%{name}-tests_with_pythonpath.patch
 Patch10:	%{name}-bdist_rpm.patch
+Patch11:	%{name}-installcompile.patch
 URL:		http://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake
@@ -477,6 +478,7 @@ Moduły testowe dla Pythona.
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
+%patch11 -p1
 
 %{__rm} -r Modules/zlib
 %{__rm} -r Modules/expat
@@ -625,8 +627,8 @@ install -p Tools/scripts/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py_ve
 # already in %%doc
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/LICENSE.txt
 
-mv $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h $RPM_BUILD_ROOT%{py_libdir}/config-%{py_abi}/pyconfig.h
-sed -e's#@PREFIX@#%{_prefix}#g;s#@PY_VER@#%{py_ver}#g;s#@PY_ABI@#%{py_abi}#g' %{SOURCE1} > $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h
+%{__mv} $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h $RPM_BUILD_ROOT%{py_libdir}/config-%{py_abi}/pyconfig.h
+%{__sed} -e's#@PREFIX@#%{_prefix}#g;s#@PY_VER@#%{py_ver}#g;s#@PY_ABI@#%{py_abi}#g' %{SOURCE1} > $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h
 
 %clean
 rm -rf $RPM_BUILD_ROOT
