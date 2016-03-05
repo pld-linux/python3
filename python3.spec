@@ -33,27 +33,26 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.0
-Release:	9
+Version:	%{py_ver}.1
+Release:	1
 Epoch:		1
 License:	PSF
-Group:		Applications
-Source0:	http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	d149d2812f10cbe04c042232e7964171
+Group:		Development/Languages/Python
+Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
+# Source0-md5:	e9ea6f2623fffcdd871b7b19113fde80
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-multilib.patch
 Patch3:		%{name}-no_cmdline_tests.patch
 Patch4:		%{name}-makefile-location.patch
-Patch5:		%{name}-atomic.patch
 Patch6:		python-distro.patch
 Patch7:		%{name}-db.patch
 Patch8:		%{name}-install_prefix.patch
 Patch9:		%{name}-tests_with_pythonpath.patch
 Patch10:	%{name}-bdist_rpm.patch
 Patch11:	%{name}-installcompile.patch
-URL:		http://www.python.org/
+URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake
 BuildRequires:	bluez-libs-devel
@@ -473,7 +472,6 @@ Moduły testowe dla Pythona.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
@@ -611,12 +609,13 @@ install -p Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 install -p Tools/scripts/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py_ver}
 
 # just to cut the noise, as they are not packaged (now)
-%{__rm} $RPM_BUILD_ROOT%{py_libdir}/plat-*/regen
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/ctypes/macholib/fetch_macholib*
-%{__rm} $RPM_BUILD_ROOT%{py_libdir}/site-packages/README
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/distutils/command/wininst*.exe
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/idlelib/*.bat
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/idlelib/*.pyw
+%{__rm} $RPM_BUILD_ROOT%{py_libdir}/idlelib/help.html
+%{__rm} $RPM_BUILD_ROOT%{py_libdir}/plat-*/regen
+%{__rm} $RPM_BUILD_ROOT%{py_libdir}/site-packages/README
 
 # currently provided by python-2to3, consider switching to this one
 %{__rm} $RPM_BUILD_ROOT%{_bindir}/2to3
