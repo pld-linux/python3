@@ -52,7 +52,7 @@ diff -dur Python-3.5.0.orig/Lib/distutils/sysconfig.py Python-3.5.0/Lib/distutil
 +        if plat_specific:
 +            lib = sys.lib
 +        else:
-+            lib = 'lib'
++            lib = 'share'
          libpython = os.path.join(prefix,
 -                                 "lib", "python" + get_python_version())
 +                                 lib, "python" + get_python_version())
@@ -74,7 +74,7 @@ diff -dur Python-3.5.0.orig/Lib/distutils/tests/test_install.py Python-3.5.0/Lib
 diff -dur Python-3.5.0.orig/Lib/site.py Python-3.5.0/Lib/site.py
 --- Python-3.5.0.orig/Lib/site.py	2015-09-13 13:41:21.000000000 +0200
 +++ Python-3.5.0/Lib/site.py	2015-12-03 17:31:03.874280444 +0100
-@@ -303,12 +303,16 @@
+@@ -303,12 +303,14 @@
          seen.add(prefix)
  
          if os.sep == '/':
@@ -83,8 +83,6 @@ diff -dur Python-3.5.0.orig/Lib/site.py Python-3.5.0/Lib/site.py
                                          "python" + sys.version[:3],
                                          "site-packages"))
 +            sitepackages.append(os.path.join(prefix, sys.lib, "site-python"))
-+            if sys.lib != 'lib':
-+                sitepackages.append(os.path.join(prefix, "lib", "python" + sys.version[:3], "site-packages"))
 +            sitepackages.append(os.path.join(prefix, "share", "python" + sys.version[:3], "site-packages"))
          else:
              sitepackages.append(prefix)
