@@ -227,7 +227,7 @@ Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Provides:	python3-enum
 Obsoletes:	python3-enum
 Obsoletes:	python3-modules-sqlite
-%requires_eq_to	openssl openssl-devel
+%requires_ge_to	openssl openssl-devel
 
 %description modules
 Python officially distributed modules.
