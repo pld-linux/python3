@@ -196,8 +196,8 @@ diff -dur Python-3.5.0.orig/Makefile.pre.in Python-3.5.0/Makefile.pre.in
 diff -dur Python-3.5.0.orig/Modules/getpath.c Python-3.5.0/Modules/getpath.c
 --- Python-3.5.0.orig/Modules/getpath.c	2015-09-13 13:41:24.000000000 +0200
 +++ Python-3.5.0/Modules/getpath.c	2015-12-03 17:31:03.874280444 +0100
-@@ -117,9 +117,21 @@
- #define EXEC_PREFIX PREFIX
+@@ -100,6 +100,17 @@
+  extern "C" {
  #endif
  
 +#ifndef LIB_PYTHON
@@ -211,15 +211,9 @@ diff -dur Python-3.5.0.orig/Modules/getpath.c Python-3.5.0/Modules/getpath.c
 +#define LIB_PYTHON "lib/python"
 +#endif
 +#endif
-+
- #ifndef PYTHONPATH
--#define PYTHONPATH PREFIX "/lib/python" VERSION ":" \
--              EXEC_PREFIX "/lib/python" VERSION "/lib-dynload"
-+#define PYTHONPATH PREFIX "/" LIB_PYTHON VERSION ":" \
-+              EXEC_PREFIX "/" LIB_PYTHON VERSION "/lib-dynload:"
- #endif
  
- #ifndef LANDMARK
+ #if !defined(PREFIX) || !defined(EXEC_PREFIX) || !defined(VERSION) || !defined(VPATH)
+ #error "PREFIX, EXEC_PREFIX, VERSION, and VPATH must be constant defined"
 @@ -511,7 +523,7 @@
      _pythonpath = Py_DecodeLocale(PYTHONPATH, NULL);
      _prefix = Py_DecodeLocale(PREFIX, NULL);

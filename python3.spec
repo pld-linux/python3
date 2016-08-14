@@ -33,13 +33,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.1
-Release:	4
+Version:	%{py_ver}.2
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	e9ea6f2623fffcdd871b7b19113fde80
+# Source0-md5:	8906efbacfcdc7c3c9198aeefafd159e
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
@@ -53,7 +53,8 @@ Patch9:		%{name}-tests_with_pythonpath.patch
 Patch10:	%{name}-bdist_rpm.patch
 Patch11:	%{name}-installcompile.patch
 Patch12:                https://bugs.python.org/file21896/nonexistent_user.patch
-# Patch12-md5:  db706fbe6de467c6e4c97c675eddf29a
+# Patch12-md5:	db706fbe6de467c6e4c97c675eddf29a
+Patch13:	python3-test-pyexpat.patch
 URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake
@@ -481,6 +482,7 @@ Moduły testowe dla Pythona.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
 
 %{__rm} -r Modules/zlib
 %{__rm} -r Modules/expat
