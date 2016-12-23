@@ -74,13 +74,13 @@ diff -dur Python-3.5.0.orig/Lib/distutils/tests/test_install.py Python-3.5.0/Lib
 diff -dur Python-3.5.0.orig/Lib/site.py Python-3.5.0/Lib/site.py
 --- Python-3.5.0.orig/Lib/site.py	2015-09-13 13:41:21.000000000 +0200
 +++ Python-3.5.0/Lib/site.py	2015-12-03 17:31:03.874280444 +0100
-@@ -303,12 +303,14 @@
+@@ -304,12 +304,14 @@ def getsitepackages(prefixes=None):
          seen.add(prefix)
  
          if os.sep == '/':
 -            sitepackages.append(os.path.join(prefix, "lib",
 +            sitepackages.append(os.path.join(prefix, sys.lib,
-                                         "python" + sys.version[:3],
+                                         "python%d.%d" % sys.version_info[:2],
                                          "site-packages"))
 +            sitepackages.append(os.path.join(prefix, sys.lib, "site-python"))
 +            sitepackages.append(os.path.join(prefix, "share", "python" + sys.version[:3], "site-packages"))
@@ -322,15 +322,18 @@ diff -dur Python-3.5.0.orig/configure.ac Python-3.5.0/configure.ac
  
  MULTIARCH=$($CC --print-multiarch 2>/dev/null)
  AC_SUBST(MULTIARCH)
-@@ -4331,7 +4370,7 @@
- 
+@@ -4640,9 +4640,9 @@ AC_MSG_RESULT($LDVERSION)
  dnl define LIBPL after ABIFLAGS and LDVERSION is defined.
  AC_SUBST(PY_ENABLE_SHARED)
--LIBPL='$(prefix)'"/lib/python${VERSION}/config-${LDVERSION}"
-+LIBPL='$(LIBDIR)/python'"${VERSION}/config-${LDVERSION}"
+ if test x$PLATFORM_TRIPLET = x; then
+-  LIBPL='$(prefix)'"/lib/python${VERSION}/config-${LDVERSION}"
++  LIBPL='$(LIBDIR)/python'"${VERSION}/config-${LDVERSION}"
+ else
+-  LIBPL='$(prefix)'"/lib/python${VERSION}/config-${LDVERSION}-${PLATFORM_TRIPLET}"
++  LIBPL='$(LIBDIR)/python'"${VERSION}/config-${LDVERSION}-${PLATFORM_TRIPLET}"
+ fi
  AC_SUBST(LIBPL)
  
- # Check whether right shifting a negative integer extends the sign bit
 diff -dur Python-3.5.0.orig/setup.py Python-3.5.0/setup.py
 --- Python-3.5.0.orig/setup.py	2015-09-13 13:41:26.000000000 +0200
 +++ Python-3.5.0/setup.py	2015-12-03 17:31:03.877613811 +0100

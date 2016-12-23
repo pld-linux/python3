@@ -16,8 +16,9 @@
 #   test_gdb: fails, as the gdb uses old python version
 %define		broken_tests	test_nntplib test_gdb test_site
 
-%define py_ver		3.5
+%define py_ver		3.6
 %define py_abi		%{py_ver}m
+%define	py_platform	%{py_abi}-%{_host_cpu}-%{_host_os}%{?_gnu}
 %define py_prefix	%{_prefix}
 %define py_libdir	%{py_prefix}/%{_lib}/python%{py_ver}
 %define py_incdir	%{_includedir}/python%{py_abi}
@@ -33,13 +34,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.2
-Release:	2
+Version:	%{py_ver}.0
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	8906efbacfcdc7c3c9198aeefafd159e
+# Source0-md5:	82b143ebbf4514d7e05876bed7a6b1f5
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
@@ -54,7 +55,6 @@ Patch10:	%{name}-bdist_rpm.patch
 Patch11:	%{name}-installcompile.patch
 Patch12:                https://bugs.python.org/file21896/nonexistent_user.patch
 # Patch12-md5:	db706fbe6de467c6e4c97c675eddf29a
-Patch13:	python3-test-pyexpat.patch
 URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake
@@ -482,12 +482,11 @@ Moduły testowe dla Pythona.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-%patch13 -p1
 
 %{__rm} -r Modules/zlib
 %{__rm} -r Modules/expat
 
-for SUBDIR in darwin libffi libffi_arm_wince libffi_msvc libffi_osx; do
+for SUBDIR in darwin libffi libffi_msvc libffi_osx; do
 	%{__rm} -r Modules/_ctypes/$SUBDIR/*
 done
 
@@ -619,7 +618,6 @@ install -p Tools/scripts/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py_ve
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/idlelib/*.bat
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/idlelib/*.pyw
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/idlelib/help.html
-%{__rm} $RPM_BUILD_ROOT%{py_libdir}/plat-*/regen
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/site-packages/README
 
 # currently provided by python-2to3, consider switching to this one
@@ -632,8 +630,8 @@ install -p Tools/scripts/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py_ve
 # already in %%doc
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/LICENSE.txt
 
-%{__mv} $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h $RPM_BUILD_ROOT%{py_libdir}/config-%{py_abi}/pyconfig.h
-%{__sed} -e's#@PREFIX@#%{_prefix}#g;s#@PY_VER@#%{py_ver}#g;s#@PY_ABI@#%{py_abi}#g' %{SOURCE1} > $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h
+%{__mv} $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h $RPM_BUILD_ROOT%{py_libdir}/config-%{py_platform}/pyconfig.h
+%{__sed} -e's#@PREFIX@#%{_prefix}#g;s#@PY_VER@#%{py_ver}#g;s#@PY_ABI@#%{py_platform}#g' %{SOURCE1} > $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -678,7 +676,7 @@ rm -rf $RPM_BUILD_ROOT
 # modules required by python library
 %{py_libdir}/_collections_abc.py
 %{py_libdir}/_sitebuiltins.py
-%{py_libdir}/_sysconfigdata.py
+%{py_libdir}/_sysconfigdata_*.py
 %{py_libdir}/_weakrefset.py
 %{py_libdir}/abc.py
 %{py_libdir}/bisect.py
@@ -706,7 +704,7 @@ rm -rf $RPM_BUILD_ROOT
 # needed by the dynamic sys.lib patch
 %{py_libdir}/types.py
 %{py_libdir}/__pycache__/_sitebuiltins.cpython-*.py[co]
-%{py_libdir}/__pycache__/_sysconfigdata.cpython-*.py[co]
+%{py_libdir}/__pycache__/_sysconfigdata_*.cpython-*.py[co]
 %{py_libdir}/__pycache__/_weakrefset.cpython-*.py[co]
 %{py_libdir}/__pycache__/abc.cpython-*.py[co]
 %{py_libdir}/__pycache__/bisect.cpython-*.py[co]
@@ -741,12 +739,12 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/encodings/__pycache__
 %{py_libdir}/encodings/*.py
 
-%dir %{py_libdir}/config-%{py_abi}
-%{py_libdir}/config-%{py_abi}/Makefile
-%{py_libdir}/config-%{py_abi}/Setup
-%{py_libdir}/config-%{py_abi}/Setup.config
-%{py_libdir}/config-%{py_abi}/Setup.local
-%{py_libdir}/config-%{py_abi}/pyconfig.h
+%dir %{py_libdir}/config-%{py_platform}
+%{py_libdir}/config-%{py_platform}/Makefile
+%{py_libdir}/config-%{py_platform}/Setup
+%{py_libdir}/config-%{py_platform}/Setup.config
+%{py_libdir}/config-%{py_platform}/Setup.local
+%{py_libdir}/config-%{py_platform}/pyconfig.h
 
 %files modules
 %defattr(644,root,root,755)
@@ -847,6 +845,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/random.py
 %{py_libdir}/rlcompleter.py
 %{py_libdir}/runpy.py
+%{py_libdir}/secrets.py
 %{py_libdir}/signal.py
 %{py_libdir}/sched.py
 %{py_libdir}/selectors.py
@@ -982,6 +981,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/rlcompleter.cpython-*.py[co]
 %{py_libdir}/__pycache__/runpy.cpython-*.py[co]
 %{py_libdir}/__pycache__/sched.cpython-*.py[co]
+%{py_libdir}/__pycache__/secrets.cpython-*.py[co]
 %{py_libdir}/__pycache__/selectors.cpython-*.py[co]
 %{py_libdir}/__pycache__/shelve.cpython-*.py[co]
 %{py_libdir}/__pycache__/shlex.cpython-*.py[co]
@@ -1026,7 +1026,9 @@ rm -rf $RPM_BUILD_ROOT
 # list .so modules to be sure that all of them are built
 #
 
+%attr(755,root,root) %{py_dyndir}/_asyncio.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_bisect.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_blake2.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_bz2.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_cn.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_hk.cpython-*.so
@@ -1059,6 +1061,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_posixsubprocess.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_random.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_sha1.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_sha3.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_socket.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_ssl.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testbuffer.cpython-*.so
@@ -1092,10 +1095,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/spwd.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/unicodedata.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/zlib.cpython-*.so
-
-%dir %{py_libdir}/plat-*
-%{py_libdir}/plat-*/__pycache__
-%{py_libdir}/plat-*/*.py
 
 %dir %{py_libdir}/asyncio
 %{py_libdir}/asyncio/__pycache__
@@ -1222,7 +1221,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n pydoc3
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/pydoc3
-%attr(755,root,root) %{_bindir}/pydoc3.5
+%attr(755,root,root) %{_bindir}/pydoc%{py_ver}
 %{py_libdir}/pydoc.py
 %{py_libdir}/__pycache__/pydoc.cpython-*.py[co]
 %dir %{py_libdir}/pydoc_data
@@ -1233,7 +1232,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n idle3
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/idle3
-%attr(755,root,root) %{_bindir}/idle3.5
+%attr(755,root,root) %{_bindir}/idle%{py_ver}
 %dir %{py_libdir}/idlelib/Icons
 %{py_libdir}/idlelib/__pycache__
 %{py_libdir}/idlelib/*.py
@@ -1252,14 +1251,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libpython3.so
 %{py_incdir}/*.h
 %exclude %{py_incdir}/pyconfig.h
-%attr(755,root,root) %{py_libdir}/config-%{py_abi}/makesetup
-%attr(755,root,root) %{py_libdir}/config-%{py_abi}/install-sh
-%{py_libdir}/config-%{py_abi}/config.c
-%{py_libdir}/config-%{py_abi}/config.c.in
-%{py_libdir}/config-%{py_abi}/python.o
-%{py_libdir}/config-%{py_abi}/python-config.py
-%dir %{py_libdir}/config-%{py_abi}/__pycache__
-%{py_libdir}/config-%{py_abi}/__pycache__/python-config.*
+%attr(755,root,root) %{py_libdir}/config-%{py_platform}/makesetup
+%attr(755,root,root) %{py_libdir}/config-%{py_platform}/install-sh
+%{py_libdir}/config-%{py_platform}/config.c
+%{py_libdir}/config-%{py_platform}/config.c.in
+%{py_libdir}/config-%{py_platform}/python.o
+%{py_libdir}/config-%{py_platform}/python-config.py
+%dir %{py_libdir}/config-%{py_platform}/__pycache__
+%{py_libdir}/config-%{py_platform}/__pycache__/python-config.*
 %{_pkgconfigdir}/python-%{py_ver}.pc
 %{_pkgconfigdir}/python-%{py_abi}.pc
 %{_pkgconfigdir}/python3.pc
