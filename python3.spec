@@ -18,7 +18,7 @@
 
 %define py_ver		3.6
 %define py_abi		%{py_ver}m
-%define	py_platform	%{py_abi}-%{_host_cpu}-%{_host_os}%{?_gnu}
+%define	py_platform	%{py_abi}-%{_target_base_arch}-%{_target_os}%{?_gnu}
 %define py_prefix	%{_prefix}
 %define py_libdir	%{py_prefix}/%{_lib}/python%{py_ver}
 %define py_incdir	%{_includedir}/python%{py_abi}
