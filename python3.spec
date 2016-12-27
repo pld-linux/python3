@@ -524,14 +524,10 @@ fi
 	--without-ensurepip \
 	--with-fpectl \
 	%{?with_debug:--with-pydebug} \
-	--with-signal-module \
 	--with-system-expat \
 	--with-system-ffi \
 	%{?with_system_mpdecimal:--with-system-libmpdec} \
-	--with-threads \
-%ifarch %{ix86} %{x8664} ppc ppc64
-	--with-tsc
-%endif
+	--with-threads
 
 %{__make} 2>&1 | awk '
 BEGIN { fail = 0; logmsg = ""; }
