@@ -519,7 +519,7 @@ fi
 	--enable-ipv6 \
 	--enable-shared \
 	--with-computed-gotos \
-	--with-dbmliborder=gdbm:bdb \
+	--with-dbmliborder=gdbm:ndbm:bdb \
 	--with-doc-strings \
 	--without-ensurepip \
 	--with-fpectl \
