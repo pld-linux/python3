@@ -9,7 +9,7 @@
 # tests which will not work on 64-bit platforms
 %define		no64bit_tests	test_audioop test_rgbimg test_imageop
 # tests which may fail because of builder environment limitations (no /proc or /dev/pts)
-%define		nobuilder_tests test_resource test_openpty test_socket test_nis test_posix test_locale test_pty test_asyncio test_os
+%define		nobuilder_tests test_resource test_openpty test_socket test_nis test_posix test_locale test_pty test_asyncio test_os test_readline
 
 # tests which fail because of some unknown/unresolved reason (this list should be %{nil})
 #   test_site: fails because our site.py is patched to include both /usr/share/... and /usr/lib...
