@@ -15,12 +15,10 @@
 #   test_site: fails because our site.py is patched to include both /usr/share/... and /usr/lib...
 #   test_gdb: fails, as the gdb uses old python version
 #   test_time: test_AsTimeval (test.test_time.TestCPyTime), rounding error
-%define		broken_tests	test_nntplib \
 %ifarch x32
-				test_time \
+%define		broken_tests_x32	test_time
 %endif
-				test_gdb \
-				test_site
+%define		broken_tests	test_nntplib test_gdb test_site %{?broken_tests_x32}
 
 %define py_ver		3.6
 %define py_abi		%{py_ver}m
