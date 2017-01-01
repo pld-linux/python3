@@ -39,7 +39,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.0
-Release:	1
+Release:	2
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
@@ -689,6 +689,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/linecache.py
 %{py_libdir}/locale.py
 %{py_libdir}/io.py
+%{py_libdir}/operator.py
 %{py_libdir}/posixpath.py
 %{py_libdir}/re.py
 %{py_libdir}/reprlib.py
@@ -718,6 +719,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/linecache.cpython-*.py[co]
 %{py_libdir}/__pycache__/locale.cpython-*.py[co]
 %{py_libdir}/__pycache__/io.cpython-*.py[co]
+%{py_libdir}/__pycache__/operator.cpython-*.py[co]
 %{py_libdir}/__pycache__/posixpath.cpython-*.py[co]
 %{py_libdir}/__pycache__/re.cpython-*.py[co]
 %{py_libdir}/__pycache__/reprlib.cpython-*.py[co]
@@ -826,7 +828,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/nturl2path.py
 %{py_libdir}/numbers.py
 %{py_libdir}/opcode.py
-%{py_libdir}/operator.py
 %{py_libdir}/optparse.py
 %{py_libdir}/pathlib.py
 %{py_libdir}/pickle.py
@@ -961,7 +962,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/nturl2path.cpython-*.py[co]
 %{py_libdir}/__pycache__/numbers.cpython-*.py[co]
 %{py_libdir}/__pycache__/opcode.cpython-*.py[co]
-%{py_libdir}/__pycache__/operator.cpython-*.py[co]
 %{py_libdir}/__pycache__/optparse.cpython-*.py[co]
 %{py_libdir}/__pycache__/pathlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/pickle.cpython-*.py[co]
