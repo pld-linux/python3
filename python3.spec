@@ -38,13 +38,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.0
-Release:	2
+Version:	%{py_ver}.1
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	82b143ebbf4514d7e05876bed7a6b1f5
+# Source0-md5:	692b4fc3a2ba0d54d1495d4ead5b0b5c
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
@@ -618,7 +618,7 @@ install -p Tools/scripts/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py_ve
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/idlelib/*.bat
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/idlelib/*.pyw
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/idlelib/help.html
-%{__rm} $RPM_BUILD_ROOT%{py_libdir}/site-packages/README
+%{__rm} $RPM_BUILD_ROOT%{py_libdir}/site-packages/README.txt
 
 # currently provided by python-2to3, consider switching to this one
 %{__rm} $RPM_BUILD_ROOT%{_bindir}/2to3
@@ -1184,8 +1184,9 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/venv/__pycache__
 %{py_libdir}/venv/*.py
 %dir %{py_libdir}/venv/scripts
+%dir %{py_libdir}/venv/scripts/common
+%{py_libdir}/venv/scripts/common/activate
 %dir %{py_libdir}/venv/scripts/posix
-%{py_libdir}/venv/scripts/posix/activate
 %{py_libdir}/venv/scripts/posix/activate.csh
 %{py_libdir}/venv/scripts/posix/activate.fish
 
