@@ -18,7 +18,7 @@
 %ifarch x32
 %define		broken_tests_x32	test_time
 %endif
-%define		broken_tests	test_nntplib test_gdb test_site %{?broken_tests_x32}
+%define		broken_tests	test_nntplib test_gdb test_site test_ssl %{?broken_tests_x32}
 
 %define py_ver		3.6
 %define py_abi		%{py_ver}m
