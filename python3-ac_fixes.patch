@@ -1,23 +1,30 @@
---- Python-3.5.0/configure.ac~	2015-09-13 13:41:26.000000000 +0200
-+++ Python-3.5.0/configure.ac	2015-09-13 20:06:11.597280920 +0200
-@@ -1258,16 +1258,16 @@ then
- 		# Optimization messes up debuggers, so turn it off for
- 		# debug builds.
-                 if "$CC" -v --help 2>/dev/null |grep -- -Og > /dev/null; then
--                    OPT="-g -Og -Wall $STRICT_PROTO"
-+                    OPT="-g $CPPFLAGS $CFLAGS -Wall $STRICT_PROTO"
-                 else
--                    OPT="-g -O0 -Wall $STRICT_PROTO"
-+                    OPT="-g $CPPFLAGS $CFLAGS -Wall $STRICT_PROTO"
-                 fi
- 	    else
--		OPT="-g $WRAP -O3 -Wall $STRICT_PROTO"
-+		OPT="-g $WRAP $CPPFLAGS $CFLAGS -Wall $STRICT_PROTO"
- 	    fi
- 	    ;;
- 	*)
--	    OPT="-O3 -Wall $STRICT_PROTO"
-+	    OPT="$CPPFLAGS $CFLAGS -Wall $STRICT_PROTO"
- 	    ;;
- 	esac
+--- Python-3.6.2/configure.ac~	2017-07-08 05:33:27.000000000 +0200
++++ Python-3.6.2/configure.ac	2017-08-07 10:28:44.498951134 +0200
+@@ -1494,26 +1494,7 @@ then
+             CFLAGS_ALIASING="-fno-strict-aliasing"
+         fi
+ 
+-	case $ac_cv_prog_cc_g in
+-	yes)
+-	    if test "$Py_DEBUG" = 'true' ; then
+-		# Optimization messes up debuggers, so turn it off for
+-		# debug builds.
+-                if "$CC" -v --help 2>/dev/null |grep -- -Og > /dev/null; then
+-                    OPT="-g -Og -Wall"
+-                else
+-                    OPT="-g -O0 -Wall"
+-                fi
+-	    else
+-		OPT="-g $WRAP -O3 -Wall"
+-	    fi
+-	    ;;
+-	*)
+-	    OPT="-O3 -Wall"
+-	    ;;
+-	esac
+-
+-	OPT="$OPT $STRICT_PROTO"
++	OPT="$OPT $CPPFLAGS $CFLAGS $STRICT_PROTO"
+ 
  	case $ac_sys_system in
+ 	    SCO_SV*) OPT="$OPT -m486 -DSCO5"
