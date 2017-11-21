@@ -750,7 +750,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files modules
 %defattr(644,root,root,755)
-/etc/shrc.d/python*-modules*
+%config(noreplace) %verify(not md5 mtime size) /etc/shrc.d/python*-modules*
 %attr(755,root,root) %{_bindir}/pyvenv
 %attr(755,root,root) %{_bindir}/pyvenv-%{py_ver}
 %{py_libdir}/__future__.py
@@ -1266,7 +1266,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel-tools
 %defattr(644,root,root,755)
-/etc/shrc.d/python*-devel*
+%config(noreplace) %verify(not md5 mtime size) /etc/shrc.d/python*-devel*
 %attr(755,root,root) %{_bindir}/pygettext%{py_ver}
 %attr(755,root,root) %{_bindir}/pyreindent%{py_ver}
 %{py_libdir}/pdb.py
