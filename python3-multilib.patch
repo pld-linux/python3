@@ -337,16 +337,15 @@ diff -dur Python-3.5.0.orig/configure.ac Python-3.5.0/configure.ac
 diff -dur Python-3.5.0.orig/setup.py Python-3.5.0/setup.py
 --- Python-3.5.0.orig/setup.py	2015-09-13 13:41:26.000000000 +0200
 +++ Python-3.5.0/setup.py	2015-12-03 17:31:03.877613811 +0100
-@@ -526,8 +526,7 @@
-         # be assumed that no additional -I,-L directives are needed.
-         if not cross_compiling:
-             lib_dirs = self.compiler.library_dirs + [
--                '/lib64', '/usr/lib64',
--                '/lib', '/usr/lib',
-+                '/' + sys.lib, '/usr/' + sys.lib
-                 ]
-             inc_dirs = self.compiler.include_dirs + ['/usr/include']
-         else:
+@@ -569,7 +569,7 @@ class PyBuildExt(build_ext):
+             add_dir_to_list(self.compiler.include_dirs,
+                             sysconfig.get_config_var("INCLUDEDIR"))
+ 
+-        system_lib_dirs = ['/lib64', '/usr/lib64', '/lib', '/usr/lib']
++        system_lib_dirs = ['/' + sys.lib, '/usr/' + sys.lib]
+         system_include_dirs = ['/usr/include']
+         # lib_dirs and inc_dirs are used to search for files;
+         # if a file is found in one of those directories, it can
 @@ -750,11 +749,11 @@
              elif curses_library:
                  readline_libs.append(curses_library)
