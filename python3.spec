@@ -39,7 +39,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.5
-Release:	1
+Release:	2
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
@@ -214,6 +214,8 @@ Group:		Libraries/Python
 Provides:	python(abi) = %{py_ver}
 # for compatibility with existing Ac packages
 Provides:	python(bytecode) = %{py_ver}
+Provides:	python3-enum
+Obsoletes:	python3-enum
 %{!?with_info:Obsoletes: python3-doc-info}
 
 %description libs
@@ -229,8 +231,6 @@ Summary(pl.UTF-8):	Moduły języka Python
 Group:		Libraries/Python
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 %{?with_system_mpdecimal:Requires:	mpdecimal >= 2.4.1}
-Provides:	python3-enum
-Obsoletes:	python3-enum
 Obsoletes:	python3-modules-sqlite
 %requires_ge_to	openssl openssl-devel
 
@@ -682,6 +682,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/bisect.py
 %{py_libdir}/codecs.py
 %{py_libdir}/copyreg.py
+%{py_libdir}/enum.py
 %{py_libdir}/functools.py
 %{py_libdir}/genericpath.py
 %{py_libdir}/heapq.py
@@ -712,6 +713,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/codecs.cpython-*.py[co]
 %{py_libdir}/__pycache__/_collections_abc.cpython-*.py[co]
 %{py_libdir}/__pycache__/copyreg.cpython-*.py[co]
+%{py_libdir}/__pycache__/enum.cpython-*.py[co]
 %{py_libdir}/__pycache__/functools.cpython-*.py[co]
 %{py_libdir}/__pycache__/genericpath.cpython-*.py[co]
 %{py_libdir}/__pycache__/heapq.cpython-*.py[co]
@@ -796,7 +798,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/dis.py
 %{py_libdir}/doctest.py
 %{py_libdir}/dummy_threading.py
-%{py_libdir}/enum.py
 %{py_libdir}/filecmp.py
 %{py_libdir}/fileinput.py
 %{py_libdir}/fnmatch.py
@@ -930,7 +931,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/dis.cpython-*.py[co]
 %{py_libdir}/__pycache__/doctest.cpython-*.py[co]
 %{py_libdir}/__pycache__/dummy_threading.cpython-*.py[co]
-%{py_libdir}/__pycache__/enum.cpython-*.py[co]
 %{py_libdir}/__pycache__/filecmp.cpython-*.py[co]
 %{py_libdir}/__pycache__/fileinput.cpython-*.py[co]
 %{py_libdir}/__pycache__/fnmatch.cpython-*.py[co]
