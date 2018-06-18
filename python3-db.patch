@@ -5,7 +5,7 @@
          # versions of BerkeleyDB already installed.
  
 -        max_db_ver = (5, 3)
-+        max_db_ver = (6, 1)
++        max_db_ver = (6, 2)
          min_db_ver = (3, 3)
          db_setup_debug = False   # verbose debug prints from this script?
  
