@@ -31,30 +31,4 @@
  # intentionally NOT "/usr/bin/env python".  On many systems
  # (e.g. Solaris), /usr/local/bin is not in $PATH as passed to CGI
  # scripts, and /usr/local/bin is the default directory where Python is
---- Python-3.0.1/Tools/pybench/pybench.py.wiget	2009-02-07 18:28:46.000000000 +0100
-+++ Python-3.0.1/Tools/pybench/pybench.py	2009-03-14 18:12:32.000000000 +0100
-@@ -1,4 +1,4 @@
--#!/usr/local/bin/python -O
-+#!/usr/bin/python3 -O
- 
- """ A Python Benchmark Suite
- 
---- Python-3.0.1/Tools/scripts/fixps.py.wiget	2007-08-03 19:06:41.000000000 +0200
-+++ Python-3.0.1/Tools/scripts/fixps.py	2009-03-14 18:12:32.000000000 +0100
-@@ -15,13 +15,13 @@ def main():
-             print(filename, ': can\'t open :', msg)
-             continue
-         line = f.readline()
--        if not re.match('^#! */usr/local/bin/python', line):
--            print(filename, ': not a /usr/local/bin/python script')
-+        if not re.match('^#! */usr/bin/python3', line):
-+            print(filename, ': not a /usr/bin/python3 script')
-             f.close()
-             continue
-         rest = f.read()
-         f.close()
--        line = re.sub('/usr/local/bin/python',
-+        line = re.sub('/usr/bin/python3',
-                       '/usr/bin/env python', line)
-         print(filename, ':', repr(line))
-         f = open(filename, "w")
+

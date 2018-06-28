@@ -20,7 +20,7 @@
 %endif
 %define		broken_tests	test_nntplib test_gdb test_site test_ssl %{?broken_tests_x32}
 
-%define py_ver		3.6
+%define py_ver		3.7
 %define py_abi		%{py_ver}m
 %define	py_platform	%{py_abi}-%{_target_base_arch}-%{_target_os}%{?_gnu}
 %define py_prefix	%{_prefix}
@@ -38,13 +38,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.5
-Release:	3
+Version:	%{py_ver}.0
+Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	9f49654a4d6f733ff3284ab9d227e9fd
+# Source0-md5:	eb8c2a6b1447d50813c02714af4681f3
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
@@ -487,10 +487,9 @@ Moduły testowe dla Pythona.
 %patch11 -p1
 %patch12 -p1
 
-%{__rm} -r Modules/zlib
 %{__rm} -r Modules/expat
 
-for SUBDIR in darwin libffi libffi_msvc libffi_osx; do
+for SUBDIR in darwin libffi_msvc libffi_osx; do
 	%{__rm} -r Modules/_ctypes/$SUBDIR/*
 done
 
@@ -526,12 +525,10 @@ fi
 	--with-dbmliborder=gdbm:ndbm:bdb \
 	--with-doc-strings \
 	--without-ensurepip \
-	--with-fpectl \
 	%{?with_debug:--with-pydebug} \
 	--with-system-expat \
 	--with-system-ffi \
-	%{?with_system_mpdecimal:--with-system-libmpdec} \
-	--with-threads
+	%{?with_system_mpdecimal:--with-system-libmpdec}
 
 %{__make} 2>&1 | awk '
 BEGIN { fail = 0; logmsg = ""; }

@@ -74,7 +74,7 @@ diff -dur Python-3.5.0.orig/Lib/distutils/tests/test_install.py Python-3.5.0/Lib
 diff -dur Python-3.5.0.orig/Lib/site.py Python-3.5.0/Lib/site.py
 --- Python-3.5.0.orig/Lib/site.py	2015-09-13 13:41:21.000000000 +0200
 +++ Python-3.5.0/Lib/site.py	2015-12-03 17:31:03.874280444 +0100
-@@ -304,12 +304,14 @@ def getsitepackages(prefixes=None):
+@@ -334,12 +334,14 @@ def getsitepackages(prefixes=None):
          seen.add(prefix)
  
          if os.sep == '/':
@@ -88,9 +88,9 @@ diff -dur Python-3.5.0.orig/Lib/site.py Python-3.5.0/Lib/site.py
              sitepackages.append(prefix)
 -            sitepackages.append(os.path.join(prefix, "lib", "site-packages"))
 +            sitepackages.append(os.path.join(prefix, sys.lib, "site-packages"))
-         if sys.platform == "darwin":
-             # for framework builds *only* we add the standard Apple
-             # locations.
+     return sitepackages
+ 
+ def addsitepackages(known_paths, prefixes=None):
 diff -dur Python-3.5.0.orig/Lib/sysconfig.py Python-3.5.0/Lib/sysconfig.py
 --- Python-3.5.0.orig/Lib/sysconfig.py	2015-09-13 13:41:21.000000000 +0200
 +++ Python-3.5.0/Lib/sysconfig.py	2015-12-03 17:31:51.974741432 +0100
@@ -182,14 +182,15 @@ diff -dur Python-3.5.0.orig/Makefile.pre.in Python-3.5.0/Makefile.pre.in
  
  Python/importdl.o: $(srcdir)/Python/importdl.c
  		$(CC) -c $(PY_CORE_CFLAGS) -I$(DLINCLDIR) -o $@ $(srcdir)/Python/importdl.c
-@@ -1362,8 +1364,8 @@
+@@ -1470,9 +1470,9 @@ libainstall:	@DEF_MAKE_RULE@ python-conf
+ 	@if test -d $(LIBRARY); then :; else \
+ 		if test "$(PYTHONFRAMEWORKDIR)" = no-framework; then \
  			if test "$(SHLIB_SUFFIX)" = .dll; then \
- 				$(INSTALL_DATA) $(LDLIBRARY) $(DESTDIR)$(LIBPL) ; \
+-				$(INSTALL_DATA) $(LDLIBRARY) $(DESTDIR)$(LIBPL) ; \
++				$(INSTALL_DATA) $(LDLIBRARY) $(DESTDIR)$(LIBDIR) ; \
  			else \
 -				$(INSTALL_DATA) $(LIBRARY) $(DESTDIR)$(LIBPL)/$(LIBRARY) ; \
--				$(RANLIB) $(DESTDIR)$(LIBPL)/$(LIBRARY) ; \
 +				$(INSTALL_DATA) $(LIBRARY) $(DESTDIR)$(LIBDIR)/$(LIBRARY) ; \
-+				$(RANLIB) $(DESTDIR)$(LIBDIR)/$(LIBRARY) ; \
  			fi; \
  		else \
  			echo Skip install of $(LIBRARY) - use make frameworkinstall; \
@@ -214,24 +215,24 @@ diff -dur Python-3.5.0.orig/Modules/getpath.c Python-3.5.0/Modules/getpath.c
  
  #if !defined(PREFIX) || !defined(EXEC_PREFIX) || !defined(VERSION) || !defined(VPATH)
  #error "PREFIX, EXEC_PREFIX, VERSION, and VPATH must be constant defined"
-@@ -511,7 +523,7 @@
-     _pythonpath = Py_DecodeLocale(PYTHONPATH, NULL);
-     _prefix = Py_DecodeLocale(PREFIX, NULL);
-     _exec_prefix = Py_DecodeLocale(EXEC_PREFIX, NULL);
--    lib_python = Py_DecodeLocale("lib/python" VERSION, NULL);
-+    lib_python = Py_DecodeLocale(LIB_PYTHON VERSION, NULL);
- 
-     if (!_pythonpath || !_prefix || !_exec_prefix || !lib_python) {
-         Py_FatalError(
-@@ -700,7 +712,7 @@
+@@ -753,7 +753,7 @@ calculate_zip_path(PyCalculatePath *calc
+     else {
+         wcsncpy(calculate->zip_path, calculate->prefix, MAXPATHLEN);
      }
-     else
-         wcsncpy(zip_path, _prefix, MAXPATHLEN);
--    joinpath(zip_path, L"lib/python00.zip");
-+    joinpath(zip_path, L"" LIB_PYTHON "00.zip");
-     bufsz = wcslen(zip_path);   /* Replace "00" with version */
-     zip_path[bufsz - 6] = VERSION[0];
-     zip_path[bufsz - 5] = VERSION[2];
+-    joinpath(calculate->zip_path, L"lib/python00.zip");
++    joinpath(calculate->zip_path, L"" LIB_PYTHON "00.zip");
+ 
+     /* Replace "00" with version */
+     size_t bufsz = wcslen(calculate->zip_path);
+@@ -878,7 +878,7 @@ calculate_init(PyCalculatePath *calculat
+     if (!calculate->prefix) {
+         return DECODE_LOCALE_ERR("EXEC_PREFIX define", len);
+     }
+-    calculate->lib_python = Py_DecodeLocale("lib/python" VERSION, &len);
++    calculate->lib_python = Py_DecodeLocale(LIB_PYTHON VERSION, &len);
+     if (!calculate->lib_python) {
+         return DECODE_LOCALE_ERR("EXEC_PREFIX define", len);
+     }
 diff -dur Python-3.5.0.orig/Python/getplatform.c Python-3.5.0/Python/getplatform.c
 --- Python-3.5.0.orig/Python/getplatform.c	2015-09-13 13:41:26.000000000 +0200
 +++ Python-3.5.0/Python/getplatform.c	2015-12-03 17:31:03.874280444 +0100
@@ -262,7 +263,7 @@ diff -dur Python-3.5.0.orig/Python/getplatform.c Python-3.5.0/Python/getplatform
 diff -dur Python-3.5.0.orig/Python/sysmodule.c Python-3.5.0/Python/sysmodule.c
 --- Python-3.5.0.orig/Python/sysmodule.c	2015-09-13 13:41:26.000000000 +0200
 +++ Python-3.5.0/Python/sysmodule.c	2015-12-03 17:31:03.874280444 +0100
-@@ -1767,6 +1767,10 @@
+@@ -2307,6 +2307,10 @@ _PySys_BeginInit(PyObject **sysmod)
                          PyUnicode_FromString(Py_GetCopyright()));
      SET_SYS_FROM_STRING("platform",
                          PyUnicode_FromString(Py_GetPlatform()));
@@ -270,9 +271,9 @@ diff -dur Python-3.5.0.orig/Python/sysmodule.c Python-3.5.0/Python/sysmodule.c
 +                        PyUnicode_FromString(Py_GetArch()));
 +    SET_SYS_FROM_STRING("lib",
 +                        PyUnicode_FromString(Py_GetLib()));
-     SET_SYS_FROM_STRING("executable",
-                         PyUnicode_FromWideChar(
-                                Py_GetProgramFullPath(), -1));
+     SET_SYS_FROM_STRING("maxsize",
+                         PyLong_FromSsize_t(PY_SSIZE_T_MAX));
+     SET_SYS_FROM_STRING("float_info",
 diff -dur Python-3.5.0.orig/configure.ac Python-3.5.0/configure.ac
 --- Python-3.5.0.orig/configure.ac	2015-12-03 17:30:32.777292009 +0100
 +++ Python-3.5.0/configure.ac	2015-12-03 17:31:03.877613811 +0100
