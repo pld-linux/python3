@@ -5,6 +5,7 @@
 %bcond_without	tkinter			# disables tkinter module building
 %bcond_without	tests			# disables Python testing
 %bcond_with	verbose_tests		# runs tests in verbose mode
+%bcond_with	optimizations		# optimitations
 #
 # tests which will not work on 64-bit platforms
 %define		no64bit_tests	test_audioop test_rgbimg test_imageop
@@ -38,13 +39,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.5
-Release:	3
+Version:	%{py_ver}.6
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	9f49654a4d6f733ff3284ab9d227e9fd
+# Source0-md5:	c3f30a0aff425dda77d19e02f420d6ba
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
@@ -58,7 +59,7 @@ Patch9:		%{name}-tests_with_pythonpath.patch
 Patch10:	%{name}-bdist_rpm.patch
 Patch11:	%{name}-installcompile.patch
 Patch12:                https://bugs.python.org/file21896/nonexistent_user.patch
-# Patch12-md5:	db706fbe6de467c6e4c97c675eddf29a
+# Patch12-md5:	acfdbe681de2e1158c47d359528d22be
 URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake
@@ -531,7 +532,11 @@ fi
 	--with-system-expat \
 	--with-system-ffi \
 	%{?with_system_mpdecimal:--with-system-libmpdec} \
-	--with-threads
+	--with-threads \
+%if %{with optimizations}
+	--enable-optimizations \
+	--with-lto
+%endif
 
 %{__make} 2>&1 | awk '
 BEGIN { fail = 0; logmsg = ""; }

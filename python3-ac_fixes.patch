@@ -1,6 +1,6 @@
 --- Python-3.6.2/configure.ac~	2017-07-08 05:33:27.000000000 +0200
 +++ Python-3.6.2/configure.ac	2017-08-07 10:28:44.498951134 +0200
-@@ -1494,26 +1494,7 @@ then
+@@ -1491,24 +1491,7 @@ then
              CFLAGS_ALIASING="-fno-strict-aliasing"
          fi
  
@@ -22,9 +22,8 @@
 -	    OPT="-O3 -Wall"
 -	    ;;
 -	esac
--
--	OPT="$OPT $STRICT_PROTO"
-+	OPT="$OPT $CPPFLAGS $CFLAGS $STRICT_PROTO"
++	OPT="$OPT $CPPFLAGS $CFLAGS"
  
  	case $ac_sys_system in
  	    SCO_SV*) OPT="$OPT -m486 -DSCO5"
+
