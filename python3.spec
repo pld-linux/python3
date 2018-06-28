@@ -59,7 +59,7 @@ Patch9:		%{name}-tests_with_pythonpath.patch
 Patch10:	%{name}-bdist_rpm.patch
 Patch11:	%{name}-installcompile.patch
 Patch12:                https://bugs.python.org/file21896/nonexistent_user.patch
-# Patch12-md5:	acfdbe681de2e1158c47d359528d22be
+# Patch12-md5:	db706fbe6de467c6e4c97c675eddf29a
 URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake
