@@ -1,3 +1,13 @@
+--- Python-3.7.0/Lib/test/test_asyncio/test_tasks.py~	2018-06-28 20:51:03.000000000 +0200
++++ Python-3.7.0/Lib/test/test_asyncio/test_tasks.py	2018-06-28 21:01:38.756365097 +0200
+@@ -6,6 +6,7 @@ import contextvars
+ import functools
+ import gc
+ import io
++import os
+ import random
+ import re
+ import sys
 diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_asyncio/test_tasks.py Python-3.5.0/Lib/test/test_asyncio/test_tasks.py
 --- Python-3.5.0.orig/Lib/test/test_asyncio/test_tasks.py	2015-09-13 13:41:23.000000000 +0200
 +++ Python-3.5.0/Lib/test/test_asyncio/test_tasks.py	2015-12-03 18:35:52.223668265 +0100

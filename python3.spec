@@ -5,6 +5,7 @@
 %bcond_without	tkinter			# disables tkinter module building
 %bcond_without	tests			# disables Python testing
 %bcond_with	verbose_tests		# runs tests in verbose mode
+%bcond_without	optimizations		# optimitations
 #
 # tests which will not work on 64-bit platforms
 %define		no64bit_tests	test_audioop test_rgbimg test_imageop
@@ -528,7 +529,11 @@ fi
 	%{?with_debug:--with-pydebug} \
 	--with-system-expat \
 	--with-system-ffi \
-	%{?with_system_mpdecimal:--with-system-libmpdec}
+	%{?with_system_mpdecimal:--with-system-libmpdec} \
+%if %{with optimizations}
+	--enable-optimizations \
+	--with-lto
+%endif
 
 %{__make} 2>&1 | awk '
 BEGIN { fail = 0; logmsg = ""; }
@@ -743,7 +748,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_libdir}/config-%{py_platform}
 %{py_libdir}/config-%{py_platform}/Makefile
 %{py_libdir}/config-%{py_platform}/Setup
-%{py_libdir}/config-%{py_platform}/Setup.config
 %{py_libdir}/config-%{py_platform}/Setup.local
 %{py_libdir}/config-%{py_platform}/pyconfig.h
 
@@ -761,6 +765,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/_markupbase.py
 %{py_libdir}/_osx_support.py
 %{py_libdir}/_pydecimal.py
+%{py_libdir}/_py_abc.py
 %{py_libdir}/_pyio.py
 %{py_libdir}/_strptime.py
 %{py_libdir}/_threading_local.py
@@ -786,9 +791,11 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/compileall.py
 %{py_libdir}/configparser.py
 %{py_libdir}/contextlib.py
+%{py_libdir}/contextvars.py
 %{py_libdir}/copy.py
 %{py_libdir}/crypt.py
 %{py_libdir}/csv.py
+%{py_libdir}/dataclasses.py
 %{py_libdir}/datetime.py
 %{py_libdir}/decimal.py
 %{py_libdir}/difflib.py
@@ -815,7 +822,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/ipaddress.py
 %{py_libdir}/lzma.py
 %{py_libdir}/macpath.py
-%{py_libdir}/macurl2path.py
 %{py_libdir}/mailbox.py
 %{py_libdir}/mailcap.py
 %{py_libdir}/mimetypes.py
@@ -894,6 +900,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/_markupbase.cpython-*.py[co]
 %{py_libdir}/__pycache__/_osx_support.cpython-*.py[co]
 %{py_libdir}/__pycache__/_pydecimal.cpython-*.py[co]
+%{py_libdir}/__pycache__/_py_abc.cpython-*.py[co]
 %{py_libdir}/__pycache__/_pyio.cpython-*.py[co]
 %{py_libdir}/__pycache__/_strptime.cpython-*.py[co]
 %{py_libdir}/__pycache__/_threading_local.cpython-*.py[co]
@@ -913,6 +920,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/cgitb.cpython-*.py[co]
 %{py_libdir}/__pycache__/chunk.cpython-*.py[co]
 %{py_libdir}/__pycache__/cmd.cpython-*.py[co]
+%{py_libdir}/__pycache__/contextvars.cpython-*.py[co]
 %{py_libdir}/__pycache__/code.cpython-*.py[co]
 %{py_libdir}/__pycache__/codeop.cpython-*.py[co]
 %{py_libdir}/__pycache__/colorsys.cpython-*.py[co]
@@ -922,6 +930,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/copy.cpython-*.py[co]
 %{py_libdir}/__pycache__/crypt.cpython-*.py[co]
 %{py_libdir}/__pycache__/csv.cpython-*.py[co]
+%{py_libdir}/__pycache__/dataclasses.cpython-*.py[co]
 %{py_libdir}/__pycache__/datetime.cpython-*.py[co]
 %{py_libdir}/__pycache__/decimal.cpython-*.py[co]
 %{py_libdir}/__pycache__/difflib.cpython-*.py[co]
@@ -948,7 +957,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/ipaddress.cpython-*.py[co]
 %{py_libdir}/__pycache__/lzma.cpython-*.py[co]
 %{py_libdir}/__pycache__/macpath.cpython-*.py[co]
-%{py_libdir}/__pycache__/macurl2path.cpython-*.py[co]
 %{py_libdir}/__pycache__/mailbox.cpython-*.py[co]
 %{py_libdir}/__pycache__/mailcap.cpython-*.py[co]
 %{py_libdir}/__pycache__/mimetypes.cpython-*.py[co]
@@ -1033,6 +1041,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_codecs_jp.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_kr.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_tw.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_contextvars.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_crypt.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_csv.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_ctypes*.cpython-*.so
@@ -1056,6 +1065,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_opcode.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_pickle.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_posixsubprocess.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_queue.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_random.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_sha1.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_sha3.cpython-*.so
@@ -1065,6 +1075,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_testcapi.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testimportmultiple.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testmultiphase.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_uuid.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_xxtestfuzz.cpython-*.so
 
 # for openssl < 0.9.8 package sha256 and sha512 modules
 %if "%{pld_release}" != "ac"
