@@ -19,7 +19,7 @@
 %ifarch x32
 %define		broken_tests_x32	test_time
 %endif
-%define		broken_tests	test_nntplib test_gdb test_site test_ssl %{?broken_tests_x32}
+%define		broken_tests	test_nntplib test_gdb test_site test_distutils test_bdist_rpm test_ssl %{?broken_tests_x32}
 
 %define py_ver		3.7
 %define py_abi		%{py_ver}m
@@ -40,7 +40,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.0
-Release:	0.1
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
@@ -58,8 +58,9 @@ Patch8:		%{name}-install_prefix.patch
 Patch9:		%{name}-tests_with_pythonpath.patch
 Patch10:	%{name}-bdist_rpm.patch
 Patch11:	%{name}-installcompile.patch
-Patch12:                https://bugs.python.org/file21896/nonexistent_user.patch
-# Patch12-md5:	db706fbe6de467c6e4c97c675eddf29a
+# https://bugs.python.org/file21896/nonexistent_user.patch
+Patch12:        nonexistent_user.patch
+Patch13:	python3-no-randomize-tests.patch
 URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake
@@ -97,7 +98,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %if %{with verbose_tests}
 %define test_flags -v -x
 %else
-%define test_flags -w -x
+%define test_flags -wW -x
 %endif
 
 %ifarch alpha ia64 ppc64 sparc64 ppc64 %{x8664}
@@ -487,6 +488,7 @@ Moduły testowe dla Pythona.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
 
 %{__rm} -r Modules/expat
 
@@ -552,8 +554,7 @@ export LC_ALL
 binlibdir=`echo build/lib.*`
 # -l and -j don't go together! and -j is brought up by Tools/scripts/run_tests.py
 WITHIN_PYTHON_RPM_BUILD=1 %{__make} test \
-	TESTOPTS="%{test_flags} %{test_list}" \
-	TESTPYTHON="LD_LIBRARY_PATH=`pwd` PYTHONHOME=`pwd` PYTHONPATH=`pwd`/Lib:`pwd`/$binlibdir ./python -tt"
+	TESTOPTS="%{test_flags} %{test_list}"
 %endif
 
 %install

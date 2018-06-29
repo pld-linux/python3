@@ -1,0 +1,44 @@
+diff --git a/Lib/site.py b/Lib/site.py
+--- a/Lib/site.py
++++ b/Lib/site.py
+@@ -262,7 +266,7 @@ def addusersitepackages(known_paths):
+     # this call will also make sure USER_BASE and USER_SITE are set
+     user_site = getusersitepackages()
+ 
+-    if ENABLE_USER_SITE and os.path.isdir(user_site):
++    if ENABLE_USER_SITE and user_site and os.path.isdir(user_site):
+         addsitedir(user_site, known_paths)
+     return known_paths
+ 
+diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
+--- a/Lib/sysconfig.py
++++ b/Lib/sysconfig.py
+@@ -170,7 +170,13 @@ def _expand_vars(scheme, vars):
+     for key, value in _INSTALL_SCHEMES[scheme].items():
+         if os.name in ('posix', 'nt'):
+             value = os.path.expanduser(value)
+-        res[key] = os.path.normpath(_subst_vars(value, vars))
++        try:
++            path = _subst_vars(value, vars)
++        except AttributeError:
++            # a substitution variable doesn't exist (eg. '{userbase}'),
++            # don't create the variable
++            continue
++        res[key] = os.path.normpath(path)
+     return res
+ 
+ def _get_default_scheme():
+@@ -488,7 +494,12 @@ def get_config_vars(*args):
+         # Setting 'userbase' is done below the call to the
+         # init function to enable using 'get_config_var' in
+         # the init-function.
+-        _CONFIG_VARS['userbase'] = _getuserbase()
++        try:
++            _CONFIG_VARS['userbase'] = _getuserbase()
++        except KeyError:
++            # catch getpwuid() error: don't create the variable if the user
++            # doesn't exist
++            pass
+ 
+         if 'srcdir' not in _CONFIG_VARS:
+             _CONFIG_VARS['srcdir'] = _PROJECT_BASE
