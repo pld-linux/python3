@@ -18,6 +18,7 @@
 #   test_time: test_AsTimeval (test.test_time.TestCPyTime), rounding error
 %ifarch x32
 %define		broken_tests_x32	test_time
+%undefine	with_optimizations
 %endif
 %define		broken_tests	test_nntplib test_gdb test_site test_distutils test_bdist_rpm test_ssl %{?broken_tests_x32}
 
@@ -40,7 +41,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.0
-Release:	1
+Release:	2
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
