@@ -548,12 +548,10 @@ BEGIN { fail = 0; logmsg = ""; }
 }
 END { if (fail) { print "\nPROBLEMS FOUND:"; print logmsg; exit(1); } }'
 
-LC_ALL=C
+LC_ALL=C.UTF-8
 export LC_ALL
 %if %{with tests}
-binlibdir=`echo build/lib.*`
-# -l and -j don't go together! and -j is brought up by Tools/scripts/run_tests.py
-WITHIN_PYTHON_RPM_BUILD=1 %{__make} test \
+WITHIN_PYTHON_RPM_BUILD=1 %{__make} -j1 test \
 	TESTOPTS="%{test_flags} %{test_list}"
 %endif
 
