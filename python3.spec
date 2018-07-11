@@ -1,3 +1,4 @@
+# NOTE: tests require processes limit >128 (256 is sufficient)
 #
 # Conditional build:
 %bcond_with	info			# info pages (requires emacs)
@@ -5,7 +6,7 @@
 %bcond_without	tkinter			# disables tkinter module building
 %bcond_without	tests			# disables Python testing
 %bcond_with	verbose_tests		# runs tests in verbose mode
-%bcond_without	optimizations		# optimitations
+%bcond_without	optimizations		# expensive, stable optimizations (PGO etc.) + LTO
 #
 # tests which will not work on 64-bit platforms
 %define		no64bit_tests	test_audioop test_rgbimg test_imageop
@@ -72,6 +73,9 @@ BuildRequires:	db-devel >= 4
 BuildRequires:	expat-devel >= 1:1.95.7
 BuildRequires:	file
 BuildRequires:	gdbm-devel >= 1.8.3
+%if %(locale -a | grep -q '^C\.utf8$'; echo $?)
+BuildRequires:	glibc-localedb-all
+%endif
 BuildRequires:	gmp-devel >= 4.0
 BuildRequires:	libffi-devel
 BuildRequires:	libstdc++-devel
