@@ -1,0 +1,28 @@
+From c919252a28f4e9dd326dc2c703b4eee6e247be83 Mon Sep 17 00:00:00 2001
+From: "Miss Islington (bot)"
+ <31488909+miss-islington@users.noreply.github.com>
+Date: Fri, 29 Jun 2018 16:03:07 -0700
+Subject: [PATCH] Fix redundant declaration of _PyImport_AddModuleObject
+ (GH-7992)
+
+(cherry picked from commit f874bd1f0630644f3e3faaa2d51e6749465c70bd)
+
+Co-authored-by: Jeremy Cline <jeremy@jcline.org>
+---
+ Include/import.h | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/Include/import.h b/Include/import.h
+index 13f32a1004cf..c664803478a5 100644
+--- a/Include/import.h
++++ b/Include/import.h
+@@ -54,9 +54,6 @@ PyAPI_FUNC(PyObject *) PyImport_AddModuleObject(
+     PyObject *name
+     );
+ #endif
+-#ifndef Py_LIMITED_API
+-PyAPI_FUNC(PyObject *) _PyImport_AddModuleObject(PyObject *, PyObject *);
+-#endif
+ PyAPI_FUNC(PyObject *) PyImport_AddModule(
+     const char *name            /* UTF-8 encoded string */
+     );

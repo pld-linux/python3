@@ -42,7 +42,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.0
-Release:	2
+Release:	3
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
@@ -62,7 +62,9 @@ Patch10:	%{name}-bdist_rpm.patch
 Patch11:	%{name}-installcompile.patch
 # https://bugs.python.org/file21896/nonexistent_user.patch
 Patch12:        nonexistent_user.patch
-Patch13:	python3-no-randomize-tests.patch
+Patch13:	%{name}-no-randomize-tests.patch
+# https://github.com/python/cpython/commit/c919252a28f4e9dd326dc2c703b4eee6e247be83.patch
+Patch14:	%{name}-redundant_declaration.patch
 URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake
@@ -494,6 +496,7 @@ Moduły testowe dla Pythona.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 %{__rm} -r Modules/expat
 
