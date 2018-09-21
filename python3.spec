@@ -592,10 +592,10 @@ ln -s libpython%{py_abi}.so $RPM_BUILD_ROOT%{_libdir}/libpython3.so
 
 # for python devel tools
 for script in timeit profile pdb pstats; do
-	echo "alias ${script}%{py_ver}.py='python%{py_ver} -m ${script}'"
+	echo "#alias ${script}%{py_ver}.py='python%{py_ver} -m ${script}'"
 done > $RPM_BUILD_ROOT/etc/shrc.d/python%{py_ver}-devel.sh
 
-echo "alias pygettext%{py_ver}.py='pygettext%{py_ver}'" \
+echo "#alias pygettext%{py_ver}.py='pygettext%{py_ver}'" \
 	>> $RPM_BUILD_ROOT/etc/shrc.d/python%{py_ver}-devel.sh
 
 sed 's/=/ /' \
@@ -604,7 +604,7 @@ sed 's/=/ /' \
 
 # for python modules
 for script in smtpd webbrowser; do
-	echo "alias ${script}%{py_ver}.py='python%{py_ver} -m ${script}'"
+	echo "#alias ${script}%{py_ver}.py='python%{py_ver} -m ${script}'"
 done > $RPM_BUILD_ROOT/etc/shrc.d/python%{py_ver}-modules.sh
 
 sed 's/=/ /' \
