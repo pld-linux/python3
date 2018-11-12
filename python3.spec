@@ -42,7 +42,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.1
-Release:	1
+Release:	2
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
@@ -566,7 +566,8 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir},%{_pkgconfigdir}} \
 	$RPM_BUILD_ROOT{%{py_sitedir},%{py_sitescriptdir}}/__pycache__ \
 	$RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version} \
 	$RPM_BUILD_ROOT{%{_infodir},%{_mandir}/man1} \
-	$RPM_BUILD_ROOT/etc/shrc.d
+	$RPM_BUILD_ROOT/etc/shrc.d \
+	$RPM_BUILD_ROOT%{_prefix}/lib/debug/%{_libdir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -582,6 +583,10 @@ cp -a Tools $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 # make libpython3.so simply symlink to real lib
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libpython3.so
 ln -s libpython%{py_abi}.so $RPM_BUILD_ROOT%{_libdir}/libpython3.so
+
+# gdb helper that will end up in -debuginfo package
+soname=$(ls -1d $RPM_BUILD_ROOT%{_libdir}/libpython%{py_abi}.so.*.* | sed -e "s#^$RPM_BUILD_ROOT##g")
+cp -a Tools/gdb/libpython.py "$RPM_BUILD_ROOT%{_prefix}/lib/debug/$soname-gdb.py"
 
 #
 # create several useful aliases, such as timeit.py, profile.py, pdb.py, smtpd.py
