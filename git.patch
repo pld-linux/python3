@@ -1,0 +1,613 @@
+commit 4ec9f64e07c8f397ad6699f8b99843846c219588
+Author: Miss Islington (bot) <31488909+miss-islington@users.noreply.github.com>
+Date:   Fri Oct 19 16:14:42 2018 -0700
+
+    bpo-34824: Fix a possible NULL pointer dereference in _ssl.c (GH-9606) (GH-9743)
+    
+    On failure, _PyBytes_Resize() will deallocate the bytes object and set
+    "result" to NULL.
+    
+    https://bugs.python.org/issue34824
+    (cherry picked from commit 365ad2ead5bbaf7a3b18648ffa36e819559d3f75)
+    
+    Co-authored-by: Zackery Spytz <zspytz@gmail.com>
+
+diff --git a/Misc/NEWS.d/next/Core and Builtins/2018-09-27-11-10-02.bpo-34824.VLlCaU.rst b/Misc/NEWS.d/next/Core and Builtins/2018-09-27-11-10-02.bpo-34824.VLlCaU.rst
+new file mode 100644
+index 0000000000..fe95b8973c
+--- /dev/null
++++ b/Misc/NEWS.d/next/Core and Builtins/2018-09-27-11-10-02.bpo-34824.VLlCaU.rst	
+@@ -0,0 +1,2 @@
++Fix a possible null pointer dereference in Modules/_ssl.c. Patch by Zackery
++Spytz.
+diff --git a/Modules/_ssl.c b/Modules/_ssl.c
+index 4253e2a772..f9d1b8c308 100644
+--- a/Modules/_ssl.c
++++ b/Modules/_ssl.c
+@@ -4711,12 +4711,17 @@ _ssl_MemoryBIO_read_impl(PySSLMemoryBIO *self, int len)
+         return result;
+ 
+     nbytes = BIO_read(self->bio, PyBytes_AS_STRING(result), len);
+-    /* There should never be any short reads but check anyway. */
+-    if ((nbytes < len) && (_PyBytes_Resize(&result, len) < 0)) {
++    if (nbytes < 0) {
+         Py_DECREF(result);
++        _setSSLError(NULL, 0, __FILE__, __LINE__);
+         return NULL;
+     }
+ 
++    /* There should never be any short reads but check anyway. */
++    if (nbytes < len) {
++        _PyBytes_Resize(&result, nbytes);
++    }
++
+     return result;
+ }
+ 
+commit 7f34d550231e047c88a1817b58bda03a33817490
+Author: Miss Islington (bot) <31488909+miss-islington@users.noreply.github.com>
+Date:   Sun Oct 21 05:55:52 2018 -0700
+
+    bpo-34973: Fix crash in bytes constructor. (GH-9841)
+    
+    
+    Constructing bytes from mutating list could cause a crash.
+    (cherry picked from commit 914f9a078f997e58cfcfabcbb30fafdd1f277bef)
+    
+    Co-authored-by: Serhiy Storchaka <storchaka@gmail.com>
+
+diff --git a/Lib/test/test_bytes.py b/Lib/test/test_bytes.py
+index b9c5b628c4..145411efbb 100644
+--- a/Lib/test/test_bytes.py
++++ b/Lib/test/test_bytes.py
+@@ -113,6 +113,23 @@ class BaseBytesTest:
+         b = self.type2test([1, 2, 3])
+         self.assertEqual(b, b"\x01\x02\x03")
+ 
++    def test_from_mutating_list(self):
++        # Issue #34973: Crash in bytes constructor with mutating list.
++        class X:
++            def __index__(self):
++                a.clear()
++                return 42
++        a = [X(), X()]
++        self.assertEqual(bytes(a), b'*')
++
++        class Y:
++            def __index__(self):
++                if len(a) < 1000:
++                    a.append(self)
++                return 42
++        a = [Y()]
++        self.assertEqual(bytes(a), b'*' * 1000)  # should not crash
++
+     def test_from_index(self):
+         b = self.type2test([Indexable(), Indexable(1), Indexable(254),
+                             Indexable(255)])
+diff --git a/Misc/NEWS.d/next/Core and Builtins/2018-10-13-16-42-03.bpo-34973.B5M-3g.rst b/Misc/NEWS.d/next/Core and Builtins/2018-10-13-16-42-03.bpo-34973.B5M-3g.rst
+new file mode 100644
+index 0000000000..6e403cd4ce
+--- /dev/null
++++ b/Misc/NEWS.d/next/Core and Builtins/2018-10-13-16-42-03.bpo-34973.B5M-3g.rst	
+@@ -0,0 +1,2 @@
++Fixed crash in :func:`bytes` when the :class:`list` argument is mutated
++while it is iterated.
+diff --git a/Objects/bytesobject.c b/Objects/bytesobject.c
+index 5b62842093..711faba645 100644
+--- a/Objects/bytesobject.c
++++ b/Objects/bytesobject.c
+@@ -2640,49 +2640,83 @@ fail:
+     return NULL;
+ }
+ 
+-#define _PyBytes_FROM_LIST_BODY(x, GET_ITEM)                                \
+-    do {                                                                    \
+-        PyObject *bytes;                                                    \
+-        Py_ssize_t i;                                                       \
+-        Py_ssize_t value;                                                   \
+-        char *str;                                                          \
+-        PyObject *item;                                                     \
+-                                                                            \
+-        bytes = PyBytes_FromStringAndSize(NULL, Py_SIZE(x));                \
+-        if (bytes == NULL)                                                  \
+-            return NULL;                                                    \
+-        str = ((PyBytesObject *)bytes)->ob_sval;                            \
+-                                                                            \
+-        for (i = 0; i < Py_SIZE(x); i++) {                                  \
+-            item = GET_ITEM((x), i);                                        \
+-            value = PyNumber_AsSsize_t(item, NULL);                         \
+-            if (value == -1 && PyErr_Occurred())                            \
+-                goto error;                                                 \
+-                                                                            \
+-            if (value < 0 || value >= 256) {                                \
+-                PyErr_SetString(PyExc_ValueError,                           \
+-                                "bytes must be in range(0, 256)");          \
+-                goto error;                                                 \
+-            }                                                               \
+-            *str++ = (char) value;                                          \
+-        }                                                                   \
+-        return bytes;                                                       \
+-                                                                            \
+-    error:                                                                  \
+-        Py_DECREF(bytes);                                                   \
+-        return NULL;                                                        \
+-    } while (0)
+-
+ static PyObject*
+ _PyBytes_FromList(PyObject *x)
+ {
+-    _PyBytes_FROM_LIST_BODY(x, PyList_GET_ITEM);
++    Py_ssize_t i, size = PyList_GET_SIZE(x);
++    Py_ssize_t value;
++    char *str;
++    PyObject *item;
++    _PyBytesWriter writer;
++
++    _PyBytesWriter_Init(&writer);
++    str = _PyBytesWriter_Alloc(&writer, size);
++    if (str == NULL)
++        return NULL;
++    writer.overallocate = 1;
++    size = writer.allocated;
++
++    for (i = 0; i < PyList_GET_SIZE(x); i++) {
++        item = PyList_GET_ITEM(x, i);
++        Py_INCREF(item);
++        value = PyNumber_AsSsize_t(item, NULL);
++        Py_DECREF(item);
++        if (value == -1 && PyErr_Occurred())
++            goto error;
++
++        if (value < 0 || value >= 256) {
++            PyErr_SetString(PyExc_ValueError,
++                            "bytes must be in range(0, 256)");
++            goto error;
++        }
++
++        if (i >= size) {
++            str = _PyBytesWriter_Resize(&writer, str, size+1);
++            if (str == NULL)
++                return NULL;
++            size = writer.allocated;
++        }
++        *str++ = (char) value;
++    }
++    return _PyBytesWriter_Finish(&writer, str);
++
++  error:
++    _PyBytesWriter_Dealloc(&writer);
++    return NULL;
+ }
+ 
+ static PyObject*
+ _PyBytes_FromTuple(PyObject *x)
+ {
+-    _PyBytes_FROM_LIST_BODY(x, PyTuple_GET_ITEM);
++    PyObject *bytes;
++    Py_ssize_t i, size = PyTuple_GET_SIZE(x);
++    Py_ssize_t value;
++    char *str;
++    PyObject *item;
++
++    bytes = PyBytes_FromStringAndSize(NULL, size);
++    if (bytes == NULL)
++        return NULL;
++    str = ((PyBytesObject *)bytes)->ob_sval;
++
++    for (i = 0; i < size; i++) {
++        item = PyTuple_GET_ITEM(x, i);
++        value = PyNumber_AsSsize_t(item, NULL);
++        if (value == -1 && PyErr_Occurred())
++            goto error;
++
++        if (value < 0 || value >= 256) {
++            PyErr_SetString(PyExc_ValueError,
++                            "bytes must be in range(0, 256)");
++            goto error;
++        }
++        *str++ = (char) value;
++    }
++    return bytes;
++
++  error:
++    Py_DECREF(bytes);
++    return NULL;
+ }
+ 
+ static PyObject *
+commit c46f0423a42c46cf62d12c300ec36a848f8ba72c
+Author: Miss Islington (bot) <31488909+miss-islington@users.noreply.github.com>
+Date:   Tue Oct 23 12:45:44 2018 -0700
+
+    Fix error handling bugs in _elementtree.c. (GH-10060)
+    
+    
+    References could leak, NULL could be dereferenced, and the Expat parser could
+    be double freed when some errors raised.
+    (cherry picked from commit 9f3ed3e213b30059087d059a7d1d3b2527fa8654)
+    
+    Co-authored-by: Zackery Spytz <zspytz@gmail.com>
+
+diff --git a/Modules/_elementtree.c b/Modules/_elementtree.c
+index d13c6dd4db..3118b55c87 100644
+--- a/Modules/_elementtree.c
++++ b/Modules/_elementtree.c
+@@ -336,6 +336,9 @@ static PyObject*
+ get_attrib_from_keywords(PyObject *kwds)
+ {
+     PyObject *attrib_str = PyUnicode_FromString("attrib");
++    if (attrib_str == NULL) {
++        return NULL;
++    }
+     PyObject *attrib = PyDict_GetItem(kwds, attrib_str);
+ 
+     if (attrib) {
+@@ -356,10 +359,10 @@ get_attrib_from_keywords(PyObject *kwds)
+ 
+     Py_DECREF(attrib_str);
+ 
+-    /* attrib can be NULL if PyDict_New failed */
+-    if (attrib)
+-        if (PyDict_Update(attrib, kwds) < 0)
+-            return NULL;
++    if (attrib != NULL && PyDict_Update(attrib, kwds) < 0) {
++        Py_DECREF(attrib);
++        return NULL;
++    }
+     return attrib;
+ }
+ 
+@@ -579,10 +582,9 @@ subelement(PyObject *self, PyObject *args, PyObject *kwds)
+         attrib = PyDict_Copy(attrib);
+         if (!attrib)
+             return NULL;
+-        if (kwds) {
+-            if (PyDict_Update(attrib, kwds) < 0) {
+-                return NULL;
+-            }
++        if (kwds != NULL && PyDict_Update(attrib, kwds) < 0) {
++            Py_DECREF(attrib);
++            return NULL;
+         }
+     } else if (kwds) {
+         /* have keyword args */
+@@ -1857,7 +1859,6 @@ element_ass_subscr(PyObject* self_, PyObject* item, PyObject* value)
+              * scheduled for removal.
+             */
+             if (!(recycle = PyList_New(slicelen))) {
+-                PyErr_NoMemory();
+                 return -1;
+             }
+ 
+@@ -1897,7 +1898,7 @@ element_ass_subscr(PyObject* self_, PyObject* item, PyObject* value)
+             self->extra->length -= slicelen;
+ 
+             /* Discard the recycle list with all the deleted sub-elements */
+-            Py_XDECREF(recycle);
++            Py_DECREF(recycle);
+             return 0;
+         }
+ 
+@@ -3352,7 +3353,6 @@ _elementtree_XMLParser___init___impl(XMLParserObject *self, PyObject *html,
+         if (!target) {
+             Py_CLEAR(self->entity);
+             Py_CLEAR(self->names);
+-            EXPAT(ParserFree)(self->parser);
+             return -1;
+         }
+     }
+commit da15389fddb85cf8a97b81e75de7d77b5f505b56
+Author: Miss Islington (bot) <31488909+miss-islington@users.noreply.github.com>
+Date:   Wed Oct 31 02:31:29 2018 -0700
+
+    Fix a possible crash in range.__reversed__(). (GH-10252)
+    
+    (cherry picked from commit c9a6168924ffa4f3f78175998b392fe23d3edc50)
+    
+    Co-authored-by: Zackery Spytz <zspytz@gmail.com>
+
+diff --git a/Objects/rangeobject.c b/Objects/rangeobject.c
+index e4f778b1f8..037be870e3 100644
+--- a/Objects/rangeobject.c
++++ b/Objects/rangeobject.c
+@@ -1154,6 +1154,7 @@ long_range:
+     it = PyObject_New(longrangeiterobject, &PyLongRangeIter_Type);
+     if (it == NULL)
+         return NULL;
++    it->index = it->start = it->step = NULL;
+ 
+     /* start + (len - 1) * step */
+     it->len = range->length;
+commit 192c54713b4c67a8d14b2d98056771feba40ca37
+Author: Miss Islington (bot) <31488909+miss-islington@users.noreply.github.com>
+Date:   Wed Oct 31 16:45:42 2018 -0700
+
+    bpo-26558: Fix Py_FatalError() with GIL released (GH-10267)
+    
+    
+    Don't call _Py_FatalError_PrintExc() nor flush_std_files() if the
+    current thread doesn't hold the GIL, or if the current thread
+    has no Python state thread.
+    (cherry picked from commit 3a228ab17c2a9cffd1a2f15f30d6209768de20a6)
+    
+    Co-authored-by: Victor Stinner <vstinner@redhat.com>
+
+diff --git a/Python/pylifecycle.c b/Python/pylifecycle.c
+index c01b21ffeb..86f95de833 100644
+--- a/Python/pylifecycle.c
++++ b/Python/pylifecycle.c
+@@ -2015,12 +2015,6 @@ _Py_FatalError_PrintExc(int fd)
+     PyObject *exception, *v, *tb;
+     int has_tb;
+ 
+-    if (PyThreadState_GET() == NULL) {
+-        /* The GIL is released: trying to acquire it is likely to deadlock,
+-           just give up. */
+-        return 0;
+-    }
+-
+     PyErr_Fetch(&exception, &v, &tb);
+     if (exception == NULL) {
+         /* No current exception */
+@@ -2125,9 +2119,30 @@ fatal_error(const char *prefix, const char *msg, int status)
+     fputs("\n", stderr);
+     fflush(stderr); /* it helps in Windows debug build */
+ 
+-    /* Print the exception (if an exception is set) with its traceback,
+-     * or display the current Python stack. */
+-    if (!_Py_FatalError_PrintExc(fd)) {
++    /* Check if the current thread has a Python thread state
++       and holds the GIL */
++    PyThreadState *tss_tstate = PyGILState_GetThisThreadState();
++    if (tss_tstate != NULL) {
++        PyThreadState *tstate = PyThreadState_GET();
++        if (tss_tstate != tstate) {
++            /* The Python thread does not hold the GIL */
++            tss_tstate = NULL;
++        }
++    }
++    else {
++        /* Py_FatalError() has been called from a C thread
++           which has no Python thread state. */
++    }
++    int has_tstate_and_gil = (tss_tstate != NULL);
++
++    if (has_tstate_and_gil) {
++        /* If an exception is set, print the exception with its traceback */
++        if (!_Py_FatalError_PrintExc(fd)) {
++            /* No exception is set, or an exception is set without traceback */
++            _Py_FatalError_DumpTracebacks(fd);
++        }
++    }
++    else {
+         _Py_FatalError_DumpTracebacks(fd);
+     }
+ 
+@@ -2138,7 +2153,7 @@ fatal_error(const char *prefix, const char *msg, int status)
+     _PyFaulthandler_Fini();
+ 
+     /* Check if the current Python thread hold the GIL */
+-    if (PyThreadState_GET() != NULL) {
++    if (has_tstate_and_gil) {
+         /* Flush sys.stdout and sys.stderr */
+         flush_std_files();
+     }
+commit f16ebcd460aaeb8d6b31db317d22f5ed68afbcc8
+Author: Miss Islington (bot) <31488909+miss-islington@users.noreply.github.com>
+Date:   Thu Nov 8 18:13:14 2018 -0800
+
+    bpo-35193: Fix an off by one error in the RETURN_VALUE case. (GH-10418)
+    
+    
+    Fix an off by one error in the peephole optimizer when checking for unreachable code beyond a return.
+    
+    Do a bounds check within find_op so it can return before going past the end as a safety measure.
+    
+    https://github.com/python/cpython/commit/7db3c488335168993689ddae5914a28e16188447GH-diff-a33329ae6ae0bb295d742f0caf93c137
+    introduced this off by one error while fixing another one nearby.
+    
+    This bug was shipped in all Python 3.6 and 3.7 releases.
+    
+    The included unittest won't fail unless you do a clang msan build.
+    (cherry picked from commit 49fa4a9f1ef387e16596f271414c855339eadf09)
+    
+    Co-authored-by: Gregory P. Smith <greg@krypto.org>
+
+diff --git a/Lib/test/test_compile.py b/Lib/test/test_compile.py
+index d8a57e5e09..5ac1c5f271 100644
+--- a/Lib/test/test_compile.py
++++ b/Lib/test/test_compile.py
+@@ -1,3 +1,4 @@
++import dis
+ import math
+ import os
+ import unittest
+@@ -621,6 +622,24 @@ if 1:
+         self.check_constant(f1, frozenset({0}))
+         self.assertTrue(f1(0))
+ 
++    # This is a regression test for a CPython specific peephole optimizer
++    # implementation bug present in a few releases.  It's assertion verifies
++    # that peephole optimization was actually done though that isn't an
++    # indication of the bugs presence or not (crashing is).
++    @support.cpython_only
++    def test_peephole_opt_unreachable_code_array_access_in_bounds(self):
++        """Regression test for issue35193 when run under clang msan."""
++        def unused_code_at_end():
++            return 3
++            raise RuntimeError("unreachable")
++        # The above function definition will trigger the out of bounds
++        # bug in the peephole optimizer as it scans opcodes past the
++        # RETURN_VALUE opcode.  This does not always crash an interpreter.
++        # When you build with the clang memory sanitizer it reliably aborts.
++        self.assertEqual(
++            'RETURN_VALUE',
++            list(dis.get_instructions(unused_code_at_end))[-1].opname)
++
+     def test_dont_merge_constants(self):
+         # Issue #25843: compile() must not merge constants which are equal
+         # but have a different type.
+diff --git a/Misc/NEWS.d/next/Core and Builtins/2018-11-08-15-00-58.bpo-35193.HzPS6R.rst b/Misc/NEWS.d/next/Core and Builtins/2018-11-08-15-00-58.bpo-35193.HzPS6R.rst
+new file mode 100644
+index 0000000000..dddebe1670
+--- /dev/null
++++ b/Misc/NEWS.d/next/Core and Builtins/2018-11-08-15-00-58.bpo-35193.HzPS6R.rst	
+@@ -0,0 +1,3 @@
++Fix an off by one error in the bytecode peephole optimizer where it could read
++bytes beyond the end of bounds of an array when removing unreachable code.
++This bug was present in every release of Python 3.6 and 3.7 until now.
+diff --git a/Python/peephole.c b/Python/peephole.c
+index 76a0edbcc2..a3b078fdf1 100644
+--- a/Python/peephole.c
++++ b/Python/peephole.c
+@@ -50,9 +50,9 @@ lastn_const_start(const _Py_CODEUNIT *codestr, Py_ssize_t i, Py_ssize_t n)
+ 
+ /* Scans through EXTENDED ARGs, seeking the index of the effective opcode */
+ static Py_ssize_t
+-find_op(const _Py_CODEUNIT *codestr, Py_ssize_t i)
++find_op(const _Py_CODEUNIT *codestr, Py_ssize_t codelen, Py_ssize_t i)
+ {
+-    while (_Py_OPCODE(codestr[i]) == EXTENDED_ARG) {
++    while (i < codelen && _Py_OPCODE(codestr[i]) == EXTENDED_ARG) {
+         i++;
+     }
+     return i;
+@@ -128,8 +128,9 @@ copy_op_arg(_Py_CODEUNIT *codestr, Py_ssize_t i, unsigned char op,
+    Called with codestr pointing to the first LOAD_CONST.
+ */
+ static Py_ssize_t
+-fold_tuple_on_constants(_Py_CODEUNIT *codestr, Py_ssize_t c_start,
+-                        Py_ssize_t opcode_end, PyObject *consts, int n)
++fold_tuple_on_constants(_Py_CODEUNIT *codestr, Py_ssize_t codelen,
++                        Py_ssize_t c_start, Py_ssize_t opcode_end,
++                        PyObject *consts, int n)
+ {
+     /* Pre-conditions */
+     assert(PyList_CheckExact(consts));
+@@ -142,7 +143,7 @@ fold_tuple_on_constants(_Py_CODEUNIT *codestr, Py_ssize_t c_start,
+ 
+     for (Py_ssize_t i = 0, pos = c_start; i < n; i++, pos++) {
+         assert(pos < opcode_end);
+-        pos = find_op(codestr, pos);
++        pos = find_op(codestr, codelen, pos);
+         assert(_Py_OPCODE(codestr[pos]) == LOAD_CONST);
+ 
+         unsigned int arg = get_arg(codestr, pos);
+@@ -267,7 +268,7 @@ PyCode_Optimize(PyObject *code, PyObject* consts, PyObject *names,
+         goto exitError;
+     assert(PyList_Check(consts));
+ 
+-    for (i=find_op(codestr, 0) ; i<codelen ; i=nexti) {
++    for (i=find_op(codestr, codelen, 0) ; i<codelen ; i=nexti) {
+         opcode = _Py_OPCODE(codestr[i]);
+         op_start = i;
+         while (op_start >= 1 && _Py_OPCODE(codestr[op_start-1]) == EXTENDED_ARG) {
+@@ -305,7 +306,8 @@ PyCode_Optimize(PyObject *code, PyObject* consts, PyObject *names,
+                 if (j > 0 && lastlc >= j) {
+                     h = lastn_const_start(codestr, op_start, j);
+                     if (ISBASICBLOCK(blocks, h, op_start)) {
+-                        h = fold_tuple_on_constants(codestr, h, i+1, consts, j);
++                        h = fold_tuple_on_constants(codestr, codelen,
++                                                    h, i+1, consts, j);
+                         break;
+                     }
+                 }
+@@ -342,7 +344,7 @@ PyCode_Optimize(PyObject *code, PyObject* consts, PyObject *names,
+             case JUMP_IF_FALSE_OR_POP:
+             case JUMP_IF_TRUE_OR_POP:
+                 h = get_arg(codestr, i) / sizeof(_Py_CODEUNIT);
+-                tgt = find_op(codestr, h);
++                tgt = find_op(codestr, codelen, h);
+ 
+                 j = _Py_OPCODE(codestr[tgt]);
+                 if (CONDITIONAL_JUMP(j)) {
+@@ -383,7 +385,7 @@ PyCode_Optimize(PyObject *code, PyObject* consts, PyObject *names,
+             case SETUP_WITH:
+             case SETUP_ASYNC_WITH:
+                 h = GETJUMPTGT(codestr, i);
+-                tgt = find_op(codestr, h);
++                tgt = find_op(codestr, codelen, h);
+                 /* Replace JUMP_* to a RETURN into just a RETURN */
+                 if (UNCONDITIONAL_JUMP(opcode) &&
+                     _Py_OPCODE(codestr[tgt]) == RETURN_VALUE) {
+@@ -412,7 +414,7 @@ PyCode_Optimize(PyObject *code, PyObject* consts, PyObject *names,
+                 }
+                 if (h > i + 1) {
+                     fill_nops(codestr, i + 1, h);
+-                    nexti = find_op(codestr, h);
++                    nexti = find_op(codestr, codelen, h);
+                 }
+                 break;
+         }
+commit 9fbcb1402efab4e287f25145a69ba14c9c6dbce9
+Author: Miss Islington (bot) <31488909+miss-islington@users.noreply.github.com>
+Date:   Tue Nov 13 16:39:36 2018 -0800
+
+    [3.7] bpo-35214: Fix OOB memory access in unicode escape parser (GH-10506) (GH-10522)
+    
+    
+    
+    Discovered using clang's MemorySanitizer when it ran python3's
+    test_fstring test_misformed_unicode_character_name.
+    
+    An msan build will fail by simply executing: ./python -c 'u"\N"'
+    (cherry picked from commit 746b2d35ea47005054ed774fecaed64fab803d7d)
+    
+    
+    Co-authored-by: Gregory P. Smith <greg@krypto.org>
+    
+    
+    https://bugs.python.org/issue35214
+
+diff --git a/Misc/NEWS.d/next/Core and Builtins/2018-11-13-00-40-35.bpo-35214.OQBjph.rst b/Misc/NEWS.d/next/Core and Builtins/2018-11-13-00-40-35.bpo-35214.OQBjph.rst
+new file mode 100644
+index 0000000000..d462c97d80
+--- /dev/null
++++ b/Misc/NEWS.d/next/Core and Builtins/2018-11-13-00-40-35.bpo-35214.OQBjph.rst	
+@@ -0,0 +1,3 @@
++Fixed an out of bounds memory access when parsing a truncated unicode
++escape sequence at the end of a string such as ``'\N'``.  It would read
++one byte beyond the end of the memory allocation.
+diff --git a/Objects/unicodeobject.c b/Objects/unicodeobject.c
+index fe833a76ea..71eb654095 100644
+--- a/Objects/unicodeobject.c
++++ b/Objects/unicodeobject.c
+@@ -6042,7 +6042,7 @@ _PyUnicode_DecodeUnicodeEscape(const char *s,
+             }
+ 
+             message = "malformed \\N character escape";
+-            if (*s == '{') {
++            if (s < end && *s == '{') {
+                 const char *start = ++s;
+                 size_t namelen;
+                 /* look for the closing brace */
+commit b5ea5e57f5dd23e1db695dda8bf3f6142ed9074f
+Author: Miss Islington (bot) <31488909+miss-islington@users.noreply.github.com>
+Date:   Thu Nov 15 01:25:34 2018 -0800
+
+    Fix a possible reference leak in _socket.getaddrinfo(). (GH-10543)
+    
+    
+    "single" needs to be decrefed if PyList_Append() fails.
+    (cherry picked from commit 4c596d54aa6a55e9d2a3db78891e656ebbfb63c8)
+    
+    Co-authored-by: Zackery Spytz <zspytz@gmail.com>
+
+diff --git a/Modules/socketmodule.c b/Modules/socketmodule.c
+index eeade2ecad..ddb1c4364b 100644
+--- a/Modules/socketmodule.c
++++ b/Modules/socketmodule.c
+@@ -6269,9 +6269,11 @@ socket_getaddrinfo(PyObject *self, PyObject *args, PyObject* kwargs)
+         if (single == NULL)
+             goto err;
+ 
+-        if (PyList_Append(all, single))
++        if (PyList_Append(all, single)) {
++            Py_DECREF(single);
+             goto err;
+-        Py_XDECREF(single);
++        }
++        Py_DECREF(single);
+     }
+     Py_XDECREF(idna);
+     if (res0)
