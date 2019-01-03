@@ -1,13 +1,12 @@
 diff -Nur Python-3.3.1.orig/Lib/test/test_compileall.py Python-3.3.1/Lib/test/test_compileall.py
 --- Python-3.3.1.orig/Lib/test/test_compileall.py	2013-04-06 08:41:41.000000000 +0100
 +++ Python-3.3.1/Lib/test/test_compileall.py	2013-04-07 19:39:23.449157629 +0100
-@@ -130,7 +130,7 @@
-         finally:
+@@ -233,6 +233,7 @@ class EncodingTest(unittest.TestCase):
              sys.stdout = orig_stdout
  
--
+ 
 +@unittest.skipUnless(support.is_resource_enabled("cmdline"), "python cmdline tests disabled")
- class CommandLineTests(unittest.TestCase):
+ class CommandLineTestsBase:
      """Test compileall's CLI."""
  
 diff -Nur Python-3.3.1.orig/Lib/test/test_warnings/__init__.py Python-3.3.1/Lib/test/test_warnings/__init__.py

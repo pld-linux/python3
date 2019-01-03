@@ -49,14 +49,14 @@ diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_compileall.py Python-3.5.0/Lib
      def test_no_args_compiles_path(self):
          # Note that -l is implied for the no args case.
          bazfn = script_helper.make_script(self.directory, 'baz', '')
-@@ -214,6 +215,7 @@
+@@ -220,6 +220,7 @@ class CommandLineTestsBase:
          self.assertNotCompiled(self.initfn)
          self.assertNotCompiled(self.barfn)
  
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
+     @without_source_date_epoch  # timestamp invalidation test
      def test_no_args_respects_force_flag(self):
-         bazfn = script_helper.make_script(self.directory, 'baz', '')
-         self.assertRunOK(PYTHONPATH=self.directory)
+         self._skip_if_sys_path_not_writable()
 @@ -230,6 +232,7 @@
          mtime2 = os.stat(pycpath).st_mtime
          self.assertNotEqual(mtime, mtime2)
