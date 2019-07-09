@@ -87,29 +87,28 @@ diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_site.py Python-3.5.0/Lib/test/
      def test_abs_paths(self):
          # Make sure all imported modules have their __file__ and __cached__
          # attributes as absolute paths.  Arranging to put the Lib directory on
-diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_venv.py Python-3.5.0/Lib/test/test_venv.py
---- Python-3.5.0.orig/Lib/test/test_venv.py	2015-09-13 13:41:23.000000000 +0200
-+++ Python-3.5.0/Lib/test/test_venv.py	2015-12-03 18:35:52.227001621 +0100
-@@ -111,6 +111,7 @@
-         self.assertTrue(os.path.exists(fn), 'File %r should exist.' % fn)
+--- Python-3.7.4/Lib/test/test_venv.py~	2019-07-08 20:03:50.000000000 +0200
++++ Python-3.7.4/Lib/test/test_venv.py	2019-07-09 08:37:18.251706609 +0200
+@@ -129,6 +129,7 @@ class BasicTest(BaseTest):
+         self.assertEqual(context.prompt, '(My prompt) ')
  
-     @skipInVenv
+     @requireVenvCreate
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      def test_prefixes(self):
          """
          Test that the prefix values are as expected.
-@@ -249,6 +250,7 @@
+@@ -266,6 +267,7 @@ class BasicTest(BaseTest):
      # point to the venv being used to run the test, and we lose the link
      # to the source build - so Python can't initialise properly.
-     @skipInVenv
+     @requireVenvCreate
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      def test_executable(self):
          """
          Test that the sys.executable value is as expected.
-@@ -279,6 +281,7 @@
+@@ -326,6 +328,7 @@ class BasicTest(BaseTest):
+         self.assertEqual(out.strip(), "python".encode())
  
- 
- @skipInVenv
+ @requireVenvCreate
 +@unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
  class EnsurePipTest(BaseTest):
      """Test venv module installation of pip."""
