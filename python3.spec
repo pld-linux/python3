@@ -9,19 +9,19 @@
 %bcond_without	optimizations		# expensive, stable optimizations (PGO etc.) + LTO
 #
 # tests which will not work on 64-bit platforms
-%define		no64bit_tests	test_audioop test_rgbimg test_imageop
+%define		no64bit_tests	-x test_audioop -x test_rgbimg -x test_imageop
 # tests which may fail because of builder environment limitations (no /proc or /dev/pts)
-%define		nobuilder_tests test_resource test_openpty test_socket test_nis test_posix test_locale test_pty test_asyncio test_os test_readline test_normalization
+%define		nobuilder_tests -x test_resource -x test_openpty -x test_socket -x test_nis -x test_posix -x test_locale -x test_pty -x test_asyncio -x test_os -x test_readline -x test_normalization
 
 # tests which fail because of some unknown/unresolved reason (this list should be %{nil})
 #   test_site: fails because our site.py is patched to include both /usr/share/... and /usr/lib...
 #   test_gdb: fails, as the gdb uses old python version
 #   test_time: test_AsTimeval (test.test_time.TestCPyTime), rounding error
 %ifarch x32
-%define		broken_tests_x32	test_time
+%define		broken_tests_x32	-x test_time
 %undefine	with_optimizations
 %endif
-%define		broken_tests	test_nntplib test_gdb test_site test_distutils test_bdist_rpm test_ssl %{?broken_tests_x32}
+%define		broken_tests	-x test_nntplib -x test_gdb -x test_site -x test_distutils -x test_bdist_rpm -x test_ssl %{?broken_tests_x32}
 
 %define py_ver		3.7
 %define py_abi		%{py_ver}m
@@ -64,6 +64,7 @@ Patch11:	%{name}-installcompile.patch
 # https://bugs.python.org/file21896/nonexistent_user.patch
 Patch12:        nonexistent_user.patch
 Patch13:	%{name}-no-randomize-tests.patch
+Patch14:	python3-profile-tests.patch
 URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake
@@ -102,9 +103,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		specflags_ppc64	-D__ppc64__=1
 
 %if %{with verbose_tests}
-%define test_flags -v -x
+%define test_flags -v
 %else
-%define test_flags -wW -x
+%define test_flags -wW
 %endif
 
 %ifarch alpha ia64 ppc64 sparc64 ppc64 %{x8664}
@@ -114,7 +115,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %endif
 
 %ifarch sparc
-%define test_list %{nobuilder_tests} %{broken_tests} test_fcntl test_ioctl
+%define test_list %{nobuilder_tests} %{broken_tests} -x test_fcntl -x test_ioctl
 %endif
 
 %description
@@ -496,6 +497,7 @@ Moduły testowe dla Pythona.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 %{__rm} -r Modules/expat
 
@@ -544,7 +546,9 @@ fi
 	--with-lto
 %endif
 
-%{__make} 2>&1 | awk '
+%{__make} \
+	TESTOPTS="%{test_list}" \
+	2>&1 | awk '
 BEGIN { fail = 0; logmsg = ""; }
 {
 		if ($0 ~ /\*\*\* WARNING:/) {
