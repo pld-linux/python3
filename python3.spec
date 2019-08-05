@@ -65,6 +65,7 @@ Patch11:	%{name}-installcompile.patch
 Patch12:        nonexistent_user.patch
 Patch13:	%{name}-no-randomize-tests.patch
 Patch14:	python3-profile-tests.patch
+Patch15:	python3-tests.patch
 URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake
@@ -498,6 +499,7 @@ Moduły testowe dla Pythona.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
+%patch15 -p1
 
 %{__rm} -r Modules/expat
 

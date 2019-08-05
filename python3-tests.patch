@@ -1,0 +1,11 @@
+--- Python-3.7.4/Lib/test/test_imaplib.py~	2019-07-08 20:03:50.000000000 +0200
++++ Python-3.7.4/Lib/test/test_imaplib.py	2019-08-05 19:25:53.119629647 +0200
+@@ -73,7 +73,7 @@ class TestImaplib(unittest.TestCase):
+ 
+     def test_imap4_host_default_value(self):
+         # Check whether the IMAP4_PORT is truly unavailable.
+-        with socket.socket() as s:
++        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+             try:
+                 s.connect(('', imaplib.IMAP4_PORT))
+                 self.skipTest(
