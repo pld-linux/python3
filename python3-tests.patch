@@ -9,3 +9,12 @@
              try:
                  s.connect(('', imaplib.IMAP4_PORT))
                  self.skipTest(
+@@ -84,7 +84,7 @@ class TestImaplib(unittest.TestCase):
+         # This is the exception that should be raised.
+         expected_errnos = support.get_socket_conn_refused_errs()
+         with self.assertRaises(OSError) as cm:
+-            imaplib.IMAP4()
++            imaplib.IMAP4('0.0.0.0')
+         self.assertIn(cm.exception.errno, expected_errnos)
+ 
+ 
