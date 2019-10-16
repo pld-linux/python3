@@ -21,10 +21,10 @@
 %define		broken_tests_x32	-x test_time
 %undefine	with_optimizations
 %endif
-%define		broken_tests	-x test_nntplib -x test_gdb -x test_site -x test_distutils -x test_bdist_rpm -x test_ssl %{?broken_tests_x32}
+%define		broken_tests	-x test_embed -x test_nntplib -x test_gdb -x test_site -x test_distutils -x test_bdist_rpm -x test_ssl %{?broken_tests_x32}
 
-%define py_ver		3.7
-%define py_abi		%{py_ver}m
+%define py_ver		3.8
+%define py_abi		%{py_ver}
 %define	py_platform	%{py_abi}-%{_target_base_arch}-%{_target_os}%{?_gnu}
 %define py_prefix	%{_prefix}
 %define py_libdir	%{py_prefix}/%{_lib}/python%{py_ver}
@@ -41,13 +41,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.4
-Release:	3
+Version:	%{py_ver}.0
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	d33e4aae66097051c2eca45ee3604803
+# Source0-md5:	dbac8df9d8b9edc678d0f4cacdb7dbb0
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
@@ -55,7 +55,7 @@ Patch2:		%{name}-multilib.patch
 Patch3:		%{name}-no_cmdline_tests.patch
 Patch4:		%{name}-makefile-location.patch
 Patch5:		%{name}-config.patch
-Patch6:		python-distro.patch
+
 Patch7:		%{name}-db.patch
 Patch8:		%{name}-install_prefix.patch
 Patch9:		%{name}-tests_with_pythonpath.patch
@@ -490,7 +490,7 @@ Moduły testowe dla Pythona.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
+
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
@@ -503,7 +503,7 @@ Moduły testowe dla Pythona.
 
 %{__rm} -r Modules/expat
 
-for SUBDIR in darwin libffi_msvc libffi_osx; do
+for SUBDIR in darwin libffi_osx; do
 	%{__rm} -r Modules/_ctypes/$SUBDIR/*
 done
 
@@ -667,7 +667,9 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/python%{py_ver}
+%if "%{py_ver}" != "%{py_abi}"
 %attr(755,root,root) %{_bindir}/python%{py_abi}
+%endif
 %attr(755,root,root) %{_bindir}/python3
 %{_mandir}/man1/python%{py_ver}.1*
 %{_mandir}/man1/python3.1*
@@ -771,8 +773,6 @@ rm -rf $RPM_BUILD_ROOT
 %files modules
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) /etc/shrc.d/python*-modules*
-%attr(755,root,root) %{_bindir}/pyvenv
-%attr(755,root,root) %{_bindir}/pyvenv-%{py_ver}
 %{py_libdir}/__future__.py
 %{py_libdir}/__phello__.foo.py
 %{py_libdir}/_bootlocale.py
@@ -838,7 +838,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/inspect.py
 %{py_libdir}/ipaddress.py
 %{py_libdir}/lzma.py
-%{py_libdir}/macpath.py
 %{py_libdir}/mailbox.py
 %{py_libdir}/mailcap.py
 %{py_libdir}/mimetypes.py
@@ -908,6 +907,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/xdrlib.py
 %{py_libdir}/zipapp.py
 %{py_libdir}/zipfile.py
+%{py_libdir}/zipimport.py
 %{py_libdir}/__pycache__/__future__.cpython-*.py[co]
 %{py_libdir}/__pycache__/__phello__.foo.cpython-*.py[co]
 %{py_libdir}/__pycache__/_bootlocale.cpython-*.py[co]
@@ -973,7 +973,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/inspect.cpython-*.py[co]
 %{py_libdir}/__pycache__/ipaddress.cpython-*.py[co]
 %{py_libdir}/__pycache__/lzma.cpython-*.py[co]
-%{py_libdir}/__pycache__/macpath.cpython-*.py[co]
 %{py_libdir}/__pycache__/mailbox.cpython-*.py[co]
 %{py_libdir}/__pycache__/mailcap.cpython-*.py[co]
 %{py_libdir}/__pycache__/mimetypes.cpython-*.py[co]
@@ -1043,6 +1042,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/xdrlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/zipapp.cpython-*.py[co]
 %{py_libdir}/__pycache__/zipfile.cpython-*.py[co]
+%{py_libdir}/__pycache__/zipimport.cpython-*.py[co]
 
 #
 # list .so modules to be sure that all of them are built
@@ -1081,6 +1081,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_multiprocessing.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_opcode.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_pickle.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_posixshmem.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_posixsubprocess.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_queue.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_random.cpython-*.so
@@ -1088,11 +1089,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_sha3.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_socket.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_ssl.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_statistics.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testbuffer.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testcapi.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_testinternalcapi.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testimportmultiple.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testmultiphase.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_uuid.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_xxsubinterpreters.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_xxtestfuzz.cpython-*.so
 
 # for openssl < 0.9.8 package sha256 and sha512 modules
@@ -1211,6 +1215,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/venv/*.py
 %dir %{py_libdir}/venv/scripts
 %dir %{py_libdir}/venv/scripts/common
+%{py_libdir}/venv/scripts/common/Activate.ps1
 %{py_libdir}/venv/scripts/common/activate
 %dir %{py_libdir}/venv/scripts/posix
 %{py_libdir}/venv/scripts/posix/activate.csh
@@ -1272,12 +1277,15 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc Misc/{ACKS,NEWS,README,README.valgrind,valgrind-python.supp}
 %attr(755,root,root) %{_bindir}/python%{py_ver}-config
+%if "%{py_ver}" != "%{py_abi}"
 %attr(755,root,root) %{_bindir}/python%{py_abi}-config
+%endif
 %attr(755,root,root) %{_bindir}/python3-config
 %attr(755,root,root) %{_libdir}/libpython%{py_abi}.so
 %attr(755,root,root) %{_libdir}/libpython3.so
 %{py_incdir}/*.h
 %exclude %{py_incdir}/pyconfig.h
+%{py_incdir}/cpython
 %{py_incdir}/internal
 %attr(755,root,root) %{py_libdir}/config-%{py_platform}/makesetup
 %attr(755,root,root) %{py_libdir}/config-%{py_platform}/install-sh
@@ -1288,7 +1296,11 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_libdir}/config-%{py_platform}/__pycache__
 %{py_libdir}/config-%{py_platform}/__pycache__/python-config.*
 %{_pkgconfigdir}/python-%{py_ver}.pc
+%{_pkgconfigdir}/python-%{py_ver}-embed.pc
+%{_pkgconfigdir}/python3-embed.pc
+%if "%{py_ver}" != "%{py_abi}"
 %{_pkgconfigdir}/python-%{py_abi}.pc
+%endif
 %{_pkgconfigdir}/python3.pc
 
 %files devel-tools

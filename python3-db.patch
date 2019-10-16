@@ -9,18 +9,18 @@
          min_db_ver = (3, 3)
          db_setup_debug = False   # verbose debug prints from this script?
  
---- Python-3.6.0/setup.py~	2016-12-27 23:21:52.000000000 +0100
-+++ Python-3.6.0/setup.py	2016-12-27 23:28:54.720208583 +0100
-@@ -1252,16 +1252,7 @@ class PyBuildExt(build_ext):
+--- Python-3.8.0/setup.py~	2019-10-15 10:03:10.000000000 +0200
++++ Python-3.8.0/setup.py	2019-10-15 10:03:52.493993277 +0200
+@@ -1275,16 +1275,7 @@ class PyBuildExt(build_ext):
              for cand in dbm_order:
                  if cand == "ndbm":
-                     if find_file("ndbm.h", inc_dirs, []) is not None:
+                     if find_file("ndbm.h", self.inc_dirs, []) is not None:
 -                        # Some systems have -lndbm, others have -lgdbm_compat,
 -                        # others don't have either
--                        if self.compiler.find_library_file(lib_dirs,
+-                        if self.compiler.find_library_file(self.lib_dirs,
 -                                                               'ndbm'):
 -                            ndbm_libs = ['ndbm']
--                        elif self.compiler.find_library_file(lib_dirs,
+-                        elif self.compiler.find_library_file(self.lib_dirs,
 -                                                             'gdbm_compat'):
 -                            ndbm_libs = ['gdbm_compat']
 -                        else:
