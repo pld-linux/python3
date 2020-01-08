@@ -42,7 +42,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.1
-Release:	1
+Release:	2
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
@@ -514,6 +514,20 @@ for f in $files; do
 	%{__rm} Modules/$f
 done
 %endif
+
+sed -E -i -e '1s,#![[:space:]]*/usr/bin/env[[:space:]]+python2,#!%{__python},' -e '1s,#![[:space:]]*/usr/bin/env[[:space:]]+python,#!%{__python},' -e '1s,#![[:space:]]*/usr/bin/python,#!%{__python},' \
+        Lib/encodings/rot_13.py \
+        Lib/lib2to3/tests/data/different_encoding.py \
+        Lib/lib2to3/tests/data/false_encoding.py \
+        Tools/gdb/libpython.py \
+        Tools/pynche/pynche \
+        Tools/pynche/pynche.pyw \
+        Tools/scripts/2to3 \
+        Tools/scripts/smelly.py
+
+sed -E -i -e '1s,#![[:space:]]*/usr/bin/env[[:space:]]+python3,#!%{__python3},' \
+	Tools/scripts/idle3 \
+	Tools/scripts/pydoc3
 
 find . -name '*.py' | xargs -r grep -El '^#! */usr/bin/env python3?' | xargs %{__sed} -i -e '1s,^#! */usr/bin/env python3\?,#!/usr/bin/python3,'
 
