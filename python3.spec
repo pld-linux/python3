@@ -42,7 +42,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.2
-Release:	2
+Release:	3
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
@@ -82,7 +82,7 @@ BuildRequires:	glibc-localedb-all
 BuildRequires:	gmp-devel >= 4.0
 BuildRequires:	libffi-devel
 BuildRequires:	libstdc++-devel
-%{?with_system_mpdecimal:BuildRequires:	mpdecimal-devel >= 2.4.1}
+%{?with_system_mpdecimal:BuildRequires:	mpdecimal-devel >= 2.4.2-2}
 BuildRequires:	ncurses-ext-devel >= 5.2
 BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	pkgconfig
@@ -240,7 +240,7 @@ Summary:	Python modules
 Summary(pl.UTF-8):	Moduły języka Python
 Group:		Libraries/Python
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
-%{?with_system_mpdecimal:Requires:	mpdecimal >= 2.4.1}
+%{?with_system_mpdecimal:Requires:	mpdecimal >= 2.4.2-2}
 Obsoletes:	python3-modules-sqlite
 %requires_ge_to	openssl openssl-devel
 
