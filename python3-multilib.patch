@@ -202,7 +202,7 @@ diff -dur Python-3.5.0.orig/Modules/getpath.c Python-3.5.0/Modules/getpath.c
  #endif
  
 +#ifndef LIB_PYTHON
-+#if defined(__x86_64__) || (defined(__sparc__) && defined(__arch64__)) || defined(__powerpc64__) || defined(__s390x__)
++#if defined(__x86_64__) || defined(__aarch64__) || (defined(__sparc__) && defined(__arch64__)) || defined(__powerpc64__) || defined(__s390x__)
 +#if defined(__ILP32__)
 +#define LIB_PYTHON "libx32/python"
 +#else
@@ -308,7 +308,7 @@ diff -dur Python-3.5.0.orig/configure.ac Python-3.5.0/configure.ac
 +esac
 +
 +case $ARCH:$python_cv_cc_64bit_output in
-+powerpc64:yes | s390x:yes | sparc64:yes | x86_64:yes)
++powerpc64:yes | s390x:yes | sparc64:yes | x86_64:yes | aarch64:yes)
 +  LIB="lib64"
 +  ;;
 +x86_64:no)
