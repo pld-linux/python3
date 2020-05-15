@@ -41,13 +41,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.2
-Release:	3
+Version:	%{py_ver}.3
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	e9d6ebc92183a177b8e8a58cad5b8d67
+# Source0-md5:	3000cf50aaa413052aef82fd2122ca78
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
@@ -55,7 +55,7 @@ Patch2:		%{name}-multilib.patch
 Patch3:		%{name}-no_cmdline_tests.patch
 Patch4:		%{name}-makefile-location.patch
 Patch5:		%{name}-config.patch
-Patch6:		bug-38744.patch
+
 Patch7:		%{name}-db.patch
 Patch8:		%{name}-install_prefix.patch
 Patch9:		%{name}-tests_with_pythonpath.patch
@@ -490,7 +490,7 @@ Moduły testowe dla Pythona.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
+
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
