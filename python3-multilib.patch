@@ -49,10 +49,10 @@ diff -dur Python-3.5.0.orig/Lib/distutils/sysconfig.py Python-3.5.0/Lib/distutil
              prefix = plat_specific and EXEC_PREFIX or PREFIX
  
      if os.name == "posix":
-+        if plat_specific:
++        if plat_specific or standard_lib or prefix != "/usr":
 +            lib = sys.lib
 +        else:
-+            lib = 'share'
++            lib = "share"
          libpython = os.path.join(prefix,
 -                                 "lib", "python" + get_python_version())
 +                                 lib, "python" + get_python_version())
