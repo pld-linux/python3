@@ -18,13 +18,13 @@
  	-PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
  		$(PYTHON_FOR_BUILD) -Wi $(DESTDIR)$(LIBDEST)/compileall.py \
  		-d $(LIBDEST) -f \
-@@ -1700,7 +1700,7 @@ Python/thread.o: @THREADHEADERS@
+@@ -1939,7 +1939,7 @@ Python/thread.o: @THREADHEADERS@ $(srcdi
  .PHONY: frameworkinstall frameworkinstallframework frameworkinstallstructure
  .PHONY: frameworkinstallmaclib frameworkinstallapps frameworkinstallunixtools
  .PHONY: frameworkaltinstallunixtools recheck clean clobber distclean
 -.PHONY: smelly funny patchcheck touch altmaninstall commoninstall
 +.PHONY: smelly funny patchcheck touch altmaninstall installcompile commoninstall
+ .PHONY: clean-retain-profile profile-removal run_profile_task
+ .PHONY: build_all_generate_profile build_all_merge_profile
  .PHONY: gdbhooks
- 
- # IF YOU PUT ANYTHING HERE IT WILL GO AWAY
 

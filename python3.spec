@@ -23,7 +23,7 @@
 %endif
 %define		broken_tests	-x test_embed -x test_nntplib -x test_gdb -x test_site -x test_distutils -x test_bdist_rpm -x test_ssl %{?broken_tests_x32}
 
-%define py_ver		3.8
+%define py_ver		3.9
 %define py_abi		%{py_ver}
 %define	py_platform	%{py_abi}-%{_target_base_arch}-%{_target_os}%{?_gnu}
 %define py_prefix	%{_prefix}
@@ -41,13 +41,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.6
-Release:	1
+Version:	%{py_ver}.0
+Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	69e73c49eeb1a853cefd26d18c9d069d
+# Source0-md5:	6ebfe157f6e88d9eabfbaf3fa92129f6
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
@@ -84,7 +84,7 @@ BuildRequires:	libffi-devel
 BuildRequires:	libnsl-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtirpc-devel
-%{?with_system_mpdecimal:BuildRequires:	mpdecimal-devel >= 2.4.2-2}
+%{?with_system_mpdecimal:BuildRequires:	mpdecimal-devel >= 2.5.0}
 BuildRequires:	ncurses-ext-devel >= 5.2
 BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	pkgconfig
@@ -551,6 +551,7 @@ fi
 	--with-dbmliborder=gdbm:ndbm:bdb \
 	--with-doc-strings \
 	--without-ensurepip \
+        --with-platlibdir="%{_lib}" \
 	%{?with_debug:--with-pydebug} \
 	--with-system-expat \
 	--with-system-ffi \
@@ -645,7 +646,6 @@ install -p Tools/scripts/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py_ve
 
 # just to cut the noise, as they are not packaged (now)
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/ctypes/macholib/fetch_macholib*
-%{__rm} $RPM_BUILD_ROOT%{py_libdir}/distutils/command/wininst*.exe
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/idlelib/*.bat
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/idlelib/*.pyw
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/idlelib/help.html
@@ -787,10 +787,11 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not md5 mtime size) /etc/shrc.d/python*-modules*
 %{py_libdir}/__future__.py
 %{py_libdir}/__phello__.foo.py
+%{py_libdir}/_aix_support.py
 %{py_libdir}/_bootlocale.py
+%{py_libdir}/_bootsubprocess.py
 %{py_libdir}/_compat_pickle.py
 %{py_libdir}/_compression.py
-%{py_libdir}/_dummy_thread.py
 %{py_libdir}/_markupbase.py
 %{py_libdir}/_osx_support.py
 %{py_libdir}/_pydecimal.py
@@ -830,7 +831,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/difflib.py
 %{py_libdir}/dis.py
 %{py_libdir}/doctest.py
-%{py_libdir}/dummy_threading.py
 %{py_libdir}/filecmp.py
 %{py_libdir}/fileinput.py
 %{py_libdir}/fnmatch.py
@@ -841,6 +841,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/getpass.py
 %{py_libdir}/gettext.py
 %{py_libdir}/glob.py
+%{py_libdir}/graphlib.py
 %{py_libdir}/gzip.py
 %{py_libdir}/hashlib.py
 %{py_libdir}/hmac.py
@@ -922,10 +923,11 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/zipimport.py
 %{py_libdir}/__pycache__/__future__.cpython-*.py[co]
 %{py_libdir}/__pycache__/__phello__.foo.cpython-*.py[co]
+%{py_libdir}/__pycache__/_aix_support.cpython-*.py[co]
 %{py_libdir}/__pycache__/_bootlocale.cpython-*.py[co]
+%{py_libdir}/__pycache__/_bootsubprocess.cpython-*.py[co]
 %{py_libdir}/__pycache__/_compat_pickle.cpython-*.py[co]
 %{py_libdir}/__pycache__/_compression.cpython-*.py[co]
-%{py_libdir}/__pycache__/_dummy_thread.cpython-*.py[co]
 %{py_libdir}/__pycache__/_markupbase.cpython-*.py[co]
 %{py_libdir}/__pycache__/_osx_support.cpython-*.py[co]
 %{py_libdir}/__pycache__/_pydecimal.cpython-*.py[co]
@@ -965,7 +967,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/difflib.cpython-*.py[co]
 %{py_libdir}/__pycache__/dis.cpython-*.py[co]
 %{py_libdir}/__pycache__/doctest.cpython-*.py[co]
-%{py_libdir}/__pycache__/dummy_threading.cpython-*.py[co]
 %{py_libdir}/__pycache__/filecmp.cpython-*.py[co]
 %{py_libdir}/__pycache__/fileinput.cpython-*.py[co]
 %{py_libdir}/__pycache__/fnmatch.cpython-*.py[co]
@@ -976,6 +977,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/getpass.cpython-*.py[co]
 %{py_libdir}/__pycache__/gettext.cpython-*.py[co]
 %{py_libdir}/__pycache__/glob.cpython-*.py[co]
+%{py_libdir}/__pycache__/graphlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/gzip.cpython-*.py[co]
 %{py_libdir}/__pycache__/hashlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/hmac.cpython-*.py[co]
@@ -1262,6 +1264,11 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/sqlite3/__pycache__
 %{py_libdir}/sqlite3/*.py
 
+%attr(755,root,root) %{py_dyndir}/_zoneinfo.cpython-*.so
+%dir %{py_libdir}/zoneinfo
+%{py_libdir}/zoneinfo/__pycache__
+%{py_libdir}/zoneinfo/*.py
+
 %files -n pydoc3
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/pydoc3
@@ -1346,7 +1353,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files static
 %defattr(644,root,root,755)
-%{_libdir}/libpython%{py_abi}.a
+%{py_libdir}/config-*/libpython%{py_abi}.a
 
 %files examples
 %defattr(644,root,root,755)
