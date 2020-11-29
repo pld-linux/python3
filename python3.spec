@@ -23,9 +23,15 @@
 %endif
 %define		broken_tests	-x test_embed -x test_nntplib -x test_gdb -x test_site -x test_distutils -x test_bdist_rpm -x test_ssl %{?broken_tests_x32}
 
+%ifarch armv6hl armv7hl armv7hnl
+%define		_python_target_abi	%{?_gnu}hf
+%else
+%define		_python_target_abi	%{?_gnu}
+%endif
+
 %define py_ver		3.9
 %define py_abi		%{py_ver}
-%define	py_platform	%{py_abi}-%{_target_base_arch}-%{_target_os}%{?_gnu}
+%define	py_platform	%{py_abi}-%{_target_base_arch}-%{_target_os}%{?_python_target_abi}
 %define py_prefix	%{_prefix}
 %define py_libdir	%{py_prefix}/%{_lib}/python%{py_ver}
 %define py_incdir	%{_includedir}/python%{py_abi}
