@@ -47,13 +47,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.0
+Version:	%{py_ver}.1
 Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	6ebfe157f6e88d9eabfbaf3fa92129f6
+# Source0-md5:	61981498e75ac8f00adcb908281fadb6
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
@@ -546,7 +546,7 @@ fi
 %{__autoconf}
 %configure \
 	CC="%{__cc}" \
-	OPT="%{rpmcflags} -fno-caller-saves" \
+	OPT="%{rpmcflags}" \
 	CPPFLAGS="%{rpmcppflags}" \
 	LDFLAGS="%{rpmldflags}" \
 	ac_cv_posix_semaphores_enabled=yes \
@@ -559,6 +559,7 @@ fi
 	--without-ensurepip \
         --with-platlibdir="%{_lib}" \
 	%{?with_debug:--with-pydebug} \
+        --with-ssl-default-suites=openssl \
 	--with-system-expat \
 	--with-system-ffi \
 	%{?with_system_mpdecimal:--with-system-libmpdec} \
@@ -568,7 +569,7 @@ fi
 %endif
 
 %{__make} \
-	TESTOPTS="%{test_list}" \
+	TESTOPTS="%{_smp_mflags} %{test_list}" \
 	2>&1 | awk '
 BEGIN { fail = 0; logmsg = ""; }
 {
@@ -583,7 +584,7 @@ END { if (fail) { print "\nPROBLEMS FOUND:"; print logmsg; exit(1); } }'
 LC_ALL=C.UTF-8
 export LC_ALL
 %if %{with tests}
-WITHIN_PYTHON_RPM_BUILD=1 %{__make} -j1 test \
+WITHIN_PYTHON_RPM_BUILD=1 %{__make} test \
 	TESTOPTS="%{test_flags} %{test_list}"
 %endif
 
@@ -1359,7 +1360,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files static
 %defattr(644,root,root,755)
-%{py_libdir}/config-*/libpython%{py_abi}.a
+%{_libdir}/libpython%{py_abi}.a
 
 %files examples
 %defattr(644,root,root,755)
