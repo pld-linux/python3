@@ -11,7 +11,7 @@
 # tests which will not work on 64-bit platforms
 %define		no64bit_tests	-x test_audioop -x test_rgbimg -x test_imageop
 # tests which may fail because of builder environment limitations (no /proc or /dev/pts)
-%define		nobuilder_tests -x test_resource -x test_openpty -x test_socket -x test_nis -x test_posix -x test_locale -x test_pty -x test_asyncio -x test_os -x test_readline -x test_normalization
+%define		nobuilder_tests -u-network -x test_resource -x test_openpty -x test_socket -x test_nis -x test_posix -x test_locale -x test_pty -x test_asyncio -x test_os -x test_readline -x test_normalization
 
 # tests which fail because of some unknown/unresolved reason (this list should be %{nil})
 #   test_site: fails because our site.py is patched to include both /usr/share/... and /usr/lib...
@@ -567,6 +567,11 @@ fi
 	--enable-optimizations \
 	--with-lto
 %endif
+
+if grep -q "#define POSIX_SEMAPHORES_NOT_ENABLED 1" pyconfig.h; then
+      echo "Please ensure that /dev/shm is mounted as a tmpfs with mode 1777." >&2
+      exit 1
+fi
 
 %{__make} \
 	TESTOPTS="%{_smp_mflags} %{test_list}" \
