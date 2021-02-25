@@ -1,7 +1,7 @@
-diff -Nur Python-3.3.1.orig/Lib/test/test_compileall.py Python-3.3.1/Lib/test/test_compileall.py
---- Python-3.3.1.orig/Lib/test/test_compileall.py	2013-04-06 08:41:41.000000000 +0100
-+++ Python-3.3.1/Lib/test/test_compileall.py	2013-04-07 19:39:23.449157629 +0100
-@@ -233,6 +233,7 @@ class EncodingTest(unittest.TestCase):
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_compileall.py Python-3.9.2/Lib/test/test_compileall.py
+--- Python-3.9.2.org/Lib/test/test_compileall.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/test/test_compileall.py	2021-02-25 18:40:29.876560976 +0100
+@@ -419,6 +419,7 @@ class EncodingTest(unittest.TestCase):
              sys.stdout = orig_stdout
  
  
@@ -9,10 +9,10 @@ diff -Nur Python-3.3.1.orig/Lib/test/test_compileall.py Python-3.3.1/Lib/test/te
  class CommandLineTestsBase:
      """Test compileall's CLI."""
  
-diff -Nur Python-3.3.1.orig/Lib/test/test_warnings/__init__.py Python-3.3.1/Lib/test/test_warnings/__init__.py
---- Python-3.3.1.orig/Lib/test/test_warnings/__init__.py	2013-04-06 08:41:46.000000000 +0100
-+++ Python-3.3.1/Lib/test/test_warnings/__init__.py	2013-04-07 19:41:25.529164545 +0100
-@@ -717,6 +717,7 @@
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_warnings/__init__.py Python-3.9.2/Lib/test/test_warnings/__init__.py
+--- Python-3.9.2.org/Lib/test/test_warnings/__init__.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/test/test_warnings/__init__.py	2021-02-25 18:40:29.876560976 +0100
+@@ -1126,6 +1126,7 @@ class PyCatchWarningTests(CatchWarningTe
      module = py_warnings
  
  
@@ -20,9 +20,9 @@ diff -Nur Python-3.3.1.orig/Lib/test/test_warnings/__init__.py Python-3.3.1/Lib/
  class EnvironmentVariableTests(BaseTest):
  
      def test_single_warning(self):
-@@ -762,14 +763,17 @@
-                 "['ignore:DeprecaciónWarning']".encode('utf-8'))
-         self.assertEqual(p.wait(), 0)
+@@ -1206,14 +1207,17 @@ class EnvironmentVariableTests(BaseTest)
+             PYTHONDEVMODE="")
+         self.assertEqual(stdout, str([PYTHONWARNINGS]).encode())
  
 +@unittest.skipUnless(support.is_resource_enabled("cmdline"), "python cmdline tests disabled")
  class CEnvironmentVariableTests(EnvironmentVariableTests, unittest.TestCase):

@@ -1,7 +1,7 @@
-diff -urNp Python-3.8.7.org/Lib/distutils/command/install.py Python-3.8.7/Lib/distutils/command/install.py
---- Python-3.8.7.org/Lib/distutils/command/install.py	2020-12-21 17:25:24.000000000 +0100
-+++ Python-3.8.7/Lib/distutils/command/install.py	2021-02-06 00:56:02.718897271 +0100
-@@ -31,14 +31,14 @@ WINDOWS_SCHEME = {
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/distutils/command/install.py Python-3.9.2/Lib/distutils/command/install.py
+--- Python-3.9.2.org/Lib/distutils/command/install.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/distutils/command/install.py	2021-02-25 18:40:00.705652346 +0100
+@@ -29,14 +29,14 @@ WINDOWS_SCHEME = {
  
  INSTALL_SCHEMES = {
      'unix_prefix': {
@@ -18,9 +18,9 @@ diff -urNp Python-3.8.7.org/Lib/distutils/command/install.py Python-3.8.7/Lib/di
          'platlib': '$base/$platlibdir/python',
          'headers': '$base/include/python/$dist_name',
          'scripts': '$base/bin',
-diff -urNp Python-3.8.7.org/Lib/distutils/sysconfig.py Python-3.8.7/Lib/distutils/sysconfig.py
---- Python-3.8.7.org/Lib/distutils/sysconfig.py	2020-12-21 17:25:24.000000000 +0100
-+++ Python-3.8.7/Lib/distutils/sysconfig.py	2021-02-06 00:56:02.718897271 +0100
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/distutils/sysconfig.py Python-3.9.2/Lib/distutils/sysconfig.py
+--- Python-3.9.2.org/Lib/distutils/sysconfig.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/distutils/sysconfig.py	2021-02-25 18:40:00.705652346 +0100
 @@ -145,13 +145,13 @@ def get_python_lib(plat_specific=0, stan
              prefix = plat_specific and EXEC_PREFIX or PREFIX
  
@@ -37,9 +37,9 @@ diff -urNp Python-3.8.7.org/Lib/distutils/sysconfig.py Python-3.8.7/Lib/distutil
          libpython = os.path.join(prefix, libdir,
                                   "python" + get_python_version())
          if standard_lib:
-diff -urNp Python-3.8.7.org/Lib/distutils/tests/test_install.py Python-3.8.7/Lib/distutils/tests/test_install.py
---- Python-3.8.7.org/Lib/distutils/tests/test_install.py	2020-12-21 17:25:24.000000000 +0100
-+++ Python-3.8.7/Lib/distutils/tests/test_install.py	2021-02-06 00:56:02.722230710 +0100
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/distutils/tests/test_install.py Python-3.9.2/Lib/distutils/tests/test_install.py
+--- Python-3.9.2.org/Lib/distutils/tests/test_install.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/distutils/tests/test_install.py	2021-02-25 18:40:00.705652346 +0100
 @@ -56,7 +56,7 @@ class InstallTestCase(support.TempdirMan
              expected = os.path.normpath(expected)
              self.assertEqual(got, expected)
@@ -47,11 +47,11 @@ diff -urNp Python-3.8.7.org/Lib/distutils/tests/test_install.py Python-3.8.7/Lib
 -        libdir = os.path.join(destination, "lib", "python")
 +        libdir = os.path.join(destination, sys.platlibdir, "python")
          check_path(cmd.install_lib, libdir)
-         check_path(cmd.install_platlib, libdir)
-         check_path(cmd.install_purelib, libdir)
-diff -urNp Python-3.8.7.org/Lib/site.py Python-3.8.7/Lib/site.py
---- Python-3.8.7.org/Lib/site.py	2020-12-21 17:25:24.000000000 +0100
-+++ Python-3.8.7/Lib/site.py	2021-02-06 00:56:02.722230710 +0100
+         platlibdir = os.path.join(destination, sys.platlibdir, "python")
+         check_path(cmd.install_platlib, platlibdir)
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/site.py Python-3.9.2/Lib/site.py
+--- Python-3.9.2.org/Lib/site.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/site.py	2021-02-25 18:40:00.705652346 +0100
 @@ -344,6 +344,8 @@ def getsitepackages(prefixes=None):
                                      "python%d.%d" % sys.version_info[:2],
                                      "site-packages")
@@ -61,10 +61,10 @@ diff -urNp Python-3.8.7.org/Lib/site.py Python-3.8.7/Lib/site.py
          else:
              sitepackages.append(prefix)
  
-diff -urNp Python-3.8.7.org/Lib/sysconfig.py Python-3.8.7/Lib/sysconfig.py
---- Python-3.8.7.org/Lib/sysconfig.py	2020-12-21 17:25:24.000000000 +0100
-+++ Python-3.8.7/Lib/sysconfig.py	2021-02-06 00:56:02.722230710 +0100
-@@ -22,7 +22,7 @@ _INSTALL_SCHEMES = {
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/sysconfig.py Python-3.9.2/Lib/sysconfig.py
+--- Python-3.9.2.org/Lib/sysconfig.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/sysconfig.py	2021-02-25 18:40:00.705652346 +0100
+@@ -27,7 +27,7 @@ _INSTALL_SCHEMES = {
      'posix_prefix': {
          'stdlib': '{installed_base}/{platlibdir}/python{py_version_short}',
          'platstdlib': '{platbase}/{platlibdir}/python{py_version_short}',
@@ -73,7 +73,7 @@ diff -urNp Python-3.8.7.org/Lib/sysconfig.py Python-3.8.7/Lib/sysconfig.py
          'platlib': '{platbase}/{platlibdir}/python{py_version_short}/site-packages',
          'include':
              '{installed_base}/include/python{py_version_short}{abiflags}',
-@@ -32,10 +32,10 @@ _INSTALL_SCHEMES = {
+@@ -37,10 +37,10 @@ _INSTALL_SCHEMES = {
          'data': '{base}',
          },
      'posix_home': {
@@ -88,7 +88,7 @@ diff -urNp Python-3.8.7.org/Lib/sysconfig.py Python-3.8.7/Lib/sysconfig.py
          'include': '{installed_base}/include/python',
          'platinclude': '{installed_base}/include/python',
          'scripts': '{base}/bin',
-@@ -64,7 +64,7 @@ _INSTALL_SCHEMES = {
+@@ -69,7 +69,7 @@ _INSTALL_SCHEMES = {
      'posix_user': {
          'stdlib': '{userbase}/{platlibdir}/python{py_version_short}',
          'platstdlib': '{userbase}/{platlibdir}/python{py_version_short}',
@@ -97,7 +97,7 @@ diff -urNp Python-3.8.7.org/Lib/sysconfig.py Python-3.8.7/Lib/sysconfig.py
          'platlib': '{userbase}/{platlibdir}/python{py_version_short}/site-packages',
          'include': '{userbase}/include/python{py_version_short}',
          'scripts': '{userbase}/bin',
-@@ -480,7 +480,11 @@ def get_config_h_filename():
+@@ -490,7 +490,11 @@ def get_config_h_filename():
          else:
              inc_dir = _sys_home or _PROJECT_BASE
      else:
@@ -110,10 +110,10 @@ diff -urNp Python-3.8.7.org/Lib/sysconfig.py Python-3.8.7/Lib/sysconfig.py
      return os.path.join(inc_dir, 'pyconfig.h')
  
  
-diff -urNp Python-3.8.7.org/Makefile.pre.in Python-3.8.7/Makefile.pre.in
---- Python-3.8.7.org/Makefile.pre.in	2020-12-21 17:25:24.000000000 +0100
-+++ Python-3.8.7/Makefile.pre.in	2021-02-06 00:56:02.722230710 +0100
-@@ -1560,9 +1562,9 @@ libainstall:	@DEF_MAKE_RULE@ python-conf
+diff -urNp -x '*.orig' Python-3.9.2.org/Makefile.pre.in Python-3.9.2/Makefile.pre.in
+--- Python-3.9.2.org/Makefile.pre.in	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Makefile.pre.in	2021-02-25 18:40:00.705652346 +0100
+@@ -1634,9 +1634,9 @@ libainstall:	@DEF_MAKE_RULE@ python-conf
  	@if test -d $(LIBRARY); then :; else \
  		if test "$(PYTHONFRAMEWORKDIR)" = no-framework; then \
  			if test "$(SHLIB_SUFFIX)" = .dll; then \
@@ -125,10 +125,10 @@ diff -urNp Python-3.8.7.org/Makefile.pre.in Python-3.8.7/Makefile.pre.in
  			fi; \
  		else \
  			echo Skip install of $(LIBRARY) - use make frameworkinstall; \
-diff -urNp Python-3.8.7.org/setup.py Python-3.8.7/setup.py
---- Python-3.8.7.org/setup.py	2020-12-21 17:25:24.000000000 +0100
-+++ Python-3.8.7/setup.py	2021-02-06 00:56:02.728897587 +0100
-@@ -670,7 +670,7 @@ class PyBuildExt(build_ext):
+diff -urNp -x '*.orig' Python-3.9.2.org/setup.py Python-3.9.2/setup.py
+--- Python-3.9.2.org/setup.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/setup.py	2021-02-25 18:40:00.708985783 +0100
+@@ -750,7 +750,7 @@ class PyBuildExt(build_ext):
              add_dir_to_list(self.compiler.include_dirs,
                              sysconfig.get_config_var("INCLUDEDIR"))
  
@@ -137,7 +137,7 @@ diff -urNp Python-3.8.7.org/setup.py Python-3.8.7/setup.py
          system_include_dirs = ['/usr/include']
          # lib_dirs and inc_dirs are used to search for files;
          # if a file is found in one of those directories, it can
-@@ -953,11 +953,11 @@ class PyBuildExt(build_ext):
+@@ -1039,11 +1039,11 @@ class PyBuildExt(build_ext):
              elif curses_library:
                  readline_libs.append(curses_library)
              elif self.compiler.find_library_file(self.lib_dirs +

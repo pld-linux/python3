@@ -1,15 +1,16 @@
---- Python-3.5.0/Makefile.pre.in.orig	2016-02-28 20:07:09.864711963 +0100
-+++ Python-3.5.0/Makefile.pre.in	2016-02-28 20:10:18.334704006 +0100
-@@ -1029,7 +1029,7 @@
+diff -urNp -x '*.orig' Python-3.9.2.org/Makefile.pre.in Python-3.9.2/Makefile.pre.in
+--- Python-3.9.2.org/Makefile.pre.in	2021-02-25 18:42:02.242771533 +0100
++++ Python-3.9.2/Makefile.pre.in	2021-02-25 18:42:03.919490432 +0100
+@@ -1262,7 +1262,7 @@ altinstall: commoninstall
  
- commoninstall:  @FRAMEWORKALTINSTALLFIRST@ \
+ commoninstall:  check-clean-src @FRAMEWORKALTINSTALLFIRST@ \
  		altbininstall libinstall inclinstall libainstall \
 -		sharedinstall oldsharedinstall altmaninstall \
 +		sharedinstall oldsharedinstall altmaninstall installcompile \
  		@FRAMEWORKALTINSTALLLAST@
  
  # Install shared libraries enabled by Setup
-@@ -1262,6 +1262,8 @@
+@@ -1530,6 +1530,8 @@ libinstall:	build_all $(srcdir)/Modules/
  		$(INSTALL_DATA) $(srcdir)/Modules/xxmodule.c \
  			$(DESTDIR)$(LIBDEST)/distutils/tests ; \
  	fi
@@ -17,8 +18,8 @@
 +installcompile: libainstall libinstall
  	-PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
  		$(PYTHON_FOR_BUILD) -Wi $(DESTDIR)$(LIBDEST)/compileall.py \
- 		-d $(LIBDEST) -f \
-@@ -1939,7 +1939,7 @@ Python/thread.o: @THREADHEADERS@ $(srcdi
+ 		-j0 -d $(LIBDEST) -f \
+@@ -1938,7 +1940,7 @@ Python/thread.o: @THREADHEADERS@ $(srcdi
  .PHONY: frameworkinstall frameworkinstallframework frameworkinstallstructure
  .PHONY: frameworkinstallmaclib frameworkinstallapps frameworkinstallunixtools
  .PHONY: frameworkaltinstallunixtools recheck clean clobber distclean
@@ -27,4 +28,3 @@
  .PHONY: clean-retain-profile profile-removal run_profile_task
  .PHONY: build_all_generate_profile build_all_merge_profile
  .PHONY: gdbhooks
-

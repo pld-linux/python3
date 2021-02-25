@@ -1,5 +1,6 @@
---- Python-3.7.0/Lib/test/test_asyncio/test_tasks.py~	2018-06-28 20:51:03.000000000 +0200
-+++ Python-3.7.0/Lib/test/test_asyncio/test_tasks.py	2018-06-28 21:01:38.756365097 +0200
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_asyncio/test_tasks.py Python-3.9.2/Lib/test/test_asyncio/test_tasks.py
+--- Python-3.9.2.org/Lib/test/test_asyncio/test_tasks.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/test/test_asyncio/test_tasks.py	2021-02-25 18:41:41.098779547 +0100
 @@ -6,6 +6,7 @@ import contextvars
  import functools
  import gc
@@ -8,21 +9,18 @@
  import random
  import re
  import sys
-diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_asyncio/test_tasks.py Python-3.5.0/Lib/test/test_asyncio/test_tasks.py
---- Python-3.5.0.orig/Lib/test/test_asyncio/test_tasks.py	2015-09-13 13:41:23.000000000 +0200
-+++ Python-3.5.0/Lib/test/test_asyncio/test_tasks.py	2015-12-03 18:35:52.223668265 +0100
-@@ -1870,6 +1870,7 @@
+@@ -3283,6 +3284,7 @@ class GatherTestsBase:
          cb.assert_called_once_with(fut)
          self.assertEqual(fut.result(), [3, 1, exc, exc2])
  
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      def test_env_var_debug(self):
-         aio_path = os.path.dirname(os.path.dirname(asyncio.__file__))
- 
-diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_cmd_line.py Python-3.5.0/Lib/test/test_cmd_line.py
---- Python-3.5.0.orig/Lib/test/test_cmd_line.py	2015-09-13 13:41:23.000000000 +0200
-+++ Python-3.5.0/Lib/test/test_cmd_line.py	2015-12-03 18:35:52.227001621 +0100
-@@ -237,6 +237,7 @@
+         code = '\n'.join((
+             'import asyncio.coroutines',
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_cmd_line.py Python-3.9.2/Lib/test/test_cmd_line.py
+--- Python-3.9.2.org/Lib/test/test_cmd_line.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/test/test_cmd_line.py	2021-02-25 18:41:41.098779547 +0100
+@@ -265,6 +265,7 @@ class CmdLineTest(unittest.TestCase):
          self.assertEqual(rc, 0)
          self.assertTrue(data.startswith(b'x'), data)
  
@@ -30,7 +28,7 @@ diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_cmd_line.py Python-3.5.0/Lib/t
      def test_large_PYTHONPATH(self):
          path1 = "ABCDE" * 100
          path2 = "FGHIJ" * 100
-@@ -252,6 +253,7 @@
+@@ -280,6 +281,7 @@ class CmdLineTest(unittest.TestCase):
          self.assertIn(path1.encode('ascii'), out)
          self.assertIn(path2.encode('ascii'), out)
  
@@ -38,18 +36,18 @@ diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_cmd_line.py Python-3.5.0/Lib/t
      def test_empty_PYTHONPATH_issue16309(self):
          # On Posix, it is documented that setting PATH to the
          # empty string is equivalent to not setting PATH at all,
-diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_compileall.py Python-3.5.0/Lib/test/test_compileall.py
---- Python-3.5.0.orig/Lib/test/test_compileall.py	2015-12-03 18:35:31.483520885 +0100
-+++ Python-3.5.0/Lib/test/test_compileall.py	2015-12-03 18:35:52.227001621 +0100
-@@ -206,6 +206,7 @@
-     def _cleanup(self):
-         support.rmtree(self.directory)
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_compileall.py Python-3.9.2/Lib/test/test_compileall.py
+--- Python-3.9.2.org/Lib/test/test_compileall.py	2021-02-25 18:41:39.412060338 +0100
++++ Python-3.9.2/Lib/test/test_compileall.py	2021-02-25 18:41:41.098779547 +0100
+@@ -486,6 +486,7 @@ class CommandLineTestsBase:
+         self.initfn = script_helper.make_script(self.pkgdir, '__init__', '')
+         self.barfn = script_helper.make_script(self.pkgdir, 'bar', '')
  
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      def test_no_args_compiles_path(self):
          # Note that -l is implied for the no args case.
-         bazfn = script_helper.make_script(self.directory, 'baz', '')
-@@ -220,6 +220,7 @@ class CommandLineTestsBase:
+         self._skip_if_sys_path_not_writable()
+@@ -495,6 +496,7 @@ class CommandLineTestsBase:
          self.assertNotCompiled(self.initfn)
          self.assertNotCompiled(self.barfn)
  
@@ -57,18 +55,18 @@ diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_compileall.py Python-3.5.0/Lib
      @without_source_date_epoch  # timestamp invalidation test
      def test_no_args_respects_force_flag(self):
          self._skip_if_sys_path_not_writable()
-@@ -230,6 +232,7 @@
+@@ -513,6 +515,7 @@ class CommandLineTestsBase:
          mtime2 = os.stat(pycpath).st_mtime
          self.assertNotEqual(mtime, mtime2)
  
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      def test_no_args_respects_quiet_flag(self):
+         self._skip_if_sys_path_not_writable()
          script_helper.make_script(self.directory, 'baz', '')
-         noisy = self.assertRunOK(PYTHONPATH=self.directory)
-diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_pydoc.py Python-3.5.0/Lib/test/test_pydoc.py
---- Python-3.5.0.orig/Lib/test/test_pydoc.py	2015-09-13 13:41:23.000000000 +0200
-+++ Python-3.5.0/Lib/test/test_pydoc.py	2015-12-03 18:35:52.227001621 +0100
-@@ -631,6 +631,7 @@
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_pydoc.py Python-3.9.2/Lib/test/test_pydoc.py
+--- Python-3.9.2.org/Lib/test/test_pydoc.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/test/test_pydoc.py	2021-02-25 18:41:41.098779547 +0100
+@@ -885,6 +885,7 @@ class PydocImportTest(PydocBaseTest):
          self.addCleanup(rmtree, TESTFN)
          importlib.invalidate_caches()
  
@@ -76,10 +74,10 @@ diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_pydoc.py Python-3.5.0/Lib/test
      def test_badimport(self):
          # This tests the fix for issue 5230, where if pydoc found the module
          # but the module had an internal import error pydoc would report no doc
-diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_site.py Python-3.5.0/Lib/test/test_site.py
---- Python-3.5.0.orig/Lib/test/test_site.py	2015-09-13 13:41:23.000000000 +0200
-+++ Python-3.5.0/Lib/test/test_site.py	2015-12-03 18:37:57.484550877 +0100
-@@ -320,6 +320,7 @@
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_site.py Python-3.9.2/Lib/test/test_site.py
+--- Python-3.9.2.org/Lib/test/test_site.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/test/test_site.py	2021-02-25 18:41:41.098779547 +0100
+@@ -387,6 +387,7 @@ class ImportSideEffectTests(unittest.Tes
          """Restore sys.path"""
          sys.path[:] = self.sys_path
  
@@ -87,17 +85,18 @@ diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_site.py Python-3.5.0/Lib/test/
      def test_abs_paths(self):
          # Make sure all imported modules have their __file__ and __cached__
          # attributes as absolute paths.  Arranging to put the Lib directory on
---- Python-3.7.4/Lib/test/test_venv.py~	2019-07-08 20:03:50.000000000 +0200
-+++ Python-3.7.4/Lib/test/test_venv.py	2019-07-09 08:37:18.251706609 +0200
-@@ -129,6 +129,7 @@ class BasicTest(BaseTest):
-         self.assertEqual(context.prompt, '(My prompt) ')
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_venv.py Python-3.9.2/Lib/test/test_venv.py
+--- Python-3.9.2.org/Lib/test/test_venv.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/test/test_venv.py	2021-02-25 18:41:41.098779547 +0100
+@@ -173,6 +173,7 @@ class BasicTest(BaseTest):
+                 builder.upgrade_dependencies(fake_context)
  
      @requireVenvCreate
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      def test_prefixes(self):
          """
          Test that the prefix values are as expected.
-@@ -266,6 +267,7 @@ class BasicTest(BaseTest):
+@@ -310,6 +311,7 @@ class BasicTest(BaseTest):
      # point to the venv being used to run the test, and we lose the link
      # to the source build - so Python can't initialise properly.
      @requireVenvCreate
@@ -105,18 +104,18 @@ diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_site.py Python-3.5.0/Lib/test/
      def test_executable(self):
          """
          Test that the sys.executable value is as expected.
-@@ -326,6 +328,7 @@ class BasicTest(BaseTest):
-         self.assertEqual(out.strip(), "python".encode())
+@@ -406,6 +408,7 @@ class BasicTest(BaseTest):
+         self.assertEqual(out.strip(), 'False'.encode())
  
  @requireVenvCreate
 +@unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
  class EnsurePipTest(BaseTest):
      """Test venv module installation of pip."""
      def assert_pip_not_installed(self):
-diff -dur -x '*~' Python-3.5.0.orig/Lib/test/test_warnings/__init__.py Python-3.5.0/Lib/test/test_warnings/__init__.py
---- Python-3.5.0.orig/Lib/test/test_warnings/__init__.py	2015-12-03 18:35:31.483520885 +0100
-+++ Python-3.5.0/Lib/test/test_warnings/__init__.py	2015-12-03 18:35:52.227001621 +0100
-@@ -918,6 +918,7 @@
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_warnings/__init__.py Python-3.9.2/Lib/test/test_warnings/__init__.py
+--- Python-3.9.2.org/Lib/test/test_warnings/__init__.py	2021-02-25 18:41:39.412060338 +0100
++++ Python-3.9.2/Lib/test/test_warnings/__init__.py	2021-02-25 18:41:41.098779547 +0100
+@@ -1218,6 +1218,7 @@ class PyEnvironmentVariableTests(Environ
  
  class BootstrapTest(unittest.TestCase):
      @unittest.skipUnless(support.is_resource_enabled("cmdline"), "python cmdline tests disabled")
