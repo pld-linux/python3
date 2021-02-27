@@ -467,6 +467,7 @@ kullanılan grafik bir arayüzdür.
 Summary:	Example programs in Python
 Summary(pl.UTF-8):	Przykładowe programy w Pythonie
 Group:		Development/Languages/Python
+BuildArch:	noarch
 
 %description examples
 Example programs in Python.
