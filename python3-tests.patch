@@ -19,24 +19,4 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_imaplib.py Python-3.9.2/Li
          self.assertIn(cm.exception.errno, expected_errnos)
  
  
-diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_unicodedata.py Python-3.9.2/Lib/test/test_unicodedata.py
---- Python-3.9.2.org/Lib/test/test_unicodedata.py	2021-02-19 13:31:44.000000000 +0100
-+++ Python-3.9.2/Lib/test/test_unicodedata.py	2021-02-25 18:42:23.540101637 +0100
-@@ -11,7 +11,7 @@ from http.client import HTTPException
- import sys
- import unicodedata
- import unittest
--from test.support import open_urlresource, requires_resource, script_helper
-+from test.support import open_urlresource, requires_resource, script_helper, is_resource_enabled
- 
- 
- class UnicodeMethodsTest(unittest.TestCase):
-@@ -320,6 +320,8 @@ class NormalizationTest(unittest.TestCas
-         data = [int(x, 16) for x in data.split(" ")]
-         return "".join([chr(x) for x in data])
- 
-+    @unittest.skipUnless(is_resource_enabled('network'),
-+                         'network is not enabled')
-     def test_normalization(self):
-         TESTDATAFILE = "NormalizationTest.txt"
-         TESTDATAURL = f"http://www.pythontest.net/unicode/{unicodedata.unidata_version}/{TESTDATAFILE}"
+
