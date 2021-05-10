@@ -74,17 +74,6 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_pydoc.py Python-3.9.2/Lib/
      def test_badimport(self):
          # This tests the fix for issue 5230, where if pydoc found the module
          # but the module had an internal import error pydoc would report no doc
-diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_site.py Python-3.9.2/Lib/test/test_site.py
---- Python-3.9.2.org/Lib/test/test_site.py	2021-02-19 13:31:44.000000000 +0100
-+++ Python-3.9.2/Lib/test/test_site.py	2021-02-25 18:41:41.098779547 +0100
-@@ -387,6 +387,7 @@ class ImportSideEffectTests(unittest.Tes
-         """Restore sys.path"""
-         sys.path[:] = self.sys_path
- 
-+    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
-     def test_abs_paths(self):
-         # Make sure all imported modules have their __file__ and __cached__
-         # attributes as absolute paths.  Arranging to put the Lib directory on
 diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_venv.py Python-3.9.2/Lib/test/test_venv.py
 --- Python-3.9.2.org/Lib/test/test_venv.py	2021-02-19 13:31:44.000000000 +0100
 +++ Python-3.9.2/Lib/test/test_venv.py	2021-02-25 18:41:41.098779547 +0100
