@@ -73,6 +73,7 @@ Patch14:	python3-profile-tests.patch
 Patch15:	python3-tests.patch
 URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.65
+BuildRequires:	autoconf-archive
 BuildRequires:	automake
 BuildRequires:	bluez-libs-devel
 BuildRequires:	bzip2-devel
