@@ -7,6 +7,7 @@
 %bcond_without	tests			# disables Python testing
 %bcond_with	verbose_tests		# runs tests in verbose mode
 %bcond_without	optimizations		# expensive, stable optimizations (PGO etc.) + LTO
+%bcond_with	semantic_interposition	# build without \-fno-semantic-interposition
 #
 # tests which will not work on 64-bit platforms
 %define		no64bit_tests	-x test_audioop -x test_rgbimg -x test_imageop
@@ -548,8 +549,10 @@ fi
 %configure \
 	CC="%{__cc}" \
 	OPT="%{rpmcflags}" \
+	CFLAGS_NODIST="%{!?with_semantic_interposition: -fno-semantic-interposition}" \
 	CPPFLAGS="%{rpmcppflags}" \
 	LDFLAGS="%{rpmldflags}" \
+	LDFLAGS_NODIST="%{!?with_semantic_interposition: -fno-semantic-interposition}" \
 	ac_cv_posix_semaphores_enabled=yes \
 	ac_cv_broken_sem_getvalue=no \
 	--enable-ipv6 \
