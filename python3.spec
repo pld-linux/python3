@@ -552,7 +552,7 @@ fi
 	CFLAGS_NODIST="%{!?with_semantic_interposition: -fno-semantic-interposition}" \
 	CPPFLAGS="%{rpmcppflags}" \
 	LDFLAGS="%{rpmldflags}" \
-	LDFLAGS_NODIST="%{!?with_semantic_interposition: -fno-semantic-interposition}" \
+	LDFLAGS_NODIST="%{debuginfocflags}%{!?with_semantic_interposition: -fno-semantic-interposition}" \
 	ac_cv_posix_semaphores_enabled=yes \
 	ac_cv_broken_sem_getvalue=no \
 	--enable-ipv6 \
