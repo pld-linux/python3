@@ -9,7 +9,7 @@
  DLLLIBRARY=	@DLLLIBRARY@
  LDLIBRARYDIR=   @LDLIBRARYDIR@
 @@ -588,7 +588,7 @@ clinic: check-clean-src $(srcdir)/Module
- 
+ #hello
  # Build the interpreter
  $(BUILDPYTHON):	Programs/python.o $(LIBRARY) $(LDLIBRARY) $(PY3LIBRARY) $(EXPORTSYMS)
 -	$(LINKCC) $(PY_CORE_LDFLAGS) $(LINKFORSHARED) -o $@ Programs/python.o $(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS)
