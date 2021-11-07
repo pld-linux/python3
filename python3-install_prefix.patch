@@ -21,19 +21,19 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/distutils/command/install.py Python-
              else:
                  if self.exec_prefix is None:
 diff -urNp -x '*.orig' Python-3.9.2.org/Lib/distutils/sysconfig.py Python-3.9.2/Lib/distutils/sysconfig.py
---- Python-3.9.2.org/Lib/distutils/sysconfig.py	2021-02-25 18:41:13.927933162 +0100
-+++ Python-3.9.2/Lib/distutils/sysconfig.py	2021-02-25 18:41:15.634652993 +0100
-@@ -19,6 +19,10 @@ from .errors import DistutilsPlatformErr
- # These are needed in a couple of spots, so just compute them once.
- PREFIX = os.path.normpath(sys.prefix)
- EXEC_PREFIX = os.path.normpath(sys.exec_prefix)
-+if PREFIX == "/usr":
-+    PREFIX = "/usr/local"
-+if EXEC_PREFIX == "/usr":
-+    EXEC_PREFIX = "/usr/local"
- BASE_PREFIX = os.path.normpath(sys.base_prefix)
- BASE_EXEC_PREFIX = os.path.normpath(sys.base_exec_prefix)
- 
+--- Python-3.10.0/Lib/distutils/sysconfig.py~	2021-10-20 22:42:16.000000000 +0200
++++ Python-3.10.0/Lib/distutils/sysconfig.py	2021-10-20 22:53:54.943156539 +0200
+@@ -320,6 +320,10 @@ def get_python_lib(plat_specific=0, stan
+     If 'prefix' is supplied, use it instead of sys.base_prefix or
+     sys.base_exec_prefix -- i.e., ignore 'plat_specific'.
+     """
++    if PREFIX == "/usr":
++        PREFIX = "/usr/local"
++    if EXEC_PREFIX == "/usr":
++        EXEC_PREFIX = "/usr/local"
+     if prefix is None:
+         if standard_lib:
+             prefix = plat_specific and BASE_EXEC_PREFIX or BASE_PREFIX
 diff -urNp -x '*.orig' Python-3.9.2.org/Lib/site.py Python-3.9.2/Lib/site.py
 --- Python-3.9.2.org/Lib/site.py	2021-02-25 18:41:13.924599724 +0100
 +++ Python-3.9.2/Lib/site.py	2021-02-25 18:41:15.634652993 +0100

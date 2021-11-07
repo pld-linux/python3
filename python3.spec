@@ -30,7 +30,7 @@
 %define		_python_target_abi	%{?_gnu}
 %endif
 
-%define py_ver		3.9
+%define py_ver		3.10
 %define py_abi		%{py_ver}
 %define	py_platform	%{py_abi}-%{_target_base_arch}-%{_target_os}%{?_python_target_abi}
 %define py_prefix	%{_prefix}
@@ -48,19 +48,19 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.7
-Release:	2
+Version:	%{py_ver}.0
+Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	fddb060b483bc01850a3f412eea1d954
+# Source0-md5:	3e7035d272680f80e3ce4e8eb492d580
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-multilib.patch
 Patch3:		%{name}-no_cmdline_tests.patch
-Patch4:		%{name}-makefile-location.patch
+
 Patch5:		%{name}-config.patch
 Patch6:		%{name}-BLDLIBRARY.patch
 Patch7:		%{name}-db.patch
@@ -498,7 +498,7 @@ Moduły testowe dla Pythona.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
+
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
