@@ -234,8 +234,8 @@ Provides:	python(abi) = %{py_ver}
 # for compatibility with existing Ac packages
 Provides:	python(bytecode) = %{py_ver}
 Provides:	python3-enum
-Obsoletes:	python3-enum
-%{!?with_info:Obsoletes: python3-doc-info}
+Obsoletes:	python3-enum < 0.5
+%{!?with_info:Obsoletes:	python3-doc-info < %{epoch}:%{version}-%{release}}
 
 %description libs
 Python shared library and very essental modules for Python binary.
@@ -250,7 +250,7 @@ Summary(pl.UTF-8):	Moduły języka Python
 Group:		Libraries/Python
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 %{?with_system_mpdecimal:Requires:	mpdecimal >= 2.4.2-2}
-Obsoletes:	python3-modules-sqlite
+Obsoletes:	python3-modules-sqlite < 1:3.1-2
 %requires_ge_to	openssl openssl-devel
 
 %description modules
@@ -295,6 +295,7 @@ Summary(tr.UTF-8):	Python ile geliştirme yapmak için gerekli dosyalar
 Summary(uk.UTF-8):	Бібліотеки та хедери для програмування на мові Python
 Group:		Development/Languages/Python
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Obsoletes:	python3-devel-src < 1:3.2-1
 
 %description devel
 The Python interpreter is relatively easy to extend with dynamically
@@ -346,18 +347,6 @@ dosyalarını ve kitaplıkları içerir.
 Інтерпретатор Python відносно легко розширюється за допомогою
 розширень з динамічною загрузкою та вбудовується в інші програми. Цей
 пакет містить хедери та бібліотеки, необхідні для обох цих задач.
-
-%package devel-src
-Summary:	Python module sources
-Summary(pl.UTF-8):	Pliki źródłowe modułów Pythona
-Group:		Development/Languages/Python
-Requires:	%{name}-modules = %{epoch}:%{version}-%{release}
-
-%description devel-src
-Python module sources.
-
-%description devel-src -l pl.UTF-8
-Pliki źródłowe modułów Pythona.
 
 %package devel-tools
 Summary:	Python development tools
@@ -597,6 +586,11 @@ WITHIN_PYTHON_RPM_BUILD=1 %{__make} test \
 	TESTOPTS="%{test_flags} %{test_list}"
 %endif
 
+%if %{with info}
+%{__make} -C Doc texinfo
+%{__make} -C Doc/build/texinfo info
+%endif
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir},%{_pkgconfigdir}} \
@@ -610,8 +604,7 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir},%{_pkgconfigdir}} \
 	DESTDIR=$RPM_BUILD_ROOT
 
 %if %{with info}
-%{__make} -C Doc/info
-cp -p Doc/info/python*info* $RPM_BUILD_ROOT%{_infodir}
+cp -p Doc/build/texinfo/python*info* $RPM_BUILD_ROOT%{_infodir}
 %endif
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
@@ -1389,7 +1382,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with info}
 %files doc-info
 %defattr(644,root,root,755)
-%{_infodir}/*.info*
+%{_infodir}/python.info*
 %endif
 
 %if %{with tkinter}
