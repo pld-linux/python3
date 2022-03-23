@@ -47,13 +47,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.0
+Version:	%{py_ver}.3
 Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	3e7035d272680f80e3ce4e8eb492d580
+# Source0-md5:	21e0b70d70fdd4756aafc4caa55cc17e
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
@@ -61,9 +61,7 @@ Patch2:		%{name}-multilib.patch
 Patch3:		%{name}-no_cmdline_tests.patch
 
 Patch5:		%{name}-config.patch
-Patch6:		%{name}-BLDLIBRARY.patch
 Patch7:		%{name}-db.patch
-Patch8:		%{name}-install_prefix.patch
 Patch9:		%{name}-tests_with_pythonpath.patch
 Patch10:	%{name}-bdist_rpm.patch
 Patch11:	%{name}-installcompile.patch
@@ -488,9 +486,7 @@ Moduły testowe dla Pythona.
 %patch3 -p1
 
 %patch5 -p1
-%patch6 -p1
 %patch7 -p1
-%patch8 -p1
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
@@ -524,6 +520,9 @@ sed -E -i -e '1s,#!\s*/usr/bin/env\s+python3(\s|$),#!%{__python3}\1,' \
       Tools/scripts/pydoc3
 
 find . -name '*.py' | xargs -r grep -El '^#! */usr/bin/env python3?' | xargs %{__sed} -i -e '1s,^#! */usr/bin/env python3\?,#!/usr/bin/python3,'
+
+sed -E -i -e '1s,#!\s*/usr/bin/env\s+bash(\s|$),#!/bin/bash\1,' \
+	Tools/c-analyzer/must-resolve.sh
 
 %build
 if ! grep -q "tmpfs" /proc/self/mounts; then
@@ -663,7 +662,7 @@ install -p Tools/scripts/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py_ve
 
 # that seems to be only an empty extension template,
 # which seems to be built only {with tests}
-%{__rm} -f $RPM_BUILD_ROOT%{py_dyndir}/xxlimited.*.so
+%{__rm} $RPM_BUILD_ROOT%{py_dyndir}/xxlimited*.*.so
 
 # already in %%doc
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/LICENSE.txt
@@ -690,8 +689,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/python%{py_abi}
 %endif
 %attr(755,root,root) %{_bindir}/python3
-%{_mandir}/man1/python%{py_ver}.1*
-%{_mandir}/man1/python3.1*
+%{_mandir}/man1/python3*.1*
 
 %files libs
 %defattr(644,root,root,755)
@@ -795,7 +793,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__future__.py
 %{py_libdir}/__phello__.foo.py
 %{py_libdir}/_aix_support.py
-%{py_libdir}/_bootlocale.py
 %{py_libdir}/_bootsubprocess.py
 %{py_libdir}/_compat_pickle.py
 %{py_libdir}/_compression.py
@@ -841,7 +838,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/filecmp.py
 %{py_libdir}/fileinput.py
 %{py_libdir}/fnmatch.py
-%{py_libdir}/formatter.py
 %{py_libdir}/fractions.py
 %{py_libdir}/ftplib.py
 %{py_libdir}/getopt.py
@@ -905,7 +901,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/struct.py
 %{py_libdir}/subprocess.py
 %{py_libdir}/sunau.py
-%{py_libdir}/symbol.py
 %{py_libdir}/symtable.py
 %{py_libdir}/tabnanny.py
 %{py_libdir}/tarfile.py
@@ -931,7 +926,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/__future__.cpython-*.py[co]
 %{py_libdir}/__pycache__/__phello__.foo.cpython-*.py[co]
 %{py_libdir}/__pycache__/_aix_support.cpython-*.py[co]
-%{py_libdir}/__pycache__/_bootlocale.cpython-*.py[co]
 %{py_libdir}/__pycache__/_bootsubprocess.cpython-*.py[co]
 %{py_libdir}/__pycache__/_compat_pickle.cpython-*.py[co]
 %{py_libdir}/__pycache__/_compression.cpython-*.py[co]
@@ -977,7 +971,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/filecmp.cpython-*.py[co]
 %{py_libdir}/__pycache__/fileinput.cpython-*.py[co]
 %{py_libdir}/__pycache__/fnmatch.cpython-*.py[co]
-%{py_libdir}/__pycache__/formatter.cpython-*.py[co]
 %{py_libdir}/__pycache__/fractions.cpython-*.py[co]
 %{py_libdir}/__pycache__/ftplib.cpython-*.py[co]
 %{py_libdir}/__pycache__/getopt.cpython-*.py[co]
@@ -1041,7 +1034,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/struct.cpython-*.py[co]
 %{py_libdir}/__pycache__/subprocess.cpython-*.py[co]
 %{py_libdir}/__pycache__/sunau.cpython-*.py[co]
-%{py_libdir}/__pycache__/symbol.cpython-*.py[co]
 %{py_libdir}/__pycache__/symtable.cpython-*.py[co]
 %{py_libdir}/__pycache__/tabnanny.cpython-*.py[co]
 %{py_libdir}/__pycache__/tarfile.cpython-*.py[co]
@@ -1136,7 +1128,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/mmap.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/nis.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/ossaudiodev.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/parser.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/pyexpat.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/readline.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/resource.cpython-*.so
@@ -1205,6 +1196,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_libdir}/importlib
 %{py_libdir}/importlib/__pycache__
 %{py_libdir}/importlib/*.py
+%dir %{py_libdir}/importlib/metadata
+%{py_libdir}/importlib/metadata/__pycache__
+%{py_libdir}/importlib/metadata/*.py
 
 %dir %{py_libdir}/json
 %{py_libdir}/json/__pycache__

@@ -32,6 +32,15 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/distutils/tests/test_install.py Pyth
 diff -urNp -x '*.orig' Python-3.9.2.org/Lib/site.py Python-3.9.2/Lib/site.py
 --- Python-3.9.2.org/Lib/site.py	2021-02-19 13:31:44.000000000 +0100
 +++ Python-3.9.2/Lib/site.py	2021-02-25 18:40:00.705652346 +0100
+@@ -295,7 +295,7 @@
+     if sys.platform == 'darwin' and sys._framework:
+         return f'{userbase}/lib/python/site-packages'
+ 
+-    return f'{userbase}/lib/python{version[0]}.{version[1]}/site-packages'
++    return f'{userbase}/{sys.platlibdir}/python{version[0]}.{version[1]}/site-packages'
+ 
+ 
+ def getuserbase():
 @@ -344,6 +344,8 @@ def getsitepackages(prefixes=None):
                                      "python%d.%d" % sys.version_info[:2],
                                      "site-packages")
@@ -123,3 +132,22 @@ diff -urNp -x '*.orig' Python-3.9.2.org/setup.py Python-3.9.2/setup.py
                                 extra_link_args=readline_extra_link_args,
                                 libraries=readline_libs))
          else:
+--- Python-3.10.3/Lib/test/test_sysconfig.py~	2022-03-16 12:27:11.000000000 +0100
++++ Python-3.10.3/Lib/test/test_sysconfig.py	2022-03-22 23:11:16.335919644 +0100
+@@ -299,13 +299,13 @@
+                 expected = global_path.replace(base, user, 1)
+                 # bpo-44860: platlib of posix_user doesn't use sys.platlibdir,
+                 # whereas posix_prefix does.
+-                if name == 'platlib':
++                if name != 'platlib':
+                     # Replace "/lib64/python3.11/site-packages" suffix
+                     # with "/lib/python3.11/site-packages".
+                     py_version_short = sysconfig.get_python_version()
+                     suffix = f'python{py_version_short}/site-packages'
+-                    expected = expected.replace(f'/{sys.platlibdir}/{suffix}',
+-                                                f'/lib/{suffix}')
++                    expected = expected.replace(f'/lib/{suffix}',
++                                                f'/{sys.platlibdir}/{suffix}')
+                 self.assertEqual(user_path, expected)
+ 
+     def test_main(self):
