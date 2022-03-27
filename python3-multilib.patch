@@ -46,7 +46,7 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/site.py Python-3.9.2/Lib/site.py
                                      "site-packages")
                  sitepackages.append(path)
 +            sitepackages.append(os.path.join(prefix, sys.platlibdir, "site-python"))
-+            sitepackages.append(os.path.join(prefix, "share", "python" + sys.version[:3], "site-packages"))
++            sitepackages.append(os.path.join(prefix, "share", "python%d.%d" % sys.version_info[:2], "site-packages"))
          else:
              sitepackages.append(prefix)
  
