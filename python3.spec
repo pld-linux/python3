@@ -59,7 +59,7 @@ Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
 Patch2:		%{name}-multilib.patch
 Patch3:		%{name}-no_cmdline_tests.patch
-
+Patch4:		%{name}-BLDLIBRARY.patch
 Patch5:		%{name}-config.patch
 Patch7:		%{name}-db.patch
 Patch9:		%{name}-tests_with_pythonpath.patch
@@ -484,7 +484,7 @@ Moduły testowe dla Pythona.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-
+%patch4 -p1
 %patch5 -p1
 %patch7 -p1
 %patch9 -p1
