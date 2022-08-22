@@ -141,10 +141,10 @@ diff -urNp -x '*.orig' Python-3.9.2.org/setup.py Python-3.9.2/setup.py
                                 extra_link_args=readline_extra_link_args,
                                 libraries=readline_libs))
          else:
---- Python-3.10.3/Lib/test/test_sysconfig.py~	2022-03-16 12:27:11.000000000 +0100
-+++ Python-3.10.3/Lib/test/test_sysconfig.py	2022-03-22 23:11:16.335919644 +0100
-@@ -299,13 +299,13 @@
-                 expected = global_path.replace(base, user, 1)
+--- Python-3.10.6/Lib/test/test_sysconfig.py.orig	2022-08-22 06:15:16.895139554 +0200
++++ Python-3.10.6/Lib/test/test_sysconfig.py	2022-08-22 06:18:57.331178879 +0200
+@@ -299,13 +299,13 @@ class TestSysConfig(unittest.TestCase):
+                 expected = os.path.normpath(global_path.replace(base, user, 1))
                  # bpo-44860: platlib of posix_user doesn't use sys.platlibdir,
                  # whereas posix_prefix does.
 -                if name == 'platlib':

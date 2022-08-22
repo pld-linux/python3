@@ -36,33 +36,32 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_cmd_line.py Python-3.9.2/L
      def test_empty_PYTHONPATH_issue16309(self):
          # On Posix, it is documented that setting PATH to the
          # empty string is equivalent to not setting PATH at all,
-diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_compileall.py Python-3.9.2/Lib/test/test_compileall.py
---- Python-3.9.2.org/Lib/test/test_compileall.py	2021-02-25 18:41:39.412060338 +0100
-+++ Python-3.9.2/Lib/test/test_compileall.py	2021-02-25 18:41:41.098779547 +0100
-@@ -486,6 +486,7 @@ class CommandLineTestsBase:
-         self.initfn = script_helper.make_script(self.pkgdir, '__init__', '')
-         self.barfn = script_helper.make_script(self.pkgdir, 'bar', '')
+--- Python-3.10.6/Lib/test/test_compileall.py.orig	2022-08-21 08:24:26.562151782 +0200
++++ Python-3.10.6/Lib/test/test_compileall.py	2022-08-22 16:36:51.754553471 +0200
+@@ -508,6 +508,7 @@ class CommandLineTestsBase:
+         path = importlib.util.cache_from_source(fn)
+         self.assertFalse(os.path.exists(path))
  
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      def test_no_args_compiles_path(self):
          # Note that -l is implied for the no args case.
-         self._skip_if_sys_path_not_writable()
-@@ -495,6 +496,7 @@ class CommandLineTestsBase:
-         self.assertNotCompiled(self.initfn)
-         self.assertNotCompiled(self.barfn)
+         bazfn = script_helper.make_script(self.directory, 'baz', '')
+@@ -517,6 +518,7 @@ class CommandLineTestsBase:
+             self.assertNotCompiled(self.initfn)
+             self.assertNotCompiled(self.barfn)
  
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      @without_source_date_epoch  # timestamp invalidation test
      def test_no_args_respects_force_flag(self):
-         self._skip_if_sys_path_not_writable()
-@@ -513,6 +515,7 @@ class CommandLineTestsBase:
+         bazfn = script_helper.make_script(self.directory, 'baz', '')
+@@ -535,6 +537,7 @@ class CommandLineTestsBase:
          mtime2 = os.stat(pycpath).st_mtime
          self.assertNotEqual(mtime, mtime2)
  
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      def test_no_args_respects_quiet_flag(self):
-         self._skip_if_sys_path_not_writable()
          script_helper.make_script(self.directory, 'baz', '')
+         with self.temporary_pycache_prefix() as env:
 diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_pydoc.py Python-3.9.2/Lib/test/test_pydoc.py
 --- Python-3.9.2.org/Lib/test/test_pydoc.py	2021-02-19 13:31:44.000000000 +0100
 +++ Python-3.9.2/Lib/test/test_pydoc.py	2021-02-25 18:41:41.098779547 +0100
