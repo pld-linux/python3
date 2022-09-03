@@ -59,7 +59,7 @@
      Linux*|GNU*|NetBSD*|FreeBSD*|DragonFly*|OpenBSD*|VxWorks*)
  	  LDLIBRARY='libpython$(LDVERSION).so'
 -	  BLDLIBRARY='-L. -lpython$(LDVERSION)'
-+	  BLDLIBDIR='-Wl,-R,$(LIBDIR) -L.'
++	  BLDLIBDIR='-L.'
 +	  BLDLIBRARY='-lpython$(VERSION)'
  	  RUNSHARED=LD_LIBRARY_PATH=`pwd`${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
  	  INSTSONAME="$LDLIBRARY".$SOVERSION
