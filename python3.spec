@@ -531,6 +531,8 @@ if ! grep -q "tmpfs" /proc/self/mounts; then
 	exit 1
 fi
 
+export SETUPTOOLS_USE_DISTUTILS=stdlib
+
 %{__aclocal}
 %{__autoconf}
 %configure \
