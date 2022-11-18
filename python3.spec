@@ -868,6 +868,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/opcode.py
 %{py_libdir}/optparse.py
 %{py_libdir}/pathlib.py
+%{py_libdir}/pdb.py
 %{py_libdir}/pickle.py
 %{py_libdir}/pickletools.py
 %{py_libdir}/pipes.py
@@ -876,6 +877,8 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/plistlib.py
 %{py_libdir}/poplib.py
 %{py_libdir}/pprint.py
+%{py_libdir}/profile.py
+%{py_libdir}/pstats.py
 %{py_libdir}/pty.py
 %{py_libdir}/py_compile.py
 %{py_libdir}/pyclbr.py
@@ -884,13 +887,13 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/random.py
 %{py_libdir}/rlcompleter.py
 %{py_libdir}/runpy.py
-%{py_libdir}/secrets.py
-%{py_libdir}/signal.py
 %{py_libdir}/sched.py
+%{py_libdir}/secrets.py
 %{py_libdir}/selectors.py
 %{py_libdir}/shelve.py
 %{py_libdir}/shlex.py
 %{py_libdir}/shutil.py
+%{py_libdir}/signal.py
 %{py_libdir}/smtpd.py
 %{py_libdir}/smtplib.py
 %{py_libdir}/sndhdr.py
@@ -954,13 +957,13 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/cgitb.cpython-*.py[co]
 %{py_libdir}/__pycache__/chunk.cpython-*.py[co]
 %{py_libdir}/__pycache__/cmd.cpython-*.py[co]
-%{py_libdir}/__pycache__/contextvars.cpython-*.py[co]
 %{py_libdir}/__pycache__/code.cpython-*.py[co]
 %{py_libdir}/__pycache__/codeop.cpython-*.py[co]
 %{py_libdir}/__pycache__/colorsys.cpython-*.py[co]
 %{py_libdir}/__pycache__/compileall.cpython-*.py[co]
 %{py_libdir}/__pycache__/configparser.cpython-*.py[co]
 %{py_libdir}/__pycache__/contextlib.cpython-*.py[co]
+%{py_libdir}/__pycache__/contextvars.cpython-*.py[co]
 %{py_libdir}/__pycache__/copy.cpython-*.py[co]
 %{py_libdir}/__pycache__/crypt.cpython-*.py[co]
 %{py_libdir}/__pycache__/csv.cpython-*.py[co]
@@ -1001,6 +1004,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/opcode.cpython-*.py[co]
 %{py_libdir}/__pycache__/optparse.cpython-*.py[co]
 %{py_libdir}/__pycache__/pathlib.cpython-*.py[co]
+%{py_libdir}/__pycache__/pdb.cpython-*.py[co]
 %{py_libdir}/__pycache__/pickle.cpython-*.py[co]
 %{py_libdir}/__pycache__/pickletools.cpython-*.py[co]
 %{py_libdir}/__pycache__/pipes.cpython-*.py[co]
@@ -1009,6 +1013,8 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/plistlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/poplib.cpython-*.py[co]
 %{py_libdir}/__pycache__/pprint.cpython-*.py[co]
+%{py_libdir}/__pycache__/profile.cpython-*.py[co]
+%{py_libdir}/__pycache__/pstats.cpython-*.py[co]
 %{py_libdir}/__pycache__/pty.cpython-*.py[co]
 %{py_libdir}/__pycache__/py_compile.cpython-*.py[co]
 %{py_libdir}/__pycache__/pyclbr.cpython-*.py[co]
@@ -1330,13 +1336,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not md5 mtime size) /etc/shrc.d/python*-devel*
 %attr(755,root,root) %{_bindir}/pygettext%{py_ver}
 %attr(755,root,root) %{_bindir}/pyreindent%{py_ver}
-%{py_libdir}/pdb.py
-%{py_libdir}/profile.py
-%{py_libdir}/pstats.py
 %{py_libdir}/timeit.py
-%{py_libdir}/__pycache__/pdb.cpython-*.py[co]
-%{py_libdir}/__pycache__/profile.cpython-*.py[co]
-%{py_libdir}/__pycache__/pstats.cpython-*.py[co]
 %{py_libdir}/__pycache__/timeit.cpython-*.py[co]
 
 %files 2to3
