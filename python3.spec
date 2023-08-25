@@ -93,6 +93,7 @@ BuildRequires:	ncurses-ext-devel >= 5.2
 BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	pkgconfig
 BuildRequires:	readline-devel >= 5.0
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
 BuildRequires:	sed >= 4.0
 BuildRequires:	sqlite3-devel >= 3.3.5
