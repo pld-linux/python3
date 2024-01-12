@@ -20,7 +20,7 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_warnings/__init__.py Pytho
  class EnvironmentVariableTests(BaseTest):
  
      def test_single_warning(self):
-@@ -1206,14 +1207,17 @@ class EnvironmentVariableTests(BaseTest)
+@@ -1278,9 +1278,11 @@ class EnvironmentVariableTests(BaseTest)
              PYTHONDEVMODE="")
          self.assertEqual(stdout, str([PYTHONWARNINGS]).encode())
  
@@ -32,8 +32,10 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_warnings/__init__.py Pytho
  class PyEnvironmentVariableTests(EnvironmentVariableTests, unittest.TestCase):
      module = py_warnings
  
+@@ -1326,6 +1328,7 @@ class _DeprecatedTest(BaseTest, unittest
  
  class BootstrapTest(unittest.TestCase):
+ 
 +    @unittest.skipUnless(support.is_resource_enabled("cmdline"), "python cmdline tests disabled")
      def test_issue_8766(self):
          # "import encodings" emits a warning whereas the warnings is not loaded

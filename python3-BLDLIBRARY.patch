@@ -8,37 +8,37 @@
  PY3LIBRARY=     @PY3LIBRARY@
  DLLLIBRARY=	@DLLLIBRARY@
  LDLIBRARYDIR=   @LDLIBRARYDIR@
-@@ -588,7 +588,7 @@ clinic: check-clean-src $(srcdir)/Module
+@@ -780,7 +780,7 @@ clinic: check-clean-src $(srcdir)/Module
  
  # Build the interpreter
- $(BUILDPYTHON):	Programs/python.o $(LIBRARY_DEPS)
--	$(LINKCC) $(PY_CORE_LDFLAGS) $(LINKFORSHARED) -o $@ Programs/python.o $(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS)
-+	$(LINKCC) $(PY_CORE_LDFLAGS) $(LINKFORSHARED) -o $@ Programs/python.o $(BLDLIBDIR) $(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS)
+ $(BUILDPYTHON):	Programs/python.o $(LINK_PYTHON_DEPS)
+-	$(LINKCC) $(PY_CORE_LDFLAGS) $(LINKFORSHARED) -o $@ Programs/python.o $(LINK_PYTHON_OBJS) $(LIBS) $(MODLIBS) $(SYSLIBS)
++	$(LINKCC) $(PY_CORE_LDFLAGS) $(LINKFORSHARED) -o $@ Programs/python.o $(BLDLIBDIR) $(LINK_PYTHON_OBJS) $(LIBS) $(MODLIBS) $(SYSLIBS)
  
- platform: $(BUILDPYTHON) pybuilddir.txt
+ platform: $(PYTHON_FOR_BUILD_DEPS) pybuilddir.txt
  	$(RUNSHARED) $(PYTHON_FOR_BUILD) -c 'import sys ; from sysconfig import get_platform ; print("%s-%d.%d" % (get_platform(), *sys.version_info[:2]))' >platform
-@@ -723,7 +723,7 @@ Makefile Modules/config.c: Makefile.pre
+@@ -1056,7 +1056,7 @@ regen-re: $(BUILDPYTHON)
+ 	$(RUNSHARED) ./$(BUILDPYTHON) $(srcdir)/Tools/build/generate_re_casefix.py $(srcdir)/Lib/re/_casefix.py
  
- 
- Programs/_testembed: Programs/_testembed.o $(LIBRARY_DEPS)
--	$(LINKCC) $(PY_CORE_LDFLAGS) $(LINKFORSHARED) -o $@ Programs/_testembed.o $(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS)
-+	$(LINKCC) $(PY_CORE_LDFLAGS) $(LINKFORSHARED) -o $@ Programs/_testembed.o $(BLDLIBDIR) $(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS)
+ Programs/_testembed: Programs/_testembed.o $(LINK_PYTHON_DEPS)
+-	$(LINKCC) $(PY_CORE_LDFLAGS) $(LINKFORSHARED) -o $@ Programs/_testembed.o $(LINK_PYTHON_OBJS) $(LIBS) $(MODLIBS) $(SYSLIBS)
++	$(LINKCC) $(PY_CORE_LDFLAGS) $(LINKFORSHARED) -o $@ Programs/_testembed.o $(BLDLIBDIR) $(LINK_PYTHON_OBJS) $(LIBS) $(MODLIBS) $(SYSLIBS)
  
  ############################################################################
- # Importlib
+ # "Bootstrap Python" used to run deepfreeze.py
 --- Python-3.8.5/configure.ac.orig	2020-09-17 07:55:13.735226834 +0200
 +++ Python-3.8.5/configure.ac	2020-09-17 10:46:44.172812084 +0200
-@@ -1033,6 +1033,7 @@
+@@ -1359,6 +1359,7 @@ AC_MSG_RESULT([$LIBRARY])
  # with the ABI build flags appended.
- AC_SUBST(LDLIBRARY)
- AC_SUBST(DLLLIBRARY)
-+AC_SUBST(BLDLIBDIR)
- AC_SUBST(BLDLIBRARY)
- AC_SUBST(PY3LIBRARY)
- AC_SUBST(LDLIBRARYDIR)
-@@ -1040,6 +1041,7 @@
- AC_SUBST(RUNSHARED)
- AC_SUBST(LDVERSION)
+ AC_SUBST([LDLIBRARY])
+ AC_SUBST([DLLLIBRARY])
++AC_SUBST([BLDLIBDIR])
+ AC_SUBST([BLDLIBRARY])
+ AC_SUBST([PY3LIBRARY])
+ AC_SUBST([LDLIBRARYDIR])
+@@ -1366,6 +1367,7 @@ AC_SUBST([INSTSONAME])
+ AC_SUBST([RUNSHARED])
+ AC_SUBST([LDVERSION])
  LDLIBRARY="$LIBRARY"
 +BLDLIBDIR=''
  BLDLIBRARY='$(LDLIBRARY)'

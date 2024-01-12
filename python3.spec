@@ -13,7 +13,7 @@
 # tests which may fail because of builder environment limitations (no /proc or /dev/pts)
 %define		nobuilder_tests -u-network -x test_resource -x test_openpty -x test_socket -x test_nis -x test_posix -x test_locale -x test_pty -x test_asyncio -x test_os -x test_readline -x test_normalization
 
-# tests which fail because of some unknown/unresolved reason (this list should be %{nil})
+# tests which fail because of some unknown/unresolved reason (this list should be %%{nil})
 #   test_site: fails because our site.py is patched to include both /usr/share/... and /usr/lib...
 #   test_gdb: fails, as the gdb uses old python version
 #   test_time: test_AsTimeval (test.test_time.TestCPyTime), rounding error
@@ -21,7 +21,7 @@
 %define		broken_tests_x32	-x test_time
 %undefine	with_optimizations
 %endif
-%define		broken_tests	-x test_embed -x test_nntplib -x test_gdb -x test_site -x test_distutils -x test_bdist_rpm -x test_ssl %{?broken_tests_x32}
+%define		broken_tests	-x test_embed -x test_nntplib -x test_gdb -x test_site -x test_ssl %{?broken_tests_x32}
 
 %ifarch armv6hl armv7hl armv7hnl
 %define		_python_target_abi	%{?_gnu}hf
@@ -29,7 +29,7 @@
 %define		_python_target_abi	%{?_gnu}
 %endif
 
-%define py_ver		3.10
+%define py_ver		3.12
 %define py_abi		%{py_ver}
 %define	py_platform	%{py_abi}-%{_target_base_arch}-%{_target_os}%{?_python_target_abi}
 %define py_prefix	%{_prefix}
@@ -47,23 +47,23 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.13
-Release:	2
+Version:	%{py_ver}.1
+Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	8847dc6458d1431d0ae0f55942deeb89
+# Source0-md5:	50f827c800483776c8ef86e6a53831fa
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
-Patch1:		%{name}-ac_fixes.patch
+
 Patch2:		%{name}-multilib.patch
 Patch3:		%{name}-no_cmdline_tests.patch
 Patch4:		%{name}-BLDLIBRARY.patch
 Patch5:		%{name}-config.patch
-Patch7:		%{name}-db.patch
+
 Patch9:		%{name}-tests_with_pythonpath.patch
-Patch10:	%{name}-bdist_rpm.patch
+
 Patch11:	%{name}-installcompile.patch
 
 Patch13:	%{name}-no-randomize-tests.patch
@@ -483,14 +483,14 @@ Moduły testowe dla Pythona.
 %prep
 %setup -q -n Python-%{version}
 %patch0 -p1
-%patch1 -p1
+
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch7 -p1
+
 %patch9 -p1
-%patch10 -p1
+
 %patch11 -p1
 
 %patch13 -p1
@@ -498,10 +498,6 @@ Moduły testowe dla Pythona.
 %patch15 -p1
 
 %{__rm} -r Modules/expat
-
-for SUBDIR in darwin libffi_osx; do
-	%{__rm} -r Modules/_ctypes/$SUBDIR/*
-done
 
 %if "%{pld_release}" == "ac"
 files="md5module.c sha1module.c"
@@ -513,17 +509,16 @@ done
 
 sed -E -i -e '1s,#!\s*/usr/bin/env\s+python2(\s|$),#!%{__python}\1,' -e '1s,#!\s*/usr/bin/env\s+python(\s|$),#!%{__python}\1,' -e '1s,#!\s*/usr/bin/python(\s|$),#!%{__python}\1,' \
       Tools/gdb/libpython.py \
-      Tools/pynche/pynche \
-      Tools/pynche/pynche.pyw \
-      Tools/scripts/2to3
 
 sed -E -i -e '1s,#!\s*/usr/bin/env\s+python3(\s|$),#!%{__python3}\1,' \
       Tools/scripts/idle3 \
+      Tools/scripts/2to3 \
       Tools/scripts/pydoc3
 
 find . -name '*.py' | xargs -r grep -El '^#! */usr/bin/env python3?' | xargs %{__sed} -i -e '1s,^#! */usr/bin/env python3\?,#!/usr/bin/python3,'
 
 sed -E -i -e '1s,#!\s*/usr/bin/env\s+bash(\s|$),#!/bin/bash\1,' \
+	Tools/build/regen-configure.sh \
 	Tools/c-analyzer/must-resolve.sh
 
 %build
@@ -652,7 +647,7 @@ sed 's/=/ /' \
 install -p Tools/i18n/pygettext.py $RPM_BUILD_ROOT%{_bindir}/pygettext%{py_ver}
 
 # reindent python code
-install -p Tools/scripts/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py_ver}
+install -p Tools/patchcheck/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py_ver}
 
 # just to cut the noise, as they are not packaged (now)
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/ctypes/macholib/fetch_macholib*
@@ -734,7 +729,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/io.py
 %{py_libdir}/operator.py
 %{py_libdir}/posixpath.py
-%{py_libdir}/re.py
 %{py_libdir}/reprlib.py
 %{py_libdir}/site.py
 %{py_libdir}/sre_*.py
@@ -765,7 +759,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/io.cpython-*.py[co]
 %{py_libdir}/__pycache__/operator.cpython-*.py[co]
 %{py_libdir}/__pycache__/posixpath.cpython-*.py[co]
-%{py_libdir}/__pycache__/re.cpython-*.py[co]
 %{py_libdir}/__pycache__/reprlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/site.cpython-*.py[co]
 %{py_libdir}/__pycache__/sre_*.cpython-*.py[co]
@@ -795,27 +788,25 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) /etc/shrc.d/python*-modules*
 %{py_libdir}/__future__.py
-%{py_libdir}/__phello__.foo.py
+%{py_libdir}/__hello__.py
 %{py_libdir}/_aix_support.py
-%{py_libdir}/_bootsubprocess.py
 %{py_libdir}/_compat_pickle.py
 %{py_libdir}/_compression.py
 %{py_libdir}/_markupbase.py
 %{py_libdir}/_osx_support.py
 %{py_libdir}/_pydecimal.py
 %{py_libdir}/_py_abc.py
+%{py_libdir}/_pydatetime.py
 %{py_libdir}/_pyio.py
+%{py_libdir}/_pylong.py
 %{py_libdir}/_strptime.py
 %{py_libdir}/_threading_local.py
 %{py_libdir}/aifc.py
 %{py_libdir}/antigravity.py
 %{py_libdir}/argparse.py
 %{py_libdir}/ast.py
-%{py_libdir}/asynchat.py
-%{py_libdir}/asyncore.py
 %{py_libdir}/base64.py
 %{py_libdir}/bdb.py
-%{py_libdir}/binhex.py
 %{py_libdir}/bz2.py
 %{py_libdir}/cProfile.py
 %{py_libdir}/calendar.py
@@ -854,7 +845,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/hmac.py
 %{py_libdir}/imaplib.py
 %{py_libdir}/imghdr.py
-%{py_libdir}/imp.py
 %{py_libdir}/inspect.py
 %{py_libdir}/ipaddress.py
 %{py_libdir}/lzma.py
@@ -896,7 +886,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/shlex.py
 %{py_libdir}/shutil.py
 %{py_libdir}/signal.py
-%{py_libdir}/smtpd.py
 %{py_libdir}/smtplib.py
 %{py_libdir}/sndhdr.py
 %{py_libdir}/socket.py
@@ -928,30 +917,27 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/webbrowser.py
 %{py_libdir}/xdrlib.py
 %{py_libdir}/zipapp.py
-%{py_libdir}/zipfile.py
 %{py_libdir}/zipimport.py
 %{py_libdir}/__pycache__/__future__.cpython-*.py[co]
-%{py_libdir}/__pycache__/__phello__.foo.cpython-*.py[co]
+%{py_libdir}/__pycache__/__hello__.cpython-*.py[co]
 %{py_libdir}/__pycache__/_aix_support.cpython-*.py[co]
-%{py_libdir}/__pycache__/_bootsubprocess.cpython-*.py[co]
 %{py_libdir}/__pycache__/_compat_pickle.cpython-*.py[co]
 %{py_libdir}/__pycache__/_compression.cpython-*.py[co]
 %{py_libdir}/__pycache__/_markupbase.cpython-*.py[co]
 %{py_libdir}/__pycache__/_osx_support.cpython-*.py[co]
 %{py_libdir}/__pycache__/_pydecimal.cpython-*.py[co]
 %{py_libdir}/__pycache__/_py_abc.cpython-*.py[co]
+%{py_libdir}/__pycache__/_pydatetime.cpython-*.py[co]
 %{py_libdir}/__pycache__/_pyio.cpython-*.py[co]
+%{py_libdir}/__pycache__/_pylong.cpython-*.py[co]
 %{py_libdir}/__pycache__/_strptime.cpython-*.py[co]
 %{py_libdir}/__pycache__/_threading_local.cpython-*.py[co]
 %{py_libdir}/__pycache__/aifc.cpython-*.py[co]
 %{py_libdir}/__pycache__/antigravity.cpython-*.py[co]
 %{py_libdir}/__pycache__/argparse.cpython-*.py[co]
 %{py_libdir}/__pycache__/ast.cpython-*.py[co]
-%{py_libdir}/__pycache__/asynchat.cpython-*.py[co]
-%{py_libdir}/__pycache__/asyncore.cpython-*.py[co]
 %{py_libdir}/__pycache__/base64.cpython-*.py[co]
 %{py_libdir}/__pycache__/bdb.cpython-*.py[co]
-%{py_libdir}/__pycache__/binhex.cpython-*.py[co]
 %{py_libdir}/__pycache__/bz2.cpython-*.py[co]
 %{py_libdir}/__pycache__/cProfile.cpython-*.py[co]
 %{py_libdir}/__pycache__/calendar.cpython-*.py[co]
@@ -990,7 +976,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/hmac.cpython-*.py[co]
 %{py_libdir}/__pycache__/imaplib.cpython-*.py[co]
 %{py_libdir}/__pycache__/imghdr.cpython-*.py[co]
-%{py_libdir}/__pycache__/imp.cpython-*.py[co]
 %{py_libdir}/__pycache__/inspect.cpython-*.py[co]
 %{py_libdir}/__pycache__/ipaddress.cpython-*.py[co]
 %{py_libdir}/__pycache__/lzma.cpython-*.py[co]
@@ -1032,7 +1017,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/shlex.cpython-*.py[co]
 %{py_libdir}/__pycache__/shutil.cpython-*.py[co]
 %{py_libdir}/__pycache__/signal.cpython-*.py[co]
-%{py_libdir}/__pycache__/smtpd.cpython-*.py[co]
 %{py_libdir}/__pycache__/smtplib.cpython-*.py[co]
 %{py_libdir}/__pycache__/sndhdr.cpython-*.py[co]
 %{py_libdir}/__pycache__/socket.cpython-*.py[co]
@@ -1064,7 +1048,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/webbrowser.cpython-*.py[co]
 %{py_libdir}/__pycache__/xdrlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/zipapp.cpython-*.py[co]
-%{py_libdir}/__pycache__/zipfile.cpython-*.py[co]
 %{py_libdir}/__pycache__/zipimport.cpython-*.py[co]
 
 #
@@ -1109,6 +1092,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_queue.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_random.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_sha1.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_sha2.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_sha3.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_socket.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_ssl.cpython-*.so
@@ -1119,16 +1103,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_testinternalcapi.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testimportmultiple.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testmultiphase.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_testsinglephase.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_uuid.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_xxinterpchannels.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_xxsubinterpreters.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_xxtestfuzz.cpython-*.so
-
-# for openssl < 0.9.8 package sha256 and sha512 modules
-%if "%{pld_release}" != "ac"
-%attr(755,root,root) %{py_dyndir}/_sha256.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/_sha512.cpython-*.so
-%endif
-
 %attr(755,root,root) %{py_dyndir}/array.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/audioop.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/binascii.cpython-*.so
@@ -1147,7 +1126,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/termios.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/spwd.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/unicodedata.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/xxsubtype.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/zlib.cpython-*.so
+
+%{py_libdir}/__phello__
 
 %dir %{py_libdir}/asyncio
 %{py_libdir}/asyncio/__pycache__
@@ -1171,15 +1153,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_libdir}/dbm
 %{py_libdir}/dbm/__pycache__
 %{py_libdir}/dbm/*.py
-
-%dir %{py_libdir}/distutils
-%dir %{py_libdir}/distutils/command
-%doc %{py_libdir}/distutils/README
-%{py_libdir}/distutils/__pycache__
-%{py_libdir}/distutils/command/__pycache__
-%{py_libdir}/distutils/*.py
-%{py_libdir}/distutils/command/*.py
-%{py_libdir}/distutils/command/command_template
 
 %dir %{py_libdir}/email
 %dir %{py_libdir}/email/mime
@@ -1210,6 +1183,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_libdir}/importlib/metadata
 %{py_libdir}/importlib/metadata/__pycache__
 %{py_libdir}/importlib/metadata/*.py
+%{py_libdir}/importlib/resources
 
 %dir %{py_libdir}/json
 %{py_libdir}/json/__pycache__
@@ -1226,6 +1200,8 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/multiprocessing/dummy/__pycache__
 %{py_libdir}/multiprocessing/dummy/*.py
 
+%{py_libdir}/re
+%{py_libdir}/tomllib
 %{py_libdir}/turtledemo
 
 %dir %{py_libdir}/unittest
@@ -1270,6 +1246,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_libdir}/xmlrpc
 %{py_libdir}/xmlrpc/__pycache__
 %{py_libdir}/xmlrpc/*.py
+
+%{py_libdir}/zipfile
 
 %attr(755,root,root) %{py_dyndir}/_sqlite3.cpython-*.so
 %dir %{py_libdir}/sqlite3
@@ -1369,12 +1347,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{py_libdir}/idlelib/idle_test
 %{py_libdir}/test
-%{py_libdir}/ctypes/test
-%{py_libdir}/distutils/tests
-%{py_libdir}/lib2to3/tests
-%{py_libdir}/sqlite3/test
-%{py_libdir}/tkinter/test
-%{py_libdir}/unittest/test
 
 %if %{with info}
 %files doc-info

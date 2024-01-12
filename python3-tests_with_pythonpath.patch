@@ -1,8 +1,8 @@
 diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_asyncio/test_tasks.py Python-3.9.2/Lib/test/test_asyncio/test_tasks.py
 --- Python-3.9.2.org/Lib/test/test_asyncio/test_tasks.py	2021-02-19 13:31:44.000000000 +0100
 +++ Python-3.9.2/Lib/test/test_asyncio/test_tasks.py	2021-02-25 18:41:41.098779547 +0100
-@@ -6,6 +6,7 @@ import contextvars
- import functools
+@@ -4,6 +4,7 @@ import collections
+ import contextvars
  import gc
  import io
 +import os
@@ -28,10 +28,11 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_cmd_line.py Python-3.9.2/L
      def test_large_PYTHONPATH(self):
          path1 = "ABCDE" * 100
          path2 = "FGHIJ" * 100
-@@ -280,6 +281,7 @@ class CmdLineTest(unittest.TestCase):
-         self.assertIn(path1.encode('ascii'), out)
-         self.assertIn(path2.encode('ascii'), out)
+
+@@ -374,6 +374,7 @@ class CmdLineTest(unittest.TestCase):
  
+     @unittest.skipIf(sys.flags.safe_path,
+                      'PYTHONSAFEPATH changes default sys.path')
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      def test_empty_PYTHONPATH_issue16309(self):
          # On Posix, it is documented that setting PATH to the
@@ -46,18 +47,18 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_cmd_line.py Python-3.9.2/L
      def test_no_args_compiles_path(self):
          # Note that -l is implied for the no args case.
          bazfn = script_helper.make_script(self.directory, 'baz', '')
-@@ -517,6 +518,7 @@ class CommandLineTestsBase:
-             self.assertNotCompiled(self.initfn)
-             self.assertNotCompiled(self.barfn)
+@@ -558,6 +558,7 @@ class CommandLineTestsBase:
  
-+    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      @without_source_date_epoch  # timestamp invalidation test
+     @support.requires_resource('cpu')
++    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      def test_no_args_respects_force_flag(self):
          bazfn = script_helper.make_script(self.directory, 'baz', '')
-@@ -535,6 +537,7 @@ class CommandLineTestsBase:
-         mtime2 = os.stat(pycpath).st_mtime
+         with self.temporary_pycache_prefix() as env:
+@@ -577,6 +577,7 @@ class CommandLineTestsBase:
          self.assertNotEqual(mtime, mtime2)
  
+     @support.requires_resource('cpu')
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      def test_no_args_respects_quiet_flag(self):
          script_helper.make_script(self.directory, 'baz', '')
@@ -92,8 +93,8 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_venv.py Python-3.9.2/Lib/t
      def test_executable(self):
          """
          Test that the sys.executable value is as expected.
-@@ -406,6 +408,7 @@ class BasicTest(BaseTest):
-         self.assertEqual(out.strip(), 'False'.encode())
+@@ -641,6 +641,7 @@ class BasicTest(BaseTest):
+                 self.assertFalse(line.endswith(b'\r\n'), error_message)
  
  @requireVenvCreate
 +@unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
@@ -103,9 +104,9 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_venv.py Python-3.9.2/Lib/t
 diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_warnings/__init__.py Python-3.9.2/Lib/test/test_warnings/__init__.py
 --- Python-3.9.2.org/Lib/test/test_warnings/__init__.py	2021-02-25 18:41:39.412060338 +0100
 +++ Python-3.9.2/Lib/test/test_warnings/__init__.py	2021-02-25 18:41:41.098779547 +0100
-@@ -1218,6 +1218,7 @@ class PyEnvironmentVariableTests(Environ
- 
+@@ -1329,6 +1329,7 @@ class _DeprecatedTest(BaseTest, unittest
  class BootstrapTest(unittest.TestCase):
+ 
      @unittest.skipUnless(support.is_resource_enabled("cmdline"), "python cmdline tests disabled")
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      def test_issue_8766(self):

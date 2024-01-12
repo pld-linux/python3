@@ -1,30 +1,20 @@
-diff -urNp -x '*.orig' Python-3.9.2.org/Makefile.pre.in Python-3.9.2/Makefile.pre.in
---- Python-3.9.2.org/Makefile.pre.in	2021-02-25 18:42:02.242771533 +0100
-+++ Python-3.9.2/Makefile.pre.in	2021-02-25 18:42:03.919490432 +0100
-@@ -1262,7 +1262,7 @@ altinstall: commoninstall
- 
+--- a/Makefile.pre.in~	2024-01-12 14:35:45.000000000 +0100
++++ b/Makefile.pre.in	2024-01-12 14:40:01.203324556 +0100
+@@ -1921,7 +1921,7 @@ altinstall: commoninstall
+ .PHONY: commoninstall
  commoninstall:  check-clean-src @FRAMEWORKALTINSTALLFIRST@ \
  		altbininstall libinstall inclinstall libainstall \
--		sharedinstall oldsharedinstall altmaninstall \
-+		sharedinstall oldsharedinstall altmaninstall installcompile \
- 		@FRAMEWORKALTINSTALLLAST@
+-		sharedinstall altmaninstall @FRAMEWORKALTINSTALLLAST@
++		sharedinstall altmaninstall installcompile @FRAMEWORKALTINSTALLLAST@
  
  # Install shared libraries enabled by Setup
-@@ -1530,6 +1530,8 @@ libinstall:	build_all $(srcdir)/Modules/
- 		$(INSTALL_DATA) $(srcdir)/Modules/xxmodule.c \
- 			$(DESTDIR)$(LIBDEST)/distutils/tests ; \
- 	fi
-+
+ DESTDIRS=	$(exec_prefix) $(LIBDIR) $(BINLIBDEST) $(DESTSHARED)
+@@ -2316,6 +2316,8 @@ libinstall:	all $(srcdir)/Modules/xxmodu
+ 	$(INSTALL_DATA) `cat pybuilddir.txt`/_sysconfigdata_$(ABIFLAGS)_$(MACHDEP)_$(MULTIARCH).py \
+ 		$(DESTDIR)$(LIBDEST); \
+ 	$(INSTALL_DATA) $(srcdir)/LICENSE $(DESTDIR)$(LIBDEST)/LICENSE.txt
++.PHONY: installcompile
 +installcompile: libainstall libinstall
- 	-PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
+ 	@ # Build PYC files for the 3 optimization levels (0, 1, 2)
+ 	-PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED) \
  		$(PYTHON_FOR_BUILD) -Wi $(DESTDIR)$(LIBDEST)/compileall.py \
- 		-j0 -d $(LIBDEST) -f \
-@@ -1938,7 +1940,7 @@ Python/thread.o: @THREADHEADERS@ $(srcdi
- .PHONY: frameworkinstall frameworkinstallframework frameworkinstallstructure
- .PHONY: frameworkinstallmaclib frameworkinstallapps frameworkinstallunixtools
- .PHONY: frameworkaltinstallunixtools recheck clean clobber distclean
--.PHONY: smelly funny patchcheck touch altmaninstall commoninstall
-+.PHONY: smelly funny patchcheck touch altmaninstall installcompile commoninstall
- .PHONY: clean-retain-profile profile-removal run_profile_task
- .PHONY: build_all_generate_profile build_all_merge_profile
- .PHONY: gdbhooks
