@@ -47,13 +47,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.13
-Release:	2
+Version:	%{py_ver}.14
+Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	8847dc6458d1431d0ae0f55942deeb89
+# Source0-md5:	05148354ce821ba7369e5b7958435400
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
@@ -77,7 +77,7 @@ BuildRequires:	bluez-libs-devel
 BuildRequires:	bzip2-devel
 BuildRequires:	db-devel >= 4
 %{?with_info:BuildRequires:	emacs >= 21}
-BuildRequires:	expat-devel >= 1:1.95.7
+BuildRequires:	expat-devel >= 1:2.6.2
 BuildRequires:	file
 BuildRequires:	gdbm-devel >= 1.8.3
 %if %(locale -a | grep -q '^C\.utf8$'; echo $?)
