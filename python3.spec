@@ -669,6 +669,9 @@ install -p Tools/patchcheck/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py
 %{__mv} $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h $RPM_BUILD_ROOT%{py_libdir}/config-%{py_platform}/pyconfig.h
 %{__sed} -e's#@PREFIX@#%{_prefix}#g;s#@PY_VER@#%{py_ver}#g;s#@PY_ABI@#%{py_platform}#g' %{SOURCE1} > $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h
 
+# python points to python3 now
+ln -s python3 $RPM_BUILD_ROOT%{_bindir}/python
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -687,6 +690,7 @@ rm -rf $RPM_BUILD_ROOT
 %if "%{py_ver}" != "%{py_abi}"
 %attr(755,root,root) %{_bindir}/python%{py_abi}
 %endif
+%attr(755,root,root) %{_bindir}/python
 %attr(755,root,root) %{_bindir}/python3
 %{_mandir}/man1/python3*.1*
 
