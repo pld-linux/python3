@@ -250,6 +250,7 @@ Group:		Libraries/Python
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 %{?with_system_mpdecimal:Requires:	mpdecimal >= 2.4.2-2}
 Obsoletes:	python3-modules-sqlite < 1:3.1-2
+%requires_ge_to	expat expat-devel
 %requires_ge_to	openssl openssl-devel
 
 %description modules
