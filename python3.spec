@@ -48,7 +48,7 @@ Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
 Version:	%{py_ver}.14
-Release:	3
+Release:	4
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
@@ -106,6 +106,7 @@ BuildRequires:	xz-devel
 BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Suggests:	pip
+Conflicts:	python < 1:2.7.18-10
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		specflags_ppc	-D__ppc__=1
