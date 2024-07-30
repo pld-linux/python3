@@ -63,9 +63,9 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_cmd_line.py Python-3.9.2/L
      def test_no_args_respects_quiet_flag(self):
          script_helper.make_script(self.directory, 'baz', '')
          with self.temporary_pycache_prefix() as env:
-diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_pydoc.py Python-3.9.2/Lib/test/test_pydoc.py
---- Python-3.9.2.org/Lib/test/test_pydoc.py	2021-02-19 13:31:44.000000000 +0100
-+++ Python-3.9.2/Lib/test/test_pydoc.py	2021-02-25 18:41:41.098779547 +0100
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_pydoc/test_pydoc.py Python-3.9.2/Lib/test/test_pydoc/test_pydoc.py
+--- Python-3.9.2.org/Lib/test/test_pydoc/test_pydoc.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/test/test_pydoc/test_pydoc.py	2021-02-25 18:41:41.098779547 +0100
 @@ -885,6 +885,7 @@ class PydocImportTest(PydocBaseTest):
          self.addCleanup(rmtree, TESTFN)
          importlib.invalidate_caches()
