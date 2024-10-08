@@ -19,4 +19,22 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_imaplib.py Python-3.9.2/Li
          self.assertIn(cm.exception.errno, expected_errnos)
  
  
-
+--- a/Lib/test/test_site.py	2024-10-07 07:02:14.000000000 +0200
++++ b/Lib/test/test_site.py.new	2024-10-08 14:14:57.416459147 +0200
+@@ -326,14 +326,14 @@ class HelperFunctionsTests(unittest.Test
+         if os.sep == '/':
+             # OS X, Linux, FreeBSD, etc
+             if sys.platlibdir != "lib":
+-                self.assertEqual(len(dirs), 2)
++                self.assertEqual(len(dirs), 6)
+                 wanted = os.path.join('xoxo', sys.platlibdir,
+                                       f'python{sysconfig._get_python_version_abi()}',
+                                       'site-packages')
+                 self.assertEqual(dirs[0], wanted)
+             else:
+                 self.assertEqual(len(dirs), 1)
+-            wanted = os.path.join('xoxo', 'lib',
++            wanted = os.path.join('xoxo', 'share',
+                                   f'python{sysconfig._get_python_version_abi()}',
+                                   'site-packages')
+             self.assertEqual(dirs[-1], wanted)

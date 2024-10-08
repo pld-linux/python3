@@ -549,8 +549,10 @@ END { if (fail) { print "\nPROBLEMS FOUND:"; print logmsg; exit(1); } }'
 LC_ALL=C.UTF-8
 export LC_ALL
 %if %{with tests}
-WITHIN_PYTHON_RPM_BUILD=1 %{__make} test \
-	TESTOPTS="%{test_flags} %{test_list}"
+WITHIN_PYTHON_RPM_BUILD=1 \
+EXTRATESTOPTS="-v" \
+	%{__make} test \
+		TESTOPTS="%{test_flags} %{test_list}"
 %endif
 
 %if %{with info}
