@@ -3,58 +3,58 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/site.py Python-3.9.2/Lib/site.py
 +++ Python-3.9.2/Lib/site.py	2021-02-25 18:40:00.705652346 +0100
 @@ -295,7 +295,7 @@
      if sys.platform == 'darwin' and sys._framework:
-         return f'{userbase}/lib/python/site-packages'
+         return f'{userbase}/lib/{implementation_lower}/site-packages'
  
--    return f'{userbase}/lib/python{version[0]}.{version[1]}/site-packages'
-+    return f'{userbase}/{sys.platlibdir}/python{version[0]}.{version[1]}/site-packages'
+-    return f'{userbase}/lib/python{version[0]}.{version[1]}{abi_thread}/site-packages'
++    return f'{userbase}/{sys.platlibdir}/python{version[0]}.{version[1]}{abi_thread}/site-packages'
  
  
  def getuserbase():
-@@ -371,6 +371,8 @@ def getsitepackages(prefixes=None):
-                                     "python%d.%d" % sys.version_info[:2],
+@@ -408,6 +408,8 @@ def getsitepackages(prefixes=None):
+                                     f"{implementation}{ver[0]}.{ver[1]}{abi_thread}",
                                      "site-packages")
                  sitepackages.append(path)
-+            sitepackages.append(os.path.join(prefix, sys.platlibdir, "site-python"))
-+            sitepackages.append(os.path.join(prefix, "share", "python%d.%d" % sys.version_info[:2], "site-packages"))
++                sitepackages.append(os.path.join(prefix, sys.platlibdir, "site-python"))
++                sitepackages.append(os.path.join(prefix, "share", f"{implementation}{ver[0]}.{ver[1]}{abi_thread}", "site-packages"))
          else:
              sitepackages.append(prefix)
              sitepackages.append(os.path.join(prefix, "Lib", "site-packages"))
-diff -urNp -x '*.orig' Python-3.9.2.org/Lib/sysconfig.py Python-3.9.2/Lib/sysconfig.py
---- Python-3.9.2.org/Lib/sysconfig.py	2021-02-19 13:31:44.000000000 +0100
-+++ Python-3.9.2/Lib/sysconfig.py	2021-02-25 18:40:00.705652346 +0100
-@@ -27,7 +27,7 @@
+diff -urNp -x '*.orig' Python-3.9.2.org/Lib/sysconfig/__init__.py Python-3.9.2/Lib/sysconfig/__init__.py
+--- Python-3.9.2.org/Lib/sysconfig/__init__.py	2021-02-19 13:31:44.000000000 +0100
++++ Python-3.9.2/Lib/sysconfig/__init__.py	2021-02-25 18:40:00.705652346 +0100
+@@ -29,7 +29,7 @@ _INSTALL_SCHEMES = {
      'posix_prefix': {
-         'stdlib': '{installed_base}/{platlibdir}/python{py_version_short}',
-         'platstdlib': '{platbase}/{platlibdir}/python{py_version_short}',
--        'purelib': '{base}/lib/python{py_version_short}/site-packages',
-+        'purelib': '{base}/share/python{py_version_short}/site-packages',
-         'platlib': '{platbase}/{platlibdir}/python{py_version_short}/site-packages',
+         'stdlib': '{installed_base}/{platlibdir}/{implementation_lower}{py_version_short}{abi_thread}',
+         'platstdlib': '{platbase}/{platlibdir}/{implementation_lower}{py_version_short}{abi_thread}',
+-        'purelib': '{base}/lib/{implementation_lower}{py_version_short}{abi_thread}/site-packages',
++        'purelib': '{base}/share/{implementation_lower}{py_version_short}{abi_thread}/site-packages',
+         'platlib': '{platbase}/{platlibdir}/{implementation_lower}{py_version_short}{abi_thread}/site-packages',
          'include':
-             '{installed_base}/include/python{py_version_short}{abiflags}',
-@@ -37,10 +37,10 @@ _INSTALL_SCHEMES = {
+             '{installed_base}/include/{implementation_lower}{py_version_short}{abiflags}',
+@@ -39,10 +39,10 @@ _INSTALL_SCHEMES = {
          'data': '{base}',
          },
      'posix_home': {
--        'stdlib': '{installed_base}/lib/python',
--        'platstdlib': '{base}/lib/python',
--        'purelib': '{base}/lib/python',
--        'platlib': '{base}/lib/python',
-+        'stdlib': '{installed_base}/{platlibdir}/python',
-+        'platstdlib': '{base}/{platlibdir}/python',
-+        'purelib': '{base}/share/python',
-+        'platlib': '{base}/{platlibdir}/python',
-         'include': '{installed_base}/include/python',
-         'platinclude': '{installed_base}/include/python',
+-        'stdlib': '{installed_base}/lib/{implementation_lower}',
+-        'platstdlib': '{base}/lib/{implementation_lower}',
+-        'purelib': '{base}/lib/{implementation_lower}',
+-        'platlib': '{base}/lib/{implementation_lower}',
++        'stdlib': '{installed_base}/{platlibdir}/{implementation_lower}',
++        'platstdlib': '{base}/{platlibdir}/{implementation_lower}',
++        'purelib': '{base}/share/{implementation_lower}',
++        'platlib': '{base}/{platlibdir}/{implementation_lower}',
+         'include': '{installed_base}/include/{implementation_lower}',
+         'platinclude': '{installed_base}/include/{implementation_lower}',
          'scripts': '{base}/bin',
-@@ -100,8 +100,8 @@ if _HAS_USER_BASE:
+@@ -150,8 +150,8 @@ if _HAS_USER_BASE:
          'posix_user': {
-             'stdlib': '{userbase}/{platlibdir}/python{py_version_short}',
-             'platstdlib': '{userbase}/{platlibdir}/python{py_version_short}',
--            'purelib': '{userbase}/lib/python{py_version_short}/site-packages',
--            'platlib': '{userbase}/lib/python{py_version_short}/site-packages',
-+            'purelib': '{userbase}/share/python{py_version_short}/site-packages',
-+            'platlib': '{userbase}/{platlibdir}/python{py_version_short}/site-packages',
-             'include': '{userbase}/include/python{py_version_short}',
+             'stdlib': '{userbase}/{platlibdir}/{implementation_lower}{py_version_short}{abi_thread}',
+             'platstdlib': '{userbase}/{platlibdir}/{implementation_lower}{py_version_short}{abi_thread}',
+-            'purelib': '{userbase}/lib/{implementation_lower}{py_version_short}{abi_thread}/site-packages',
+-            'platlib': '{userbase}/lib/{implementation_lower}{py_version_short}{abi_thread}/site-packages',
++            'purelib': '{userbase}/share/{implementation_lower}{py_version_short}{abi_thread}/site-packages',
++            'platlib': '{userbase}/{platlibdir}/{implementation_lower}{py_version_short}{abi_thread}/site-packages',
+             'include': '{userbase}/include/{implementation_lower}{py_version_short}{abi_thread}',
              'scripts': '{userbase}/bin',
              'data': '{userbase}',
 @@ -490,7 +490,11 @@ def get_config_h_filename():
@@ -86,7 +86,7 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/sysconfig.py Python-3.9.2/Lib/syscon
  				echo Skip install of $(LIBRARY) - use make frameworkinstall; \
 --- Python-3.10.6/Lib/test/test_sysconfig.py.orig	2022-08-22 06:15:16.895139554 +0200
 +++ Python-3.10.6/Lib/test/test_sysconfig.py	2022-08-22 06:18:57.331178879 +0200
-@@ -299,13 +299,13 @@ class TestSysConfig(unittest.TestCase):
+@@ -414,13 +414,13 @@ class TestSysConfig(unittest.TestCase):
                  expected = os.path.normpath(global_path.replace(base, user, 1))
                  # bpo-44860: platlib of posix_user doesn't use sys.platlibdir,
                  # whereas posix_prefix does.
@@ -94,8 +94,8 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/sysconfig.py Python-3.9.2/Lib/syscon
 +                if name != 'platlib':
                      # Replace "/lib64/python3.11/site-packages" suffix
                      # with "/lib/python3.11/site-packages".
-                     py_version_short = sysconfig.get_python_version()
-                     suffix = f'python{py_version_short}/site-packages'
+                     py_version_abi = sysconfig._get_python_version_abi()
+                     suffix = f'python{py_version_abi}/site-packages'
 -                    expected = expected.replace(f'/{sys.platlibdir}/{suffix}',
 -                                                f'/lib/{suffix}')
 +                    expected = expected.replace(f'/lib/{suffix}',

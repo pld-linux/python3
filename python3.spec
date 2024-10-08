@@ -9,9 +9,9 @@
 %bcond_without	optimizations		# expensive, stable optimizations (PGO etc.) + LTO
 #
 # tests which will not work on 64-bit platforms
-%define		no64bit_tests	-x test_audioop -x test_rgbimg -x test_imageop
+%define		no64bit_tests	-x test_rgbimg -x test_imageop
 # tests which may fail because of builder environment limitations (no /proc or /dev/pts)
-%define		nobuilder_tests -u-network -x test_resource -x test_openpty -x test_socket -x test_nis -x test_posix -x test_locale -x test_pty -x test_asyncio -x test_os -x test_readline -x test_normalization
+%define		nobuilder_tests -u-network -x test_resource -x test_openpty -x test_socket -x test_posix -x test_locale -x test_pty -x test_asyncio -x test_os -x test_readline -x test_normalization
 
 # tests which fail because of some unknown/unresolved reason (this list should be %%{nil})
 #   test_site: fails because our site.py is patched to include both /usr/share/... and /usr/lib...
@@ -21,7 +21,7 @@
 %define		broken_tests_x32	-x test_time
 %undefine	with_optimizations
 %endif
-%define		broken_tests	-x test_embed -x test_nntplib -x test_gdb -x test_site -x test_ssl %{?broken_tests_x32}
+%define		broken_tests	-x test_embed -x test_gdb -x test_site -x test_ssl %{?broken_tests_x32}
 
 %ifarch armv6hl armv7hl armv7hnl
 %define		_python_target_abi	%{?_gnu}hf
@@ -29,7 +29,7 @@
 %define		_python_target_abi	%{?_gnu}
 %endif
 
-%define py_ver		3.12
+%define py_ver		3.13
 %define py_abi		%{py_ver}
 %define	py_platform	%{py_abi}-%{_target_base_arch}-%{_target_os}%{?_python_target_abi}
 %define py_prefix	%{_prefix}
@@ -47,15 +47,14 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.7
+Version:	%{py_ver}.0
 Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	c6c933c1a0db52597cb45a7910490f93
+# Source0-md5:	726e5b829fcf352326874c1ae599abaa
 Source1:	pyconfig.h.in
-Patch0:		%{name}-pythonpath.patch
 
 Patch2:		%{name}-multilib.patch
 Patch3:		%{name}-no_cmdline_tests.patch
@@ -66,7 +65,6 @@ Patch9:		%{name}-tests_with_pythonpath.patch
 
 Patch11:	%{name}-installcompile.patch
 
-Patch13:	%{name}-no-randomize-tests.patch
 Patch14:	python3-profile-tests.patch
 Patch15:	python3-tests.patch
 URL:		https://www.python.org/
@@ -361,30 +359,6 @@ Python development tools such as profilers and debugger.
 Narzędzia programistyczne języka Python takie jak profiler oraz
 debugger.
 
-%package 2to3
-Summary:	Automated Python 2 to 3 code translation
-Summary(pl.UTF-8):	Automatyczne tłumaczenie kodu Pythona 2 do 3
-Group:		Development/Languages/Python
-
-%description 2to3
-2to3 is a Python program that reads Python 2.x source code and applies
-a series of fixers to transform it into valid Python 3.x code. The
-standard library contains a rich set of fixers that will handle almost
-all code. 2to3 supporting library lib2to3 is, however, a flexible and
-generic library, so it is possible to write your own fixers for 2to3.
-lib2to3 could also be adapted to custom applications in which Python
-code needs to be edited automatically.
-
-%description 2to3 -l pl.UTF-8
-2to3 to program w Pythonie czytający od źródłowy w Pythonie 2.x i
-aplikujący serię poprawek przekształcających go w poprawny kod w
-Pythonie 3.x. Biblioteka standardowa zawiera duży zbiór poprawek
-obsługujących większość kodu. Biblioteka wspierająca 2to3 (lib2to3)
-jest jednak elastyczną i ogólną biblioteką, więc można pisać własne
-poprawki dla 2to3. lib2to3 można także zaadaptować na potrzeby
-własnych zastosowań, w których kod w Pythonie musi być modyfikowany
-automatycznie.
-
 %package static
 Summary:	Static python library
 Summary(pl.UTF-8):	Statyczna biblioteka Pythona
@@ -483,7 +457,6 @@ Moduły testowe dla Pythona.
 
 %prep
 %setup -q -n Python-%{version}
-%patch0 -p1
 
 %patch2 -p1
 %patch3 -p1
@@ -494,7 +467,6 @@ Moduły testowe dla Pythona.
 
 %patch11 -p1
 
-%patch13 -p1
 %patch14 -p1
 %patch15 -p1
 
@@ -513,7 +485,6 @@ sed -E -i -e '1s,#!\s*/usr/bin/env\s+python2(\s|$),#!%{__python}\1,' -e '1s,#!\s
 
 sed -E -i -e '1s,#!\s*/usr/bin/env\s+python3(\s|$),#!%{__python3}\1,' \
       Tools/scripts/idle3 \
-      Tools/scripts/2to3 \
       Tools/scripts/pydoc3
 
 find . -name '*.py' | xargs -r grep -El '^#! */usr/bin/env python3?' | xargs %{__sed} -i -e '1s,^#! */usr/bin/env python3\?,#!/usr/bin/python3,'
@@ -551,7 +522,6 @@ export SETUPTOOLS_USE_DISTUTILS=stdlib
 	%{?with_debug:--with-pydebug} \
         --with-ssl-default-suites=openssl \
 	--with-system-expat \
-	--with-system-ffi \
 	%{?with_system_mpdecimal:--with-system-libmpdec} \
 %if %{with optimizations}
 	--enable-optimizations \
@@ -657,9 +627,6 @@ install -p Tools/patchcheck/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/idlelib/help.html
 %{__rm} $RPM_BUILD_ROOT%{py_libdir}/site-packages/README.txt
 
-# currently provided by python-2to3, consider switching to this one
-%{__rm} $RPM_BUILD_ROOT%{_bindir}/2to3
-
 # that seems to be only an empty extension template,
 # which seems to be built only {with tests}
 %{__rm} $RPM_BUILD_ROOT%{py_dyndir}/xxlimited*.*.so
@@ -738,7 +705,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/site.py
 %{py_libdir}/sre_*.py
 %{py_libdir}/stat.py
-%{py_libdir}/sysconfig.py
 %{py_libdir}/token.py
 %{py_libdir}/tokenize.py
 %{py_libdir}/traceback.py
@@ -768,7 +734,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/site.cpython-*.py[co]
 %{py_libdir}/__pycache__/sre_*.cpython-*.py[co]
 %{py_libdir}/__pycache__/stat.cpython-*.py[co]
-%{py_libdir}/__pycache__/sysconfig.cpython-*.py[co]
 %{py_libdir}/__pycache__/token.cpython-*.py[co]
 %{py_libdir}/__pycache__/tokenize.cpython-*.py[co]
 %{py_libdir}/__pycache__/traceback.cpython-*.py[co]
@@ -776,12 +741,10 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/os.cpython-*.py[co]
 %{py_libdir}/__pycache__/types.cpython-*.py[co]
 
+# main modules needed by core python
 %{py_libdir}/collections
-
-# encodings required by python library
-%dir %{py_libdir}/encodings
-%{py_libdir}/encodings/__pycache__
-%{py_libdir}/encodings/*.py
+%{py_libdir}/encodings
+%{py_libdir}/sysconfig
 
 %dir %{py_libdir}/config-%{py_platform}
 %{py_libdir}/config-%{py_platform}/Makefile
@@ -795,9 +758,13 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__future__.py
 %{py_libdir}/__hello__.py
 %{py_libdir}/_aix_support.py
+%{py_libdir}/_android_support.py
+%{py_libdir}/_colorize.py
 %{py_libdir}/_compat_pickle.py
 %{py_libdir}/_compression.py
+%{py_libdir}/_ios_support.py
 %{py_libdir}/_markupbase.py
+%{py_libdir}/_opcode_metadata.py
 %{py_libdir}/_osx_support.py
 %{py_libdir}/_pydecimal.py
 %{py_libdir}/_py_abc.py
@@ -806,7 +773,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/_pylong.py
 %{py_libdir}/_strptime.py
 %{py_libdir}/_threading_local.py
-%{py_libdir}/aifc.py
 %{py_libdir}/antigravity.py
 %{py_libdir}/argparse.py
 %{py_libdir}/ast.py
@@ -815,9 +781,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/bz2.py
 %{py_libdir}/cProfile.py
 %{py_libdir}/calendar.py
-%{py_libdir}/cgi.py
-%{py_libdir}/cgitb.py
-%{py_libdir}/chunk.py
 %{py_libdir}/cmd.py
 %{py_libdir}/code.py
 %{py_libdir}/codeop.py
@@ -827,7 +790,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/contextlib.py
 %{py_libdir}/contextvars.py
 %{py_libdir}/copy.py
-%{py_libdir}/crypt.py
 %{py_libdir}/csv.py
 %{py_libdir}/dataclasses.py
 %{py_libdir}/datetime.py
@@ -849,26 +811,21 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/hashlib.py
 %{py_libdir}/hmac.py
 %{py_libdir}/imaplib.py
-%{py_libdir}/imghdr.py
 %{py_libdir}/inspect.py
 %{py_libdir}/ipaddress.py
 %{py_libdir}/lzma.py
 %{py_libdir}/mailbox.py
-%{py_libdir}/mailcap.py
 %{py_libdir}/mimetypes.py
 %{py_libdir}/modulefinder.py
 %{py_libdir}/netrc.py
-%{py_libdir}/nntplib.py
 %{py_libdir}/ntpath.py
 %{py_libdir}/nturl2path.py
 %{py_libdir}/numbers.py
 %{py_libdir}/opcode.py
 %{py_libdir}/optparse.py
-%{py_libdir}/pathlib.py
 %{py_libdir}/pdb.py
 %{py_libdir}/pickle.py
 %{py_libdir}/pickletools.py
-%{py_libdir}/pipes.py
 %{py_libdir}/pkgutil.py
 %{py_libdir}/platform.py
 %{py_libdir}/plistlib.py
@@ -892,7 +849,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/shutil.py
 %{py_libdir}/signal.py
 %{py_libdir}/smtplib.py
-%{py_libdir}/sndhdr.py
 %{py_libdir}/socket.py
 %{py_libdir}/socketserver.py
 %{py_libdir}/ssl.py
@@ -901,11 +857,9 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/stringprep.py
 %{py_libdir}/struct.py
 %{py_libdir}/subprocess.py
-%{py_libdir}/sunau.py
 %{py_libdir}/symtable.py
 %{py_libdir}/tabnanny.py
 %{py_libdir}/tarfile.py
-%{py_libdir}/telnetlib.py
 %{py_libdir}/tempfile.py
 %{py_libdir}/textwrap.py
 %{py_libdir}/this.py
@@ -915,20 +869,22 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/tty.py
 %{py_libdir}/turtle.py
 %{py_libdir}/typing.py
-%{py_libdir}/uu.py
 %{py_libdir}/uuid.py
 %{py_libdir}/warnings.py
 %{py_libdir}/wave.py
 %{py_libdir}/webbrowser.py
-%{py_libdir}/xdrlib.py
 %{py_libdir}/zipapp.py
 %{py_libdir}/zipimport.py
 %{py_libdir}/__pycache__/__future__.cpython-*.py[co]
 %{py_libdir}/__pycache__/__hello__.cpython-*.py[co]
 %{py_libdir}/__pycache__/_aix_support.cpython-*.py[co]
+%{py_libdir}/__pycache__/_android_support.cpython-*.py[co]
+%{py_libdir}/__pycache__/_colorize.cpython-*.py[co]
 %{py_libdir}/__pycache__/_compat_pickle.cpython-*.py[co]
 %{py_libdir}/__pycache__/_compression.cpython-*.py[co]
+%{py_libdir}/__pycache__/_ios_support.cpython-*.py[co]
 %{py_libdir}/__pycache__/_markupbase.cpython-*.py[co]
+%{py_libdir}/__pycache__/_opcode_metadata.cpython-*.py[co]
 %{py_libdir}/__pycache__/_osx_support.cpython-*.py[co]
 %{py_libdir}/__pycache__/_pydecimal.cpython-*.py[co]
 %{py_libdir}/__pycache__/_py_abc.cpython-*.py[co]
@@ -937,7 +893,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/_pylong.cpython-*.py[co]
 %{py_libdir}/__pycache__/_strptime.cpython-*.py[co]
 %{py_libdir}/__pycache__/_threading_local.cpython-*.py[co]
-%{py_libdir}/__pycache__/aifc.cpython-*.py[co]
 %{py_libdir}/__pycache__/antigravity.cpython-*.py[co]
 %{py_libdir}/__pycache__/argparse.cpython-*.py[co]
 %{py_libdir}/__pycache__/ast.cpython-*.py[co]
@@ -946,9 +901,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/bz2.cpython-*.py[co]
 %{py_libdir}/__pycache__/cProfile.cpython-*.py[co]
 %{py_libdir}/__pycache__/calendar.cpython-*.py[co]
-%{py_libdir}/__pycache__/cgi.cpython-*.py[co]
-%{py_libdir}/__pycache__/cgitb.cpython-*.py[co]
-%{py_libdir}/__pycache__/chunk.cpython-*.py[co]
 %{py_libdir}/__pycache__/cmd.cpython-*.py[co]
 %{py_libdir}/__pycache__/code.cpython-*.py[co]
 %{py_libdir}/__pycache__/codeop.cpython-*.py[co]
@@ -958,7 +910,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/contextlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/contextvars.cpython-*.py[co]
 %{py_libdir}/__pycache__/copy.cpython-*.py[co]
-%{py_libdir}/__pycache__/crypt.cpython-*.py[co]
 %{py_libdir}/__pycache__/csv.cpython-*.py[co]
 %{py_libdir}/__pycache__/dataclasses.cpython-*.py[co]
 %{py_libdir}/__pycache__/datetime.cpython-*.py[co]
@@ -980,26 +931,21 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/hashlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/hmac.cpython-*.py[co]
 %{py_libdir}/__pycache__/imaplib.cpython-*.py[co]
-%{py_libdir}/__pycache__/imghdr.cpython-*.py[co]
 %{py_libdir}/__pycache__/inspect.cpython-*.py[co]
 %{py_libdir}/__pycache__/ipaddress.cpython-*.py[co]
 %{py_libdir}/__pycache__/lzma.cpython-*.py[co]
 %{py_libdir}/__pycache__/mailbox.cpython-*.py[co]
-%{py_libdir}/__pycache__/mailcap.cpython-*.py[co]
 %{py_libdir}/__pycache__/mimetypes.cpython-*.py[co]
 %{py_libdir}/__pycache__/modulefinder.cpython-*.py[co]
 %{py_libdir}/__pycache__/netrc.cpython-*.py[co]
-%{py_libdir}/__pycache__/nntplib.cpython-*.py[co]
 %{py_libdir}/__pycache__/ntpath.cpython-*.py[co]
 %{py_libdir}/__pycache__/nturl2path.cpython-*.py[co]
 %{py_libdir}/__pycache__/numbers.cpython-*.py[co]
 %{py_libdir}/__pycache__/opcode.cpython-*.py[co]
 %{py_libdir}/__pycache__/optparse.cpython-*.py[co]
-%{py_libdir}/__pycache__/pathlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/pdb.cpython-*.py[co]
 %{py_libdir}/__pycache__/pickle.cpython-*.py[co]
 %{py_libdir}/__pycache__/pickletools.cpython-*.py[co]
-%{py_libdir}/__pycache__/pipes.cpython-*.py[co]
 %{py_libdir}/__pycache__/pkgutil.cpython-*.py[co]
 %{py_libdir}/__pycache__/platform.cpython-*.py[co]
 %{py_libdir}/__pycache__/plistlib.cpython-*.py[co]
@@ -1023,7 +969,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/shutil.cpython-*.py[co]
 %{py_libdir}/__pycache__/signal.cpython-*.py[co]
 %{py_libdir}/__pycache__/smtplib.cpython-*.py[co]
-%{py_libdir}/__pycache__/sndhdr.cpython-*.py[co]
 %{py_libdir}/__pycache__/socket.cpython-*.py[co]
 %{py_libdir}/__pycache__/socketserver.cpython-*.py[co]
 %{py_libdir}/__pycache__/ssl.cpython-*.py[co]
@@ -1032,11 +977,9 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/stringprep.cpython-*.py[co]
 %{py_libdir}/__pycache__/struct.cpython-*.py[co]
 %{py_libdir}/__pycache__/subprocess.cpython-*.py[co]
-%{py_libdir}/__pycache__/sunau.cpython-*.py[co]
 %{py_libdir}/__pycache__/symtable.cpython-*.py[co]
 %{py_libdir}/__pycache__/tabnanny.cpython-*.py[co]
 %{py_libdir}/__pycache__/tarfile.cpython-*.py[co]
-%{py_libdir}/__pycache__/telnetlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/tempfile.cpython-*.py[co]
 %{py_libdir}/__pycache__/textwrap.cpython-*.py[co]
 %{py_libdir}/__pycache__/this.cpython-*.py[co]
@@ -1046,12 +989,10 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/tty.cpython-*.py[co]
 %{py_libdir}/__pycache__/turtle.cpython-*.py[co]
 %{py_libdir}/__pycache__/typing.cpython-*.py[co]
-%{py_libdir}/__pycache__/uu.cpython-*.py[co]
 %{py_libdir}/__pycache__/uuid.cpython-*.py[co]
 %{py_libdir}/__pycache__/warnings.cpython-*.py[co]
 %{py_libdir}/__pycache__/wave.cpython-*.py[co]
 %{py_libdir}/__pycache__/webbrowser.cpython-*.py[co]
-%{py_libdir}/__pycache__/xdrlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/zipapp.cpython-*.py[co]
 %{py_libdir}/__pycache__/zipimport.cpython-*.py[co]
 
@@ -1070,7 +1011,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_codecs_kr.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_tw.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_contextvars.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/_crypt.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_csv.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_ctypes*.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_curses_panel.cpython-*.so
@@ -1084,6 +1024,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_gdbm.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_hashlib.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_heapq.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_interpchannels.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_interpqueues.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_interpreters.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_json.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_lsprof.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_lzma.cpython-*.so
@@ -1105,35 +1048,33 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_testbuffer.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testcapi.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testclinic.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/_testinternalcapi.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_testclinic_limited.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_testexternalinspection.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testimportmultiple.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_testinternalcapi.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_testlimitedcapi.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testmultiphase.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testsinglephase.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_uuid.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/_xxinterpchannels.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/_xxsubinterpreters.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_xxtestfuzz.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/array.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/audioop.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/binascii.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/cmath.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/fcntl.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/grp.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/math.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/mmap.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/nis.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/ossaudiodev.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/pyexpat.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/readline.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/resource.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/select.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/syslog.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/termios.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/spwd.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/unicodedata.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/xxsubtype.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/zlib.cpython-*.so
 
+%{py_libdir}/_pyrepl
 %{py_libdir}/__phello__
 
 %dir %{py_libdir}/asyncio
@@ -1205,6 +1146,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/multiprocessing/dummy/__pycache__
 %{py_libdir}/multiprocessing/dummy/*.py
 
+%{py_libdir}/pathlib
 %{py_libdir}/re
 %{py_libdir}/tomllib
 %{py_libdir}/turtledemo
@@ -1224,9 +1166,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_libdir}/venv/scripts/common
 %{py_libdir}/venv/scripts/common/Activate.ps1
 %{py_libdir}/venv/scripts/common/activate
+%{py_libdir}/venv/scripts/common/activate.fish
 %dir %{py_libdir}/venv/scripts/posix
 %{py_libdir}/venv/scripts/posix/activate.csh
-%{py_libdir}/venv/scripts/posix/activate.fish
 
 %dir %{py_libdir}/wsgiref
 %{py_libdir}/wsgiref/__pycache__
@@ -1324,21 +1266,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/pyreindent%{py_ver}
 %{py_libdir}/timeit.py
 %{py_libdir}/__pycache__/timeit.cpython-*.py[co]
-
-%files 2to3
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/2to3-%{py_ver}
-%dir %{py_libdir}/lib2to3
-%{py_libdir}/lib2to3/__pycache__
-%{py_libdir}/lib2to3/*.txt
-%{py_libdir}/lib2to3/*.pickle
-%{py_libdir}/lib2to3/*.py
-%dir %{py_libdir}/lib2to3/fixes
-%{py_libdir}/lib2to3/fixes/__pycache__
-%{py_libdir}/lib2to3/fixes/*.py
-%dir %{py_libdir}/lib2to3/pgen2
-%{py_libdir}/lib2to3/pgen2/__pycache__
-%{py_libdir}/lib2to3/pgen2/*.py
 
 %files static
 %defattr(644,root,root,755)

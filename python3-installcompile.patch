@@ -9,12 +9,13 @@
  
  # Install shared libraries enabled by Setup
  DESTDIRS=	$(exec_prefix) $(LIBDIR) $(BINLIBDEST) $(DESTSHARED)
-@@ -2316,6 +2316,8 @@ libinstall:	all $(srcdir)/Modules/xxmodu
- 	$(INSTALL_DATA) `cat pybuilddir.txt`/_sysconfigdata_$(ABIFLAGS)_$(MACHDEP)_$(MULTIARCH).py \
- 		$(DESTDIR)$(LIBDEST); \
- 	$(INSTALL_DATA) $(srcdir)/LICENSE $(DESTDIR)$(LIBDEST)/LICENSE.txt
+@@ -2576,6 +2576,8 @@ libinstall:	all $(srcdir)/Modules/xxmodu
+ 		echo "Applying app store compliance patch"; \
+ 		patch --force --reject-file "$(abs_builddir)/app-store-compliance.rej" --strip 2 --directory "$(DESTDIR)$(LIBDEST)" --input "$(abs_srcdir)/$(APP_STORE_COMPLIANCE_PATCH)" || true ; \
+ 	fi
 +.PHONY: installcompile
 +installcompile: libainstall libinstall
  	@ # Build PYC files for the 3 optimization levels (0, 1, 2)
  	-PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED) \
  		$(PYTHON_FOR_BUILD) -Wi $(DESTDIR)$(LIBDEST)/compileall.py \
+
