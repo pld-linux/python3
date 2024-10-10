@@ -549,10 +549,13 @@ END { if (fail) { print "\nPROBLEMS FOUND:"; print logmsg; exit(1); } }'
 LC_ALL=C.UTF-8
 export LC_ALL
 %if %{with tests}
+cp -a Makefile Makefile.org
+sed -i -e 's#^test: all.*#test:#g' Makefile
 WITHIN_PYTHON_RPM_BUILD=1 \
 EXTRATESTOPTS="-v" \
 	%{__make} test \
 		TESTOPTS="%{test_flags} %{test_list}"
+cp -a Makefile.org Makefile
 %endif
 
 %if %{with info}
