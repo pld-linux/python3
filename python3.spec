@@ -458,17 +458,17 @@ Moduły testowe dla Pythona.
 %prep
 %setup -q -n Python-%{version}
 
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
+%patch -P 2 -p1
+%patch -P 3 -p1
+%patch -P 4 -p1
+%patch -P 5 -p1
 
-%patch9 -p1
+%patch -P 9 -p1
 
-%patch11 -p1
+%patch -P 11 -p1
 
-%patch14 -p1
-%patch15 -p1
+%patch -P 14 -p1
+%patch -P 15 -p1
 
 %{__rm} -r Modules/expat
 
