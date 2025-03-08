@@ -94,7 +94,7 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_venv.py Python-3.9.2/Lib/t
          """
          Test that the sys.executable value is as expected.
 @@ -673,6 +673,7 @@ class BasicTest(BaseTest):
-                     self.assertFalse(same_path(path1, path2))
+ 
  
  @requireVenvCreate
 +@unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")

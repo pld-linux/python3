@@ -47,13 +47,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.0
+Version:	%{py_ver}.2
 Release:	0.1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	726e5b829fcf352326874c1ae599abaa
+# Source0-md5:	4c2d9202ab4db02c9d0999b14655dfe5
 Source1:	pyconfig.h.in
 
 Patch2:		%{name}-multilib.patch
@@ -754,7 +754,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_libdir}/config-%{py_platform}
 %{py_libdir}/config-%{py_platform}/Makefile
 %{py_libdir}/config-%{py_platform}/Setup
+%{py_libdir}/config-%{py_platform}/Setup.bootstrap
 %{py_libdir}/config-%{py_platform}/Setup.local
+%{py_libdir}/config-%{py_platform}/Setup.stdlib
 %{py_libdir}/config-%{py_platform}/pyconfig.h
 
 %files modules
@@ -764,6 +766,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__hello__.py
 %{py_libdir}/_aix_support.py
 %{py_libdir}/_android_support.py
+%{py_libdir}/_apple_support.py
 %{py_libdir}/_colorize.py
 %{py_libdir}/_compat_pickle.py
 %{py_libdir}/_compression.py
@@ -884,6 +887,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/__hello__.cpython-*.py[co]
 %{py_libdir}/__pycache__/_aix_support.cpython-*.py[co]
 %{py_libdir}/__pycache__/_android_support.cpython-*.py[co]
+%{py_libdir}/__pycache__/_apple_support.cpython-*.py[co]
 %{py_libdir}/__pycache__/_colorize.cpython-*.py[co]
 %{py_libdir}/__pycache__/_compat_pickle.cpython-*.py[co]
 %{py_libdir}/__pycache__/_compression.cpython-*.py[co]
