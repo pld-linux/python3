@@ -1,6 +1,7 @@
 # NOTE: tests require processes limit >128 (256 is sufficient)
 #
 # Conditional build:
+%bcond_without	default_python		# build as default system Python
 %bcond_with	info			# info pages (requires emacs)
 %bcond_without	system_mpdecimal	# system libmpdec library
 %bcond_without	tkinter			# disables tkinter module building
@@ -104,6 +105,9 @@ BuildRequires:	xz-devel
 BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Suggests:	pip
+%if %{with default_python}
+Conflicts:	python < 1:2.7.18-10
+%endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		specflags_ppc	-D__ppc__=1
@@ -480,8 +484,8 @@ for f in $files; do
 done
 %endif
 
-sed -E -i -e '1s,#!\s*/usr/bin/env\s+python2(\s|$),#!%{__python}\1,' -e '1s,#!\s*/usr/bin/env\s+python(\s|$),#!%{__python}\1,' -e '1s,#!\s*/usr/bin/python(\s|$),#!%{__python}\1,' \
-      Tools/gdb/libpython.py \
+sed -i -e '1s,/usr/bin/python$,%{__python3},' \
+      Tools/gdb/libpython.py
 
 sed -E -i -e '1s,#!\s*/usr/bin/env\s+python3(\s|$),#!%{__python3}\1,' \
       Tools/scripts/idle3 \
@@ -588,7 +592,7 @@ ln -s libpython%{py_abi}.so $RPM_BUILD_ROOT%{_libdir}/libpython3.so
 
 # gdb helper that will end up in -debuginfo package
 soname=$(ls -1d $RPM_BUILD_ROOT%{_libdir}/libpython%{py_abi}.so.*.* | sed -e "s#^$RPM_BUILD_ROOT##g")
-cp -a Tools/gdb/libpython.py "$RPM_BUILD_ROOT%{_prefix}/lib/debug/$soname-gdb.py"
+cp -a Tools/gdb/libpython.py "$RPM_BUILD_ROOT%{_prefix}/lib/debug/${soname}-gdb.py"
 
 #
 # create several useful aliases, such as timeit.py, profile.py, pdb.py, smtpd.py
@@ -642,8 +646,11 @@ install -p Tools/patchcheck/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py
 %{__mv} $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h $RPM_BUILD_ROOT%{py_libdir}/config-%{py_platform}/pyconfig.h
 %{__sed} -e's#@PREFIX@#%{_prefix}#g;s#@PY_VER@#%{py_ver}#g;s#@PY_ABI@#%{py_platform}#g' %{SOURCE1} > $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h
 
+%if %{with default_python}
 # python points to python3 now
 ln -s python3 $RPM_BUILD_ROOT%{_bindir}/python
+echo '.so python3.1' >$RPM_BUILD_ROOT%{_mandir}/man1/python.1
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -663,9 +670,12 @@ rm -rf $RPM_BUILD_ROOT
 %if "%{py_ver}" != "%{py_abi}"
 %attr(755,root,root) %{_bindir}/python%{py_abi}
 %endif
-%attr(755,root,root) %{_bindir}/python
 %attr(755,root,root) %{_bindir}/python3
 %{_mandir}/man1/python3*.1*
+%if %{with default_python}
+%attr(755,root,root) %{_bindir}/python
+%{_mandir}/man1/python.1*
+%endif
 
 %files libs
 %defattr(644,root,root,755)
