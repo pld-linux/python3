@@ -698,6 +698,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_struct.cpython-*.so
 
 # modules required by python library
+%{py_libdir}/__future__.py
 %{py_libdir}/_collections_abc.py
 %{py_libdir}/_sitebuiltins.py
 %{py_libdir}/_sysconfigdata_*.py
@@ -727,6 +728,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/os.py
 # needed by the dynamic sys.lib patch
 %{py_libdir}/types.py
+%{py_libdir}/__pycache__/__future__.cpython-*.py[co]
 %{py_libdir}/__pycache__/_sitebuiltins.cpython-*.py[co]
 %{py_libdir}/__pycache__/_sysconfigdata_*.cpython-*.py[co]
 %{py_libdir}/__pycache__/_weakrefset.cpython-*.py[co]
@@ -757,8 +759,10 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/types.cpython-*.py[co]
 
 # main modules needed by core python
+%{py_libdir}/_pyrepl
 %{py_libdir}/collections
 %{py_libdir}/encodings
+%{py_libdir}/importlib
 %{py_libdir}/sysconfig
 
 %dir %{py_libdir}/config-%{py_platform}
@@ -772,7 +776,6 @@ rm -rf $RPM_BUILD_ROOT
 %files modules
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) /etc/shrc.d/python*-modules*
-%{py_libdir}/__future__.py
 %{py_libdir}/__hello__.py
 %{py_libdir}/_aix_support.py
 %{py_libdir}/_android_support.py
@@ -1093,7 +1096,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/xxsubtype.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/zlib.cpython-*.so
 
-%{py_libdir}/_pyrepl
 %{py_libdir}/__phello__
 
 %dir %{py_libdir}/asyncio
@@ -1141,14 +1143,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/http/*.py
 
 %dir %{py_libdir}/idlelib
-
-%dir %{py_libdir}/importlib
-%{py_libdir}/importlib/__pycache__
-%{py_libdir}/importlib/*.py
-%dir %{py_libdir}/importlib/metadata
-%{py_libdir}/importlib/metadata/__pycache__
-%{py_libdir}/importlib/metadata/*.py
-%{py_libdir}/importlib/resources
 
 %dir %{py_libdir}/json
 %{py_libdir}/json/__pycache__
