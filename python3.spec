@@ -83,6 +83,9 @@ BuildRequires:	gdbm-devel >= 1.8.3
 BuildRequires:	glibc-localedb-all
 %endif
 BuildRequires:	gmp-devel >= 4.0
+%ifnarch %arch_with_atomics64
+BuildRequires:	libatomic-devel
+%endif
 BuildRequires:	libffi-devel
 BuildRequires:	libnsl-devel
 BuildRequires:	libstdc++-devel
@@ -94,6 +97,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	readline-devel >= 5.0
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 2.025
 BuildRequires:	sed >= 4.0
 BuildRequires:	sqlite3-devel >= 3.3.5
 BuildRequires:	tar >= 1:1.22
@@ -297,6 +301,9 @@ Summary(tr.UTF-8):	Python ile geliştirme yapmak için gerekli dosyalar
 Summary(uk.UTF-8):	Бібліотеки та хедери для програмування на мові Python
 Group:		Development/Languages/Python
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+%ifnarch %arch_with_atomics64
+Requires:	libatomic-devel
+%endif
 Obsoletes:	python3-devel-src < 1:3.2-1
 
 %description devel
