@@ -48,13 +48,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.2
+Version:	%{py_ver}.3
 Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	4c2d9202ab4db02c9d0999b14655dfe5
+# Source0-md5:	8bb5f0b8c9d9d7b87d7d98510e8d58e5
 Source1:	pyconfig.h.in
 
 Patch2:		%{name}-multilib.patch
