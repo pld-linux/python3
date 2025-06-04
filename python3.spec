@@ -47,13 +47,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.16
+Version:	%{py_ver}.18
 Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	97b3ee1740f32a92905dd0a99dcb04d5
+# Source0-md5:	14ea0982a7dd4dbfc3f50537c723df41
 Source1:	pyconfig.h.in
 Patch0:		%{name}-pythonpath.patch
 Patch1:		%{name}-ac_fixes.patch
@@ -484,20 +484,20 @@ Moduły testowe dla Pythona.
 
 %prep
 %setup -q -n Python-%{version}
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch7 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
+%patch -P0 -p1
+%patch -P1 -p1
+%patch -P2 -p1
+%patch -P3 -p1
+%patch -P4 -p1
+%patch -P5 -p1
+%patch -P7 -p1
+%patch -P9 -p1
+%patch -P10 -p1
+%patch -P11 -p1
 
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
+%patch -P13 -p1
+%patch -P14 -p1
+%patch -P15 -p1
 
 %{__rm} -r Modules/expat
 
