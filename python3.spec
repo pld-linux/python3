@@ -12,7 +12,7 @@
 # tests which will not work on 64-bit platforms
 %define		no64bit_tests	-x test_rgbimg -x test_imageop
 # tests which may fail because of builder environment limitations (no /proc or /dev/pts)
-%define		nobuilder_tests -u-network -x test_resource -x test_openpty -x test_socket -x test_posix -x test_locale -x test_pty -x test_asyncio -x test_os -x test_readline -x test_normalization
+%define		nobuilder_tests -u-network -x test_resource -x test_openpty -x test_socket -x test_posix -x test_locale -x test_pty -x test_asyncio -x test_os -x test_readline -x test_normalization -x test_zoneinfo
 
 # tests which fail because of some unknown/unresolved reason (this list should be %%{nil})
 #   test_site: fails because our site.py is patched to include both /usr/share/... and /usr/lib...
@@ -48,13 +48,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.3
+Version:	%{py_ver}.4
 Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	8bb5f0b8c9d9d7b87d7d98510e8d58e5
+# Source0-md5:	2e2a8eb2e1be50049dc4248d99a52f89
 Source1:	pyconfig.h.in
 
 Patch2:		%{name}-multilib.patch
