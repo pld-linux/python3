@@ -107,6 +107,7 @@ BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 BuildRequires:	xz-devel
 BuildRequires:	zlib-devel
+BuildConflicts:	python3-hunter <= 3.7.0
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Suggests:	pip
 %if %{with default_python}
