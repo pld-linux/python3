@@ -20,15 +20,14 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_asyncio/test_tasks.py Pyth
 diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_cmd_line.py Python-3.9.2/Lib/test/test_cmd_line.py
 --- Python-3.9.2.org/Lib/test/test_cmd_line.py	2021-02-19 13:31:44.000000000 +0100
 +++ Python-3.9.2/Lib/test/test_cmd_line.py	2021-02-25 18:41:41.098779547 +0100
-@@ -265,6 +265,7 @@ class CmdLineTest(unittest.TestCase):
+@@ -383,6 +383,7 @@ class CmdLineTest(unittest.TestCase):
          self.assertEqual(rc, 0)
-         self.assertTrue(data.startswith(b'x'), data)
+         self.assertStartsWith(data, b'x')
  
 +    @unittest.skipIf("PYTHONPATH" in os.environ, "$PYTHONPATH set")
      def test_large_PYTHONPATH(self):
          path1 = "ABCDE" * 100
          path2 = "FGHIJ" * 100
-
 @@ -374,6 +374,7 @@ class CmdLineTest(unittest.TestCase):
  
      @unittest.skipIf(sys.flags.safe_path,

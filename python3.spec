@@ -30,7 +30,7 @@
 %define		_python_target_abi	%{?_gnu}
 %endif
 
-%define py_ver		3.13
+%define py_ver		3.14
 %define py_abi		%{py_ver}
 %define	py_platform	%{py_abi}-%{_target_base_arch}-%{_target_os}%{?_python_target_abi}
 %define py_prefix	%{_prefix}
@@ -48,13 +48,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.7
+Version:	%{py_ver}.0
 Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	256cdb3bbf45cdce7499e52ba6c36ea3
+# Source0-md5:	41389edaf9c643263cbed9b5ed307df8
 Source1:	pyconfig.h.in
 
 Patch2:		%{name}-multilib.patch
@@ -773,6 +773,9 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/importlib
 %{py_libdir}/sysconfig
 
+%{py_libdir}/build-details.json
+%{py_libdir}/_sysconfig_vars__*.json
+
 %dir %{py_libdir}/config-%{py_platform}
 %{py_libdir}/config-%{py_platform}/Makefile
 %{py_libdir}/config-%{py_platform}/Setup
@@ -788,9 +791,9 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/_aix_support.py
 %{py_libdir}/_android_support.py
 %{py_libdir}/_apple_support.py
+%{py_libdir}/_ast_unparse.py
 %{py_libdir}/_colorize.py
 %{py_libdir}/_compat_pickle.py
-%{py_libdir}/_compression.py
 %{py_libdir}/_ios_support.py
 %{py_libdir}/_markupbase.py
 %{py_libdir}/_opcode_metadata.py
@@ -800,8 +803,10 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/_pydatetime.py
 %{py_libdir}/_pyio.py
 %{py_libdir}/_pylong.py
+%{py_libdir}/_py_warnings.py
 %{py_libdir}/_strptime.py
 %{py_libdir}/_threading_local.py
+%{py_libdir}/annotationlib.py
 %{py_libdir}/antigravity.py
 %{py_libdir}/argparse.py
 %{py_libdir}/ast.py
@@ -882,7 +887,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/socketserver.py
 %{py_libdir}/ssl.py
 %{py_libdir}/statistics.py
-%{py_libdir}/string.py
 %{py_libdir}/stringprep.py
 %{py_libdir}/struct.py
 %{py_libdir}/subprocess.py
@@ -909,9 +913,9 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/_aix_support.cpython-*.py[co]
 %{py_libdir}/__pycache__/_android_support.cpython-*.py[co]
 %{py_libdir}/__pycache__/_apple_support.cpython-*.py[co]
+%{py_libdir}/__pycache__/_ast_unparse.cpython-*.py[co]
 %{py_libdir}/__pycache__/_colorize.cpython-*.py[co]
 %{py_libdir}/__pycache__/_compat_pickle.cpython-*.py[co]
-%{py_libdir}/__pycache__/_compression.cpython-*.py[co]
 %{py_libdir}/__pycache__/_ios_support.cpython-*.py[co]
 %{py_libdir}/__pycache__/_markupbase.cpython-*.py[co]
 %{py_libdir}/__pycache__/_opcode_metadata.cpython-*.py[co]
@@ -921,8 +925,10 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/_pydatetime.cpython-*.py[co]
 %{py_libdir}/__pycache__/_pyio.cpython-*.py[co]
 %{py_libdir}/__pycache__/_pylong.cpython-*.py[co]
+%{py_libdir}/__pycache__/_py_warnings.cpython-*.py[co]
 %{py_libdir}/__pycache__/_strptime.cpython-*.py[co]
 %{py_libdir}/__pycache__/_threading_local.cpython-*.py[co]
+%{py_libdir}/__pycache__/annotationlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/antigravity.cpython-*.py[co]
 %{py_libdir}/__pycache__/argparse.cpython-*.py[co]
 %{py_libdir}/__pycache__/ast.cpython-*.py[co]
@@ -1003,7 +1009,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/socketserver.cpython-*.py[co]
 %{py_libdir}/__pycache__/ssl.cpython-*.py[co]
 %{py_libdir}/__pycache__/statistics.cpython-*.py[co]
-%{py_libdir}/__pycache__/string.cpython-*.py[co]
 %{py_libdir}/__pycache__/stringprep.cpython-*.py[co]
 %{py_libdir}/__pycache__/struct.cpython-*.py[co]
 %{py_libdir}/__pycache__/subprocess.cpython-*.py[co]
@@ -1040,12 +1045,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_codecs_jp.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_kr.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_codecs_tw.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/_contextvars.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_csv.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_ctypes*.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_curses_panel.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_curses.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/_datetime.cpython-*.so
 %ifnarch sparc64
 %attr(755,root,root) %{py_dyndir}/_dbm.cpython-*.so
 %endif
@@ -1054,6 +1057,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_gdbm.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_hashlib.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_heapq.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_hmac.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_interpchannels.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_interpqueues.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_interpreters.cpython-*.so
@@ -1063,12 +1067,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_md5.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_multibytecodec.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_multiprocessing.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/_opcode.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_pickle.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_posixshmem.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_posixsubprocess.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_queue.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_random.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_remote_debugging.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_sha1.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_sha2.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_sha3.cpython-*.so
@@ -1079,7 +1083,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_testcapi.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testclinic.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testclinic_limited.cpython-*.so
-%attr(755,root,root) %{py_dyndir}/_testexternalinspection.cpython-*.so
+#%attr(755,root,root) %{py_dyndir}/_testexternalinspection.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testimportmultiple.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testinternalcapi.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testlimitedcapi.cpython-*.so
@@ -1087,6 +1091,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_testsinglephase.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_uuid.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_xxtestfuzz.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_zstd.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/array.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/binascii.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/cmath.cpython-*.so
@@ -1110,6 +1115,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/asyncio/__pycache__
 %{py_libdir}/asyncio/*.py
 
+%{py_libdir}/compression
 %{py_libdir}/concurrent
 
 %dir %{py_libdir}/ctypes
@@ -1169,6 +1175,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{py_libdir}/pathlib
 %{py_libdir}/re
+%{py_libdir}/string
 %{py_libdir}/tomllib
 %{py_libdir}/turtledemo
 
