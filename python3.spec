@@ -56,6 +56,8 @@ Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
 # Source0-md5:	41389edaf9c643263cbed9b5ed307df8
 Source1:	pyconfig.h.in
+# https://peps.python.org/pep-0668/
+Source2:	externally-managed
 
 Patch2:		%{name}-multilib.patch
 Patch3:		%{name}-no_cmdline_tests.patch
@@ -653,6 +655,7 @@ install -p Tools/patchcheck/reindent.py $RPM_BUILD_ROOT%{_bindir}/pyreindent%{py
 
 %{__mv} $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h $RPM_BUILD_ROOT%{py_libdir}/config-%{py_platform}/pyconfig.h
 %{__sed} -e's#@PREFIX@#%{_prefix}#g;s#@PY_VER@#%{py_ver}#g;s#@PY_ABI@#%{py_platform}#g' %{SOURCE1} > $RPM_BUILD_ROOT%{py_incdir}/pyconfig.h
+cp -p %{SOURCE2} $RPM_BUILD_ROOT%{py_libdir}/EXTERNALLY-MANAGED
 
 %if %{with default_python}
 # python points to python3 now
@@ -705,6 +708,7 @@ rm -rf $RPM_BUILD_ROOT
 # shared modules required by python library
 %attr(755,root,root) %{py_dyndir}/_struct.cpython-*.so
 
+%{py_libdir}/EXTERNALLY-MANAGED
 # modules required by python library
 %{py_libdir}/__future__.py
 %{py_libdir}/_collections_abc.py

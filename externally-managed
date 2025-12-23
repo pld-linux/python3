@@ -1,0 +1,3 @@
+[externally-managed]
+Error=To install Python packages system-wide, use poldek -i python3-xyz,
+ where xyz is the package you are trying to install.
