@@ -92,7 +92,7 @@ BuildRequires:	libffi-devel
 BuildRequires:	libnsl-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtirpc-devel
-%{?with_system_mpdecimal:BuildRequires:	mpdecimal-devel >= 2.5.0}
+%{?with_system_mpdecimal:BuildRequires:	mpdecimal-devel >= 2.5.1}
 BuildRequires:	ncurses-ext-devel >= 5.2
 BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	pkgconfig
