@@ -8,6 +8,7 @@
 %bcond_without	tests			# disables Python testing
 %bcond_with	verbose_tests		# runs tests in verbose mode
 %bcond_without	optimizations		# expensive, stable optimizations (PGO etc.) + LTO
+%bcond_without	static_libs		# static libraries
 #
 # tests which will not work on 64-bit platforms
 %define		no64bit_tests	-x test_rgbimg -x test_imageop
@@ -532,6 +533,7 @@ export SETUPTOOLS_USE_DISTUTILS=stdlib
 	ac_cv_broken_sem_getvalue=no \
 	--enable-ipv6 \
 	--enable-shared \
+	%{!?with_static_libs:--without-static-libpython} \
 	--with-computed-gotos \
 	--with-dbmliborder=gdbm:ndbm:bdb \
 	--with-doc-strings \
@@ -1276,7 +1278,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_libdir}/config-%{py_platform}/install-sh
 %{py_libdir}/config-%{py_platform}/config.c
 %{py_libdir}/config-%{py_platform}/config.c.in
-%{py_libdir}/config-%{py_platform}/python.o
+%{?with_static_libs:%{py_libdir}/config-%{py_platform}/python.o}
 %{py_libdir}/config-%{py_platform}/python-config.py
 %dir %{py_libdir}/config-%{py_platform}/__pycache__
 %{py_libdir}/config-%{py_platform}/__pycache__/python-config.*
@@ -1296,9 +1298,11 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/timeit.py
 %{py_libdir}/__pycache__/timeit.cpython-*.py[co]
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libpython%{py_abi}.a
+%endif
 
 %files examples
 %defattr(644,root,root,755)
