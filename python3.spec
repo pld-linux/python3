@@ -8,6 +8,7 @@
 %bcond_without	tests			# disables Python testing
 %bcond_with	verbose_tests		# runs tests in verbose mode
 %bcond_without	optimizations		# expensive, stable optimizations (PGO etc.) + LTO
+%bcond_without	bdb			# disable support for Berkeley DB
 #
 # tests which will not work on 64-bit platforms
 %define		no64bit_tests	-x test_rgbimg -x test_imageop
@@ -76,7 +77,7 @@ BuildRequires:	autoconf-archive
 BuildRequires:	automake
 BuildRequires:	bluez-libs-devel
 BuildRequires:	bzip2-devel
-BuildRequires:	db-devel >= 4
+%{?with_bdb:BuildRequires:	db-devel >= 4}
 %{?with_info:BuildRequires:	emacs >= 21}
 BuildRequires:	expat-devel >= 1:1.95.7
 BuildRequires:	file
@@ -529,7 +530,7 @@ export SETUPTOOLS_USE_DISTUTILS=stdlib
 	--enable-ipv6 \
 	--enable-shared \
 	--with-computed-gotos \
-	--with-dbmliborder=gdbm:ndbm:bdb \
+	--with-dbmliborder=gdbm:ndbm%{?with_bdb::bdb} \
 	--with-doc-strings \
 	--without-ensurepip \
         --with-platlibdir="%{_lib}" \
