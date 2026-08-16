@@ -5,9 +5,9 @@
  LDLIBRARY=      @LDLIBRARY@
  BLDLIBRARY=     @BLDLIBRARY@
 +BLDLIBDIR=      @BLDLIBDIR@
+ MODULE_LDFLAGS_SHARED=$(if $(LIBPYTHON),$(BLDLIBRARY))
  PY3LIBRARY=     @PY3LIBRARY@
  DLLLIBRARY=	@DLLLIBRARY@
- LDLIBRARYDIR=   @LDLIBRARYDIR@
 @@ -780,7 +780,7 @@ clinic: check-clean-src $(srcdir)/Module
  
  # Build the interpreter
