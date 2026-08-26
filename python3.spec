@@ -49,13 +49,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.0
+Version:	%{py_ver}.7
 Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	41389edaf9c643263cbed9b5ed307df8
+# Source0-md5:	a4c4c2991b4126e227073c2d9445f432
 Source1:	pyconfig.h.in
 # https://peps.python.org/pep-0668/
 Source2:	externally-managed
@@ -72,44 +72,43 @@ Patch11:	%{name}-installcompile.patch
 Patch14:	python3-profile-tests.patch
 Patch15:	python3-tests.patch
 URL:		https://www.python.org/
-BuildRequires:	autoconf >= 2.65
+BuildRequires:	autoconf >= 2.72
 BuildRequires:	autoconf-archive
 BuildRequires:	automake
 BuildRequires:	bluez-libs-devel
 BuildRequires:	bzip2-devel
 %{?with_bdb:BuildRequires:	db-devel >= 4}
 %{?with_info:BuildRequires:	emacs >= 21}
-BuildRequires:	expat-devel >= 1:1.95.7
+BuildRequires:	expat-devel >= 1:2.8.0
 BuildRequires:	file
 BuildRequires:	gdbm-devel >= 1.8.3
 %if %(locale -a | grep -q '^C\.utf8$'; echo $?)
 BuildRequires:	glibc-localedb-all
 %endif
-BuildRequires:	gmp-devel >= 4.0
 %ifnarch %arch_with_atomics64
 BuildRequires:	libatomic-devel
 %endif
 BuildRequires:	libffi-devel
-BuildRequires:	libnsl-devel
 BuildRequires:	libstdc++-devel
-BuildRequires:	libtirpc-devel
+BuildRequires:	libuuid-devel >= 2.20
 %{?with_system_mpdecimal:BuildRequires:	mpdecimal-devel >= 2.5.1}
 BuildRequires:	ncurses-ext-devel >= 5.2
-BuildRequires:	openssl-devel >= 0.9.7
+BuildRequires:	openssl-devel >= 1.1.1
 BuildRequires:	pkgconfig
 BuildRequires:	readline-devel >= 5.0
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 2.025
 BuildRequires:	sed >= 4.0
-BuildRequires:	sqlite3-devel >= 3.3.5
+BuildRequires:	sqlite3-devel >= 3.15.2
 BuildRequires:	tar >= 1:1.22
 %{?with_info:BuildRequires:	tetex-makeindex}
 %{?with_tkinter:BuildRequires:	tix-devel >= 1:8.1.4-4}
-%{?with_tkinter:BuildRequires:	tk-devel >= 8.4.3}
+%{?with_tkinter:BuildRequires:	tk-devel >= 8.5.12}
 BuildRequires:	xz
 BuildRequires:	xz-devel
-BuildRequires:	zlib-devel
+BuildRequires:	zlib-devel >= 1.2.0
+BuildRequires:	zstd-devel >= 1.4.5
 BuildConflicts:	python3-hunter <= 3.7.0
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
 Suggests:	pip
@@ -258,6 +257,7 @@ Summary:	Python modules
 Summary(pl.UTF-8):	Moduły języka Python
 Group:		Libraries/Python
 Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+# 2.4.2-2 carries the div+sqrt memory exhaustion fix
 %{?with_system_mpdecimal:Requires:	mpdecimal >= 2.4.2-2}
 Obsoletes:	python3-modules-sqlite < 1:3.1-2
 %requires_ge_to	expat expat-devel
@@ -407,9 +407,9 @@ Summary(pt_BR.UTF-8):	Interface GUI Tk para Phyton
 Summary(tr.UTF-8):	Python için grafik kullanıcı arayüzü
 Group:		Libraries/Python
 Requires:	%{name}-modules = %{epoch}:%{version}-%{release}
-Requires:	tcl >= 8.4.3
+Requires:	tcl >= 8.5.12
 Requires:	tix >= 1:8.1.4-4
-Requires:	tk >= 8.4.3
+Requires:	tk >= 8.5.12
 
 %description tkinter
 Standard Python interface to the Tk GUI toolkit.
@@ -452,12 +452,8 @@ BuildArch:	noarch
 %description examples
 Example programs in Python.
 
-These are for Python 2.3.4, not %{version}.
-
 %description examples -l pl.UTF-8
 Przykładowe programy w Pythonie.
-
-Przykłady te są dla Pythona 2.3.4, nie %{version}.
 
 %package test
 Summary:	Test modules for Python
@@ -585,7 +581,7 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_libdir},%{_pkgconfigdir}} \
 	$RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version} \
 	$RPM_BUILD_ROOT{%{_infodir},%{_mandir}/man1} \
 	$RPM_BUILD_ROOT/etc/shrc.d \
-	$RPM_BUILD_ROOT%{_prefix}/lib/debug/%{_libdir}
+	$RPM_BUILD_ROOT%{_datadir}/gdb/auto-load%{_libdir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -601,9 +597,10 @@ cp -a Tools $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libpython3.so
 ln -s libpython%{py_abi}.so $RPM_BUILD_ROOT%{_libdir}/libpython3.so
 
-# gdb helper that will end up in -debuginfo package
+# gdb auto-load script; find-debuginfo lists only ELF objects it processed,
+# so a hand-copied .py can never reach the -debuginfo package
 soname=$(ls -1d $RPM_BUILD_ROOT%{_libdir}/libpython%{py_abi}.so.*.* | sed -e "s#^$RPM_BUILD_ROOT##g")
-cp -a Tools/gdb/libpython.py "$RPM_BUILD_ROOT%{_prefix}/lib/debug/${soname}-gdb.py"
+cp -a Tools/gdb/libpython.py "$RPM_BUILD_ROOT%{_datadir}/gdb/auto-load${soname}-gdb.py"
 
 #
 # create several useful aliases, such as timeit.py, profile.py, pdb.py, smtpd.py
@@ -693,6 +690,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc LICENSE
 %attr(755,root,root) %{_libdir}/libpython%{py_abi}.so.*.*
+%{_datadir}/gdb/auto-load%{_libdir}/libpython%{py_abi}.so.*.*-gdb.py
 
 %dir %{py_incdir}
 %{py_incdir}/pyconfig.h

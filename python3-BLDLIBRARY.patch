@@ -1,13 +1,13 @@
 --- Python-3.8.5/Makefile.pre.in.orig	2020-09-17 07:55:13.731893519 +0200
 +++ Python-3.8.5/Makefile.pre.in	2020-09-17 10:33:36.683744945 +0200
-@@ -224,6 +224,7 @@
+@@ -280,6 +280,7 @@
  LIBRARY=	@LIBRARY@
  LDLIBRARY=      @LDLIBRARY@
  BLDLIBRARY=     @BLDLIBRARY@
 +BLDLIBDIR=      @BLDLIBDIR@
+ MODULE_LDFLAGS_SHARED=$(if $(LIBPYTHON),$(BLDLIBRARY))
  PY3LIBRARY=     @PY3LIBRARY@
  DLLLIBRARY=	@DLLLIBRARY@
- LDLIBRARYDIR=   @LDLIBRARYDIR@
 @@ -780,7 +780,7 @@ clinic: check-clean-src $(srcdir)/Module
  
  # Build the interpreter
