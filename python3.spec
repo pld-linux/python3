@@ -113,7 +113,7 @@ BuildRequires:	xz
 BuildRequires:	xz-devel
 BuildRequires:	zlib-devel
 BuildConflicts:	python3-hunter <= 3.7.0
-Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Requires:	%{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
 Suggests:	pip
 %if %{with default_python}
 Conflicts:	python < 1:2.7.18-10
@@ -259,8 +259,8 @@ dla Pythona.
 Summary:	Python modules
 Summary(pl.UTF-8):	Moduły języka Python
 Group:		Libraries/Python
-Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
-%{?with_system_mpdecimal:Requires:	mpdecimal >= 2.4.2-2}
+Requires:	%{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
+%{?with_system_mpdecimal:Requires:	mpdecimal%{?_isa} >= 2.4.2-2}
 Obsoletes:	python3-modules-sqlite < 1:3.1-2
 %requires_ge_to	expat expat-devel
 %requires_ge_to	openssl openssl-devel
@@ -275,7 +275,7 @@ Oficjalnie rozprowadzane moduły języka Python.
 Summary:	Python interactive module documentation access support
 Summary(pl.UTF-8):	Interaktywne korzystanie z dokumentacji modułów języka Python
 Group:		Applications
-Requires:	%{name}-modules = %{epoch}:%{version}-%{release}
+Requires:	%{name}-modules%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description -n pydoc3
 Python interactive module documentation access support.
@@ -287,7 +287,7 @@ Interaktywne korzystanie z dokumentacji modułów języka Python.
 Summary:	IDE for Python language
 Summary(pl.UTF-8):	IDE dla języka Python
 Group:		Applications
-Requires:	%{name}-tkinter = %{epoch}:%{version}-%{release}
+Requires:	%{name}-tkinter%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description -n idle3
 IDE for Python language.
@@ -306,9 +306,9 @@ Summary(ru.UTF-8):	Библиотеки и хедеры для построен�
 Summary(tr.UTF-8):	Python ile geliştirme yapmak için gerekli dosyalar
 Summary(uk.UTF-8):	Бібліотеки та хедери для програмування на мові Python
 Group:		Development/Languages/Python
-Requires:	%{name}-libs = %{epoch}:%{version}-%{release}
+Requires:	%{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
 %ifnarch %arch_with_atomics64
-Requires:	libatomic-devel
+Requires:	libatomic-devel%{?_isa}
 %endif
 Obsoletes:	python3-devel-src < 1:3.2-1
 
@@ -367,7 +367,7 @@ dosyalarını ve kitaplıkları içerir.
 Summary:	Python development tools
 Summary(pl.UTF-8):	Narzędzia programistyczne języka Python
 Group:		Development/Languages/Python
-Requires:	%{name}-modules = %{epoch}:%{version}-%{release}
+Requires:	%{name}-modules%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description devel-tools
 Python development tools such as profilers and debugger.
@@ -380,7 +380,7 @@ debugger.
 Summary:	Static python library
 Summary(pl.UTF-8):	Statyczna biblioteka Pythona
 Group:		Development/Languages/Python
-Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
+Requires:	%{name}-devel%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description static
 Static python library.
@@ -408,10 +408,10 @@ Summary(pl.UTF-8):	Standardowy interfejs Pythona do biblioteki Tk
 Summary(pt_BR.UTF-8):	Interface GUI Tk para Phyton
 Summary(tr.UTF-8):	Python için grafik kullanıcı arayüzü
 Group:		Libraries/Python
-Requires:	%{name}-modules = %{epoch}:%{version}-%{release}
-Requires:	tcl >= 8.4.3
-Requires:	tix >= 1:8.1.4-4
-Requires:	tk >= 8.4.3
+Requires:	%{name}-modules%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	tcl%{?_isa} >= 8.4.3
+Requires:	tix%{?_isa} >= 1:8.1.4-4
+Requires:	tk%{?_isa} >= 8.4.3
 
 %description tkinter
 Standard Python interface to the Tk GUI toolkit.
