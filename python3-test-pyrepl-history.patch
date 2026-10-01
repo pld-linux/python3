@@ -1,0 +1,18 @@
+Run the pyrepl half of test_no_newline with a temporary PYTHON_HISTORY.
+With env=None run_repl uses -I, which ignores PYTHON_HISTORY, so the REPL
+appends to the real ~/.python_history; with a read-only $HOME the resulting
+warning lands in the checked output.
+
+--- Python-3.14.8/Lib/test/test_pyrepl/test_pyrepl.py
++++ Python-3.14.8/Lib/test/test_pyrepl/test_pyrepl.py
+@@ -1963,7 +1963,9 @@
+             self.assertEqual(basic_exit_code, 0)
+             self.assertIn(expected_output_sequence, basic_output)
+ 
+-        output, exit_code = self.run_repl(commands)
++        env = os.environ.copy()
++        env.pop("PYTHON_BASIC_REPL", None)
++        output, exit_code = self.run_repl(commands, env=env)
+         self.assertEqual(exit_code, 0)
+ 
+         # Build patterns for escape sequences that don't affect cursor position

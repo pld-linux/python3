@@ -1,0 +1,28 @@
+Make test_subprocess.test_user / test_group tolerate user namespace
+builder sandboxes where setregid / setreuid return EINVAL for unmapped
+uid/gid values instead of EPERM/EACCES.
+
+--- Python-3.13.13/Lib/test/test_subprocess.py.orig	2025-11-10 00:00:00.000000000 +0100
++++ Python-3.13.13/Lib/test/test_subprocess.py	2025-11-10 00:00:00.000000000 +0100
+@@ -2202,6 +2202,10 @@ class POSIXProcessTestCase(BaseTestCase,
+                             self.assertEqual(e.filename, sys.executable)
+                         else:
+                             self.assertIsNone(e.filename)
++                    except OSError as e:
++                        if e.errno != errno.EINVAL:
++                            raise
++                        self.skipTest("setreuid() EINVAL; unmapped uid in user namespace")
+                     else:
+                         if isinstance(user, str):
+                             user_uid = pwd.getpwnam(user).pw_uid
+@@ -2248,6 +2252,10 @@ class POSIXProcessTestCase(BaseTestCase,
+                                 close_fds=close_fds)
+                     except PermissionError as e:  # (EACCES, EPERM)
+                         self.assertIsNone(e.filename)
++                    except OSError as e:
++                        if e.errno != errno.EINVAL:
++                            raise
++                        self.skipTest("setregid() EINVAL; unmapped gid in user namespace")
+                     else:
+                         if isinstance(group, str):
+                             group_gid = grp.getgrnam(group).gr_gid

@@ -1,0 +1,15 @@
+--- Python-3.13.13/Lib/test/support/os_helper.py.orig	2025-11-10 00:00:00.000000000 +0100
++++ Python-3.13.13/Lib/test/support/os_helper.py	2025-11-10 00:00:00.000000000 +0100
+@@ -345,6 +345,12 @@ def unlink(filename):
+         _unlink(filename)
+     except (FileNotFoundError, NotADirectoryError):
+         pass
++    except OSError as e:
++        # On a read-only filesystem, unlink of a non-existent file may
++        # raise EROFS instead of ENOENT. Treat it like a missing file.
++        if e.errno == errno.EROFS and not os.path.lexists(filename):
++            return
++        raise
+
+
+ if sys.platform.startswith("win"):

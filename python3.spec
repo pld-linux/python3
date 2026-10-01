@@ -71,6 +71,9 @@ Patch11:	%{name}-installcompile.patch
 
 Patch14:	python3-profile-tests.patch
 Patch15:	python3-tests.patch
+Patch16:	python3-test-unlink-rofs.patch
+Patch17:	python3-test-subprocess-userns.patch
+Patch18:	python3-test-pyrepl-history.patch
 URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.72
 BuildRequires:	autoconf-archive
@@ -480,6 +483,9 @@ Moduły testowe dla Pythona.
 
 %patch -P 14 -p1
 %patch -P 15 -p1
+%patch -P 16 -p1
+%patch -P 17 -p1
+%patch -P 18 -p1
 
 %{__rm} -r Modules/expat
 
