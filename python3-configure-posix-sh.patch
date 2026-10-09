@@ -1,0 +1,16 @@
+POSIX sh parses "&>/dev/null" as "&" plus ">/dev/null": the compiler runs in the
+background, ./conftest is not there yet and the check always reports "default".
+
+--- Python-3.15.0/configure.ac.orig	2026-10-09 13:16:41.000000000 +0200
++++ Python-3.15.0/configure.ac	2026-10-09 21:56:23.542818230 +0200
+@@ -2501,8 +2501,8 @@ int main()
+ EOF
+ 
+     ac_cv_thread_stack_size=unknown
+-    if $CC -pthread $CFLAGS conftest.c -o conftest &>/dev/null; then
+-        ./conftest &>/dev/null
++    if $CC -pthread $CFLAGS conftest.c -o conftest >/dev/null 2>&1; then
++        ./conftest >/dev/null 2>&1
+         exitcode=$?
+         if test $exitcode -eq 1; then
+             ac_cv_thread_stack_size=1048576

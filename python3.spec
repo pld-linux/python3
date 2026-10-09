@@ -16,14 +16,13 @@
 %define		nobuilder_tests -u-network -x test_resource -x test_openpty -x test_socket -x test_posix -x test_locale -x test_pty -x test_asyncio -x test_os -x test_readline -x test_normalization -x test_zoneinfo
 
 # tests which fail because of some unknown/unresolved reason (this list should be %%{nil})
-#   test_site: fails because our site.py is patched to include both /usr/share/... and /usr/lib...
 #   test_gdb: fails, as the gdb uses old python version
 #   test_time: test_AsTimeval (test.test_time.TestCPyTime), rounding error
 %ifarch x32
 %define		broken_tests_x32	-x test_time
 %undefine	with_optimizations
 %endif
-%define		broken_tests	-x test_embed -x test_gdb -x test_site -x test_ssl %{?broken_tests_x32}
+%define		broken_tests	-x test_embed -x test_gdb -x test_ssl %{?broken_tests_x32}
 
 %ifarch armv6hl armv7hl armv7hnl
 %define		_python_target_abi	%{?_gnu}hf
@@ -31,7 +30,7 @@
 %define		_python_target_abi	%{?_gnu}
 %endif
 
-%define py_ver		3.14
+%define py_ver		3.15
 %define py_abi		%{py_ver}
 %define	py_platform	%{py_abi}-%{_target_base_arch}-%{_target_os}%{?_python_target_abi}
 %define py_prefix	%{_prefix}
@@ -49,13 +48,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.8
+Version:	%{py_ver}.0
 Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	129e654fc09bda21b21c7b4b5ac516e9
+# Source0-md5:	143a3a4a078206f468cf7618f6fb425a
 Source1:	pyconfig.h.in
 # https://peps.python.org/pep-0668/
 Source2:	externally-managed
@@ -71,9 +70,8 @@ Patch11:	%{name}-installcompile.patch
 
 Patch14:	python3-profile-tests.patch
 Patch15:	python3-tests.patch
-Patch16:	python3-test-unlink-rofs.patch
 Patch17:	python3-test-subprocess-userns.patch
-Patch18:	python3-test-pyrepl-history.patch
+Patch19:	python3-configure-posix-sh.patch
 URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.72
 BuildRequires:	autoconf-archive
@@ -106,11 +104,10 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	sqlite3-devel >= 3.15.2
 BuildRequires:	tar >= 1:1.22
 %{?with_info:BuildRequires:	tetex-makeindex}
-%{?with_tkinter:BuildRequires:	tix-devel >= 1:8.1.4-4}
 %{?with_tkinter:BuildRequires:	tk-devel >= 8.5.12}
 BuildRequires:	xz
 BuildRequires:	xz-devel
-BuildRequires:	zlib-devel >= 1.2.0
+BuildRequires:	zlib-devel >= 1.2.2.1
 BuildRequires:	zstd-devel >= 1.4.5
 BuildConflicts:	python3-hunter <= 3.7.0
 Requires:	%{name}-libs%{?_isa} = %{epoch}:%{version}-%{release}
@@ -411,7 +408,6 @@ Summary(tr.UTF-8):	Python için grafik kullanıcı arayüzü
 Group:		Libraries/Python
 Requires:	%{name}-modules%{?_isa} = %{epoch}:%{version}-%{release}
 Requires:	tcl%{?_isa} >= 8.5.12
-Requires:	tix%{?_isa} >= 1:8.1.4-4
 Requires:	tk%{?_isa} >= 8.5.12
 
 %description tkinter
@@ -483,9 +479,8 @@ Moduły testowe dla Pythona.
 
 %patch -P 14 -p1
 %patch -P 15 -p1
-%patch -P 16 -p1
 %patch -P 17 -p1
-%patch -P 18 -p1
+%patch -P 19 -p1
 
 %{__rm} -r Modules/expat
 
@@ -498,6 +493,7 @@ done
 %endif
 
 sed -i -e '1s,/usr/bin/python$,%{__python3},' \
+      Tools/build/generate_slots.py \
       Tools/gdb/libpython.py
 
 sed -E -i -e '1s,#!\s*/usr/bin/env\s+python3(\s|$),#!%{__python3}\1,' \
@@ -519,6 +515,20 @@ fi
 
 export SETUPTOOLS_USE_DISTUTILS=stdlib
 
+# ModuleNotFoundError hints for stdlib modules shipped in separate packages
+cat > missing-stdlib.json <<'EOF'
+{
+	"idlelib": "Install the idle3 package to use idlelib",
+	"pydoc": "Install the pydoc3 package to use pydoc",
+	"pydoc_data": "Install the pydoc3 package to use pydoc",
+%if %{with tkinter}
+	"_tkinter": "Install the python3-tkinter package to use tkinter",
+	"tkinter": "Install the python3-tkinter package to use tkinter",
+%endif
+	"timeit": "Install the python3-devel-tools package to use timeit"
+}
+EOF
+
 %{__aclocal}
 %{__autoconf}
 %configure \
@@ -534,6 +544,7 @@ export SETUPTOOLS_USE_DISTUTILS=stdlib
 	--with-computed-gotos \
 	--with-dbmliborder=gdbm:ndbm%{?with_bdb::bdb} \
 	--with-doc-strings \
+	--with-missing-stdlib-config=missing-stdlib.json \
 	--without-ensurepip \
         --with-platlibdir="%{_lib}" \
 	%{?with_debug:--with-pydebug} \
@@ -549,6 +560,10 @@ if grep -q "#define POSIX_SEMAPHORES_NOT_ENABLED 1" pyconfig.h; then
       echo "Please ensure that /dev/shm is mounted as a tmpfs with mode 1777." >&2
       exit 1
 fi
+
+# PGO and test runs write to $HOME (user site, REPL history); builder's may be read-only
+install -d test-home
+export HOME=$(pwd)/test-home
 
 %{__make} \
 	TESTOPTS="%{_smp_mflags} %{test_list}" \
@@ -736,11 +751,11 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/posixpath.py
 %{py_libdir}/reprlib.py
 %{py_libdir}/site.py
-%{py_libdir}/sre_*.py
 %{py_libdir}/stat.py
 %{py_libdir}/token.py
 %{py_libdir}/tokenize.py
 %{py_libdir}/traceback.py
+%{py_libdir}/_missing_stdlib_info.py
 %{py_libdir}/weakref.py
 %{py_libdir}/os.py
 # needed by the dynamic sys.lib patch
@@ -766,11 +781,11 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/__pycache__/posixpath.cpython-*.py[co]
 %{py_libdir}/__pycache__/reprlib.cpython-*.py[co]
 %{py_libdir}/__pycache__/site.cpython-*.py[co]
-%{py_libdir}/__pycache__/sre_*.cpython-*.py[co]
 %{py_libdir}/__pycache__/stat.cpython-*.py[co]
 %{py_libdir}/__pycache__/token.cpython-*.py[co]
 %{py_libdir}/__pycache__/tokenize.cpython-*.py[co]
 %{py_libdir}/__pycache__/traceback.cpython-*.py[co]
+%{py_libdir}/__pycache__/_missing_stdlib_info.cpython-*.py[co]
 %{py_libdir}/__pycache__/weakref.cpython-*.py[co]
 %{py_libdir}/__pycache__/os.cpython-*.py[co]
 %{py_libdir}/__pycache__/types.cpython-*.py[co]
@@ -1044,7 +1059,6 @@ rm -rf $RPM_BUILD_ROOT
 # list .so modules to be sure that all of them are built
 #
 
-%attr(755,root,root) %{py_dyndir}/_asyncio.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_bisect.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_blake2.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_bz2.cpython-*.so
@@ -1073,6 +1087,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_json.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_lsprof.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_lzma.cpython-*.so
+%attr(755,root,root) %{py_dyndir}/_math_integer.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_md5.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_multibytecodec.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_multiprocessing.cpython-*.so
@@ -1092,7 +1107,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_dyndir}/_testcapi.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testclinic.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testclinic_limited.cpython-*.so
-#%attr(755,root,root) %{py_dyndir}/_testexternalinspection.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testimportmultiple.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testinternalcapi.cpython-*.so
 %attr(755,root,root) %{py_dyndir}/_testlimitedcapi.cpython-*.so
@@ -1165,8 +1179,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/http/__pycache__
 %{py_libdir}/http/*.py
 
-%dir %{py_libdir}/idlelib
-
 %dir %{py_libdir}/json
 %{py_libdir}/json/__pycache__
 %{py_libdir}/json/*.py
@@ -1183,6 +1195,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/multiprocessing/dummy/*.py
 
 %{py_libdir}/pathlib
+%{py_libdir}/profiling
 %{py_libdir}/re
 %{py_libdir}/string
 %{py_libdir}/tomllib
@@ -1258,6 +1271,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/idle3
 %attr(755,root,root) %{_bindir}/idle%{py_ver}
+%dir %{py_libdir}/idlelib
 %dir %{py_libdir}/idlelib/Icons
 %{py_libdir}/idlelib/__pycache__
 %{py_libdir}/idlelib/*.py
@@ -1314,6 +1328,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files test
 %defattr(644,root,root,755)
+%dir %{py_libdir}/idlelib
 %{py_libdir}/idlelib/idle_test
 %{py_libdir}/test
 

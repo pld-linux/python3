@@ -1,16 +1,7 @@
 diff -urNp -x '*.orig' Python-3.9.2.org/Lib/site.py Python-3.9.2/Lib/site.py
 --- Python-3.9.2.org/Lib/site.py	2021-02-19 13:31:44.000000000 +0100
 +++ Python-3.9.2/Lib/site.py	2021-02-25 18:40:00.705652346 +0100
-@@ -295,7 +295,7 @@
-     if sys.platform == 'darwin' and sys._framework:
-         return f'{userbase}/lib/{implementation_lower}/site-packages'
- 
--    return f'{userbase}/lib/python{version[0]}.{version[1]}{abi_thread}/site-packages'
-+    return f'{userbase}/{sys.platlibdir}/python{version[0]}.{version[1]}{abi_thread}/site-packages'
- 
- 
- def getuserbase():
-@@ -408,6 +408,8 @@ def getsitepackages(prefixes=None):
+@@ -769,6 +769,8 @@ def getsitepackages(prefixes=None):
                                      f"{implementation}{ver[0]}.{ver[1]}{abi_thread}",
                                      "site-packages")
                  sitepackages.append(path)
@@ -46,30 +37,15 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/sysconfig/__init__.py Python-3.9.2/L
          'include': '{installed_base}/include/{implementation_lower}',
          'platinclude': '{installed_base}/include/{implementation_lower}',
          'scripts': '{base}/bin',
-@@ -150,8 +150,8 @@ if _HAS_USER_BASE:
-         'posix_user': {
-             'stdlib': '{userbase}/{platlibdir}/{implementation_lower}{py_version_short}{abi_thread}',
-             'platstdlib': '{userbase}/{platlibdir}/{implementation_lower}{py_version_short}{abi_thread}',
--            'purelib': '{userbase}/lib/{implementation_lower}{py_version_short}{abi_thread}/site-packages',
--            'platlib': '{userbase}/lib/{implementation_lower}{py_version_short}{abi_thread}/site-packages',
-+            'purelib': '{userbase}/share/{implementation_lower}{py_version_short}{abi_thread}/site-packages',
-+            'platlib': '{userbase}/{platlibdir}/{implementation_lower}{py_version_short}{abi_thread}/site-packages',
-             'include': '{userbase}/include/{implementation_lower}{py_version_short}{abi_thread}',
-             'scripts': '{userbase}/bin',
-             'data': '{userbase}',
-@@ -490,7 +490,11 @@ def get_config_h_filename():
+@@ -470,7 +470,7 @@ def get_config_h_filename():
          else:
              inc_dir = _PROJECT_BASE
      else:
 -        inc_dir = get_path('platinclude')
-+        if hasattr(sys, 'abiflags'):
-+            config_dir_name = 'config-%s%s' % (_PY_VERSION_SHORT, sys.abiflags)
-+        else:
-+            config_dir_name = 'config'
-+        inc_dir = os.path.join(get_path('stdlib'), config_dir_name)
++        inc_dir = os.path.dirname(get_makefile_filename())
      return os.path.join(inc_dir, 'pyconfig.h')
  
-
+ 
 --- Python-3.10.0/Makefile.pre.in~	2021-10-04 19:40:46.000000000 +0200
 +++ Python-3.10.0/Makefile.pre.in	2021-10-20 22:21:30.573156183 +0200
 @@ -1707,9 +1707,9 @@ libainstall:	@DEF_MAKE_RULE@ python-conf
@@ -86,36 +62,21 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/sysconfig/__init__.py Python-3.9.2/L
  				echo Skip install of $(LIBRARY) - use make frameworkinstall; \
 --- Python-3.10.6/Lib/test/test_sysconfig.py.orig	2022-08-22 06:15:16.895139554 +0200
 +++ Python-3.10.6/Lib/test/test_sysconfig.py	2022-08-22 06:18:57.331178879 +0200
-@@ -414,13 +414,13 @@ class TestSysConfig(unittest.TestCase):
+@@ -430,13 +430,16 @@ class TestSysConfig(unittest.TestCase, V
                  expected = os.path.normpath(global_path.replace(base, user, 1))
                  # bpo-44860: platlib of posix_user doesn't use sys.platlibdir,
                  # whereas posix_prefix does.
 -                if name == 'platlib':
-+                if name != 'platlib':
++                if name in ('platlib', 'purelib'):
                      # Replace "/lib64/python3.11/site-packages" suffix
                      # with "/lib/python3.11/site-packages".
                      py_version_abi = sysconfig._get_python_version_abi()
                      suffix = f'python{py_version_abi}/site-packages'
--                    expected = expected.replace(f'/{sys.platlibdir}/{suffix}',
--                                                f'/lib/{suffix}')
-+                    expected = expected.replace(f'/lib/{suffix}',
-+                                                f'/{sys.platlibdir}/{suffix}')
+                     expected = expected.replace(f'/{sys.platlibdir}/{suffix}',
+                                                 f'/lib/{suffix}')
++                    # posix_prefix keeps purelib in share/
++                    expected = expected.replace(f'/share/{suffix}',
++                                                f'/lib/{suffix}')
                  self.assertEqual(user_path, expected)
  
      def test_main(self):
---- Python-3.10.13/Lib/venv/__init__.py.orig	2023-08-24 14:46:25.000000000 +0200
-+++ Python-3.10.13/Lib/venv/__init__.py	2023-09-23 12:30:09.948046280 +0200
-@@ -145,10 +145,9 @@ class EnvBuilder:
-         create_if_needed(incpath)
-         context.lib_path = libpath
-         create_if_needed(libpath)
--        # Issue 21197: create lib64 as a symlink to lib on 64-bit non-OS X POSIX
--        if ((sys.maxsize > 2**32) and (os.name == 'posix') and
--            (sys.platform != 'darwin')):
--            link_path = os.path.join(env_dir, 'lib64')
-+        # Issue 21197: create lib<qual> as a symlink to lib on 64-bit non-OS X POSIX
-+        if sys.platlibdir != 'lib':
-+            link_path = os.path.join(env_dir, sys.platlibdir)
-             if not os.path.exists(link_path):   # Issue #21643
-                 os.symlink('lib', link_path)
-         context.bin_path = binpath
