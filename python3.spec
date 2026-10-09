@@ -72,6 +72,7 @@ Patch14:	python3-profile-tests.patch
 Patch15:	python3-tests.patch
 Patch17:	python3-test-subprocess-userns.patch
 Patch19:	python3-configure-posix-sh.patch
+Patch20:	python3-test-unwind-x32.patch
 URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.72
 BuildRequires:	autoconf-archive
@@ -117,6 +118,8 @@ Conflicts:	python < 1:2.7.18-10
 %endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+# configure enables frame pointers for native profilers; optflags would omit them on ix86/arm
+%define		filterout_c	-fomit-frame-pointer
 %define		specflags_ppc	-D__ppc__=1
 %define		specflags_ppc64	-D__ppc64__=1
 
@@ -481,6 +484,7 @@ Moduły testowe dla Pythona.
 %patch -P 15 -p1
 %patch -P 17 -p1
 %patch -P 19 -p1
+%patch -P 20 -p1
 
 %{__rm} -r Modules/expat
 

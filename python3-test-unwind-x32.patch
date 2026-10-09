@@ -1,0 +1,17 @@
+test_c_stack_unwind: on x32 the manual unwinder read the upper half of the
+saved rbp as the return address (always 0) and found no Python frames.
+
+--- Python-3.15.0.orig/Modules/_testinternalcapi.c	2026-10-09 23:24:21.282818226 +0200
++++ Python-3.15.0/Modules/_testinternalcapi.c	2026-10-09 23:24:21.359484893 +0200
+@@ -103,6 +103,11 @@ static const uintptr_t min_frame_pointer
+ // See: https://riscv-non-isa.github.io/riscv-elf-psabi-doc/#_frame_pointer_convention
+ #  define FRAME_POINTER_NEXT_OFFSET -2
+ #  define FRAME_POINTER_RETURN_OFFSET -1
++#elif defined(__x86_64__) && defined(__ILP32__)
++// x32 pushes the saved rbp and the return address as 8-byte slots while
++// uintptr_t is 4 bytes, so the (little-endian) return address is at fp[2].
++#  define FRAME_POINTER_NEXT_OFFSET 0
++#  define FRAME_POINTER_RETURN_OFFSET 2
+ #else
+ #  define FRAME_POINTER_NEXT_OFFSET 0
+ #  define FRAME_POINTER_RETURN_OFFSET 1

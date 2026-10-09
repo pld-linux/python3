@@ -32,7 +32,8 @@ diff -urNp -x '*.orig' Python-3.9.2.org/Lib/test/test_imaplib.py Python-3.9.2/Li
                                        'site-packages')
                  self.assertEqual(dirs[0], wanted)
              else:
-                 self.assertEqual(len(dirs), 1)
+-                self.assertEqual(len(dirs), 1)
++                self.assertEqual(len(dirs), 3)
 -            wanted = os.path.join('xoxo', 'lib',
 +            wanted = os.path.join('xoxo', 'share',
                                    f'python{sysconfig._get_python_version_abi()}',
