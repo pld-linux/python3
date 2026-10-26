@@ -48,13 +48,13 @@ Summary(ru.UTF-8):	Язык программирования очень высо
 Summary(tr.UTF-8):	X arayüzlü, yüksek düzeyli, kabuk yorumlayıcı dili
 Summary(uk.UTF-8):	Мова програмування дуже високого рівня з X-інтерфейсом
 Name:		python3
-Version:	%{py_ver}.0
+Version:	%{py_ver}.2
 Release:	1
 Epoch:		1
 License:	PSF
 Group:		Development/Languages/Python
 Source0:	https://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
-# Source0-md5:	143a3a4a078206f468cf7618f6fb425a
+# Source0-md5:	fa9fdb83b421033bd86f43662d311f69
 Source1:	pyconfig.h.in
 # https://peps.python.org/pep-0668/
 Source2:	externally-managed
@@ -68,11 +68,11 @@ Patch9:		%{name}-tests_with_pythonpath.patch
 
 Patch11:	%{name}-installcompile.patch
 
-Patch14:	python3-profile-tests.patch
-Patch15:	python3-tests.patch
-Patch17:	python3-test-subprocess-userns.patch
-Patch19:	python3-configure-posix-sh.patch
-Patch20:	python3-test-unwind-x32.patch
+Patch14:	%{name}-profile-tests.patch
+Patch15:	%{name}-tests.patch
+Patch17:	%{name}-test-subprocess-userns.patch
+Patch19:	%{name}-configure-posix-sh.patch
+Patch20:	%{name}-test-unwind-x32.patch
 URL:		https://www.python.org/
 BuildRequires:	autoconf >= 2.72
 BuildRequires:	autoconf-archive
@@ -98,11 +98,11 @@ BuildRequires:	ncurses-ext-devel >= 5.2
 BuildRequires:	openssl-devel >= 1.1.1
 BuildRequires:	pkgconfig
 BuildRequires:	readline-devel >= 5.0
-BuildRequires:	rpm-build >= 4.6
+BuildRequires:	rpm-build >= 1:4.6
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 2.025
 BuildRequires:	sed >= 4.0
-BuildRequires:	sqlite3-devel >= 3.15.2
+BuildRequires:	sqlite3-devel >= 1:3.15.2
 BuildRequires:	tar >= 1:1.22
 %{?with_info:BuildRequires:	tetex-makeindex}
 %{?with_tkinter:BuildRequires:	tk-devel >= 8.5.12}
@@ -245,8 +245,8 @@ Provides:	python(abi) = %{py_ver}
 # for compatibility with existing Ac packages
 Provides:	python(bytecode) = %{py_ver}
 Provides:	python3-enum
-Obsoletes:	python3-enum < 0.5
 %{!?with_info:Obsoletes:	python3-doc-info < %{epoch}:%{version}-%{release}}
+Obsoletes:	python3-enum < 0.5
 
 %description libs
 Python shared library and very essental modules for Python binary.
@@ -471,20 +471,20 @@ Moduły testowe dla Pythona.
 %prep
 %setup -q -n Python-%{version}
 
-%patch -P 2 -p1
-%patch -P 3 -p1
-%patch -P 4 -p1
-%patch -P 5 -p1
+%patch -P2 -p1
+%patch -P3 -p1
+%patch -P4 -p1
+%patch -P5 -p1
 
-%patch -P 9 -p1
+%patch -P9 -p1
 
-%patch -P 11 -p1
+%patch -P11 -p1
 
-%patch -P 14 -p1
-%patch -P 15 -p1
-%patch -P 17 -p1
-%patch -P 19 -p1
-%patch -P 20 -p1
+%patch -P14 -p1
+%patch -P15 -p1
+%patch -P17 -p1
+%patch -P19 -p1
+%patch -P20 -p1
 
 %{__rm} -r Modules/expat
 
@@ -936,7 +936,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_libdir}/webbrowser.py
 %{py_libdir}/zipapp.py
 %{py_libdir}/zipimport.py
-%{py_libdir}/__pycache__/__future__.cpython-*.py[co]
 %{py_libdir}/__pycache__/__hello__.cpython-*.py[co]
 %{py_libdir}/__pycache__/_aix_support.cpython-*.py[co]
 %{py_libdir}/__pycache__/_android_support.cpython-*.py[co]
